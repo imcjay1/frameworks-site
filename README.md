@@ -17,7 +17,7 @@ assets/
   site.css                                  every page
   site.js                                   every page — owns the single rAF loop
   home.js                                   index.html only — the scrub hero
-  showreel.mp4                              the scrub film (~9 MB)
+  showreel.mp4                              the scrub film (~18 MB)
   brand/                                    logo assets, generated (see below)
   sectors/                                  sector hover previews
   clients/                                  trusted-by logos (empty until supplied)
