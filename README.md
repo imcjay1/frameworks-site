@@ -153,23 +153,56 @@ files.
   and swapping the meanings underneath them turns the current-page pill inside
   out. Only the surfaces this page paints are overridden.
 
-## Contact form
+## Forms
 
-`contact.html` posts natively to `api/contact.js`, which emails the enquiry via
-[Resend](https://resend.com) and redirects back to `/contact?sent=1`. `site.js`
-upgrades it to submit in place when JavaScript is available. It works either way.
+There are three, all posting to the one endpoint, `api/contact.js`, which emails
+via [Resend](https://resend.com). Every form posts natively and works with
+JavaScript disabled; the scripts upgrade them to submit in place.
 
-**It needs two environment variables in the Vercel dashboard before it will
-send:**
+| form | where | handled by |
+|---|---|---|
+| Enquiry | `/contact` | `site.js` (bound by `#contact-form`) |
+| Enquiry | `/digital-services` | `digital.js` |
+| Call request | `/digital-services` | `digital.js` |
+
+**Enquiries go to `cameron@frameworksstudios.com`** — set as the default in
+`api/contact.js`, overridable with a `CONTACT_TO` environment variable.
+
+**One environment variable is required in the Vercel dashboard before anything
+will send:**
 
 | variable | value |
 |---|---|
-| `RESEND_API_KEY` | an API key from resend.com |
-| `CONTACT_TO` | the address enquiries should reach |
-| `CONTACT_FROM` | optional; a verified sender on your own domain |
+| `RESEND_API_KEY` | an API key from resend.com — **required** |
+| `CONTACT_TO` | optional; overrides the destination above |
+| `CONTACT_FROM` | optional; a verified sender on your own domain. Without it Resend delivers only to the account owner's address |
 
-Until they are set the endpoint returns a clear message rather than failing
-silently. A hidden `_gotcha` honeypot field absorbs bots.
+Until the key is set the endpoint returns a message telling the visitor to email
+directly, rather than failing silently. A hidden `_gotcha` honeypot absorbs bots,
+and it answers those as if they succeeded so there is nothing to learn from the
+difference.
+
+### The Digital Services conversion panel
+
+One glass panel with two tabs. Both are built for as little friction as possible:
+only name and email are required, everything else qualifies the lead.
+
+- **Send an enquiry** — service chips (multi-select, so one visitor can pick
+  several), name, email, company, phone, budget, timeline, free-text notes.
+  Checkbox groups arrive as repeated keys, which is why the endpoint parses the
+  body itself rather than using `Object.fromEntries` — that keeps only the last
+  value of a repeated key and would silently drop every service but one.
+- **Book a call** — a date picker built in `digital.js` (weekdays only, from
+  tomorrow to 90 days out) plus an hourly slot. Worth being clear in any copy
+  changes: **this requests a time, it does not confirm one.** There is no
+  calendar integration behind it, so the wording says we confirm by email and
+  nothing is booked until we do.
+- Validation is inline and per-field, with the message appearing under the
+  offending input and the first one focused and scrolled to.
+- On success the panel swaps to a confirmation with an animated tick. A native
+  (JavaScript-off) submit returns to `/digital-services?sent=enquiry|call` and
+  the same panel is shown from that flag. The endpoint only honours a `next`
+  value that is a same-origin path, so it cannot be turned into an open redirect.
 
 ## Key tunables (assets/home.js + assets/site.css)
 

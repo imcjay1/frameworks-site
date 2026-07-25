@@ -56,7 +56,9 @@ body[data-theme="dark"] .spec-chips span{color:#B7BCC4}
    Slow luminous blobs behind everything. They are what the glass actually
    refracts — backdrop-filter over flat black would be an invisible effect, so
    this layer is what makes the cards read as glass at all. */
-.aurora{position:fixed; inset:-12vh -10vw; z-index:0; pointer-events:none; overflow:hidden}
+/* horizontally flush with the viewport: reaching past it would add page scroll.
+   The blobs are clipped by this element's own overflow. */
+.aurora{position:fixed; inset:-12vh 0; z-index:0; pointer-events:none; overflow:hidden}
 .aurora i{
   position:absolute; display:block; border-radius:50%;
   filter:blur(90px); will-change:transform;
@@ -185,6 +187,9 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   position:relative; min-height:100svh;
   padding:158px var(--pad-x) 96px;
   display:flex; flex-direction:column;
+  /* clip, not hidden: the orb must not widen the page, but it is still free to
+     bleed past the bottom edge into the section below */
+  overflow-x:clip;
 }
 .dh-grid{
   flex:1; display:grid; gap:48px 56px;
@@ -510,4 +515,266 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   .pillar:hover, .method-step:hover, .svc:hover{translate:none}
   .svc-body > p, .svc-tags li{opacity:1; transform:none; transition:none}
   .progress{display:none}
+}
+
+/* =========================================================================
+   Conversion section — enquiry form and call booking
+   ========================================================================= */
+.convert-grid{
+  display:grid; grid-template-columns:minmax(0,4fr) minmax(0,7fr);
+  gap:56px; margin-top:52px; align-items:start;
+}
+.convert-points{list-style:none; display:grid; gap:26px}
+.convert-points li{display:grid; gap:7px; padding-left:22px; position:relative}
+.convert-points li::before{
+  content:""; position:absolute; left:0; top:10px;
+  width:7px; height:7px; border-radius:50%; background:#FFF; opacity:.85;
+}
+.convert-points b{
+  font-family:"Fraunces",serif; font-weight:340; font-size:20px; letter-spacing:-.01em; color:#F5F6F7;
+}
+.convert-points span{font-size:14.5px; line-height:1.62; color:var(--ink-soft)}
+.convert-meta{
+  margin-top:36px; padding-top:22px; border-top:1px solid var(--line-soft);
+  display:grid; gap:6px;
+  font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:#6E747D;
+}
+
+/* ---------- The panel ---------- */
+.panel{
+  position:relative; isolation:isolate; border-radius:26px; overflow:hidden;
+  padding:12px 34px 34px;
+  background:linear-gradient(150deg, rgba(255,255,255,.10), rgba(255,255,255,.022) 46%, rgba(255,255,255,.06));
+  -webkit-backdrop-filter:blur(30px) saturate(1.7); backdrop-filter:blur(30px) saturate(1.7);
+  box-shadow:0 44px 90px -44px rgba(0,0,0,.95),
+             inset 0 1px 0 rgba(255,255,255,.24),
+             inset 0 -24px 50px -34px rgba(255,255,255,.28);
+}
+.panel::before{
+  content:""; position:absolute; inset:0; z-index:3; border-radius:inherit;
+  padding:1px; pointer-events:none;
+  background:linear-gradient(132deg, var(--spectral-blue), transparent 24%, transparent 58%,
+             var(--spectral-rose) 78%, var(--spectral-gold));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  opacity:.45;
+}
+.panel > *{position:relative; z-index:2}
+
+/* ---------- Tabs ---------- */
+.panel-tabs[hidden]{display:none}   /* an author display: rule outranks [hidden] */
+.panel-tabs{
+  position:relative; display:flex; gap:4px;
+  margin:0 -34px 30px; padding:0 34px;
+  border-bottom:1px solid var(--line-soft);
+}
+.tab{
+  appearance:none; background:none; border:0; cursor:pointer; color:var(--ink-soft);
+  font:inherit; font-size:14.5px; padding:20px 4px 18px; margin-right:26px;
+  transition:color .35s var(--ease);
+}
+.tab[aria-selected="true"]{color:#FFF}
+.tab:hover{color:#D6DAE0}
+.tab:focus-visible{outline:2px solid var(--brass-deep); outline-offset:-4px; border-radius:8px}
+.tab-ink{
+  position:absolute; left:34px; bottom:-1px; height:1px; width:0;
+  background:#FFF;
+  transition:transform .5s var(--ease), width .5s var(--ease);
+}
+
+/* ---------- Fields ---------- */
+.pane[hidden]{display:none}
+.pane{display:grid; gap:20px; animation:pane-in .55s var(--ease) both}
+@keyframes pane-in{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
+.f-row{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+.f{display:grid; gap:8px; min-width:0}
+.f label, .slot-label, .f-chips legend{
+  font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:#8E949E;
+}
+.f label i, .consent i, .slot-label i{font-style:normal; color:#C8CCD2}
+.f input, .f select, .f textarea{
+  font-family:"Archivo",system-ui,sans-serif; font-size:15.5px; color:#F5F6F7;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:13px; padding:14px 15px; width:100%;
+  transition:border-color .3s var(--ease), background .3s var(--ease), box-shadow .3s var(--ease);
+}
+.f textarea{resize:vertical; min-height:96px}
+.f select{appearance:none; cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,#8E949E 50%),linear-gradient(135deg,#8E949E 50%,transparent 50%);
+  background-position:calc(100% - 19px) 22px, calc(100% - 14px) 22px;
+  background-size:5px 5px, 5px 5px; background-repeat:no-repeat;
+}
+.f select option{background:#111318; color:#F5F6F7}
+.f input:hover, .f select:hover, .f textarea:hover{border-color:rgba(255,255,255,.22); background:rgba(255,255,255,.06)}
+.f input:focus, .f select:focus, .f textarea:focus{
+  outline:none; border-color:rgba(255,255,255,.5); background:rgba(255,255,255,.08);
+  box-shadow:0 0 0 4px rgba(255,255,255,.06);
+}
+.f input::placeholder, .f textarea::placeholder{color:#5F656E}
+
+/* ---------- Service chips ---------- */
+.f-chips{border:0; display:grid; gap:14px}
+.f-chips legend{float:left; width:100%; margin-bottom:14px}
+.f-chips legend span{text-transform:none; letter-spacing:0; color:#5F656E; margin-left:8px}
+.chips{display:flex; flex-wrap:wrap; gap:9px; clear:both}
+.chip{position:relative; cursor:pointer}
+.chip input{position:absolute; opacity:0; width:1px; height:1px}
+.chip span{
+  display:block; padding:10px 15px; border-radius:var(--radius-pill);
+  font-size:13.5px; color:#B7BCC4;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.11);
+  transition:background .3s var(--ease), color .3s var(--ease),
+             border-color .3s var(--ease), transform .3s var(--ease);
+}
+.chip:hover span{transform:translateY(-2px); border-color:rgba(255,255,255,.26); color:#FFF}
+.chip input:checked + span{background:#F3F4F6; border-color:#F3F4F6; color:#0B0C0E; font-weight:500}
+.chip input:focus-visible + span{outline:2px solid var(--brass-deep); outline-offset:2px}
+
+/* ---------- Calendar ---------- */
+.cal{display:grid; gap:12px}
+.cal-head{display:flex; align-items:center; justify-content:space-between; gap:12px}
+.cal-month{
+  font-family:"Fragment Mono",monospace; font-size:11.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:#F5F6F7;
+}
+.cal-nav{
+  width:34px; height:34px; border-radius:50%; cursor:pointer;
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);
+  color:#D6DAE0; font-size:17px; line-height:1;
+  transition:background .3s var(--ease), color .3s var(--ease);
+}
+.cal-nav:hover{background:rgba(255,255,255,.13); color:#FFF}
+.cal-nav:disabled{opacity:.3; cursor:not-allowed}
+.cal-nav:focus-visible{outline:2px solid var(--brass-deep); outline-offset:2px}
+.cal-dow, .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px}
+.cal-dow span{
+  text-align:center; font-family:"Fragment Mono",monospace; font-size:9.5px;
+  letter-spacing:.1em; color:#5F656E; padding-bottom:2px;
+}
+.cal-day{
+  padding:11px 0; border-radius:11px; cursor:pointer;
+  background:rgba(255,255,255,.035); border:1px solid transparent;
+  color:#C3C8CF; font-family:"Archivo",system-ui,sans-serif; font-size:14px;
+  transition:background .25s var(--ease), color .25s var(--ease),
+             border-color .25s var(--ease), transform .25s var(--ease);
+}
+.cal-day:hover:not(:disabled){background:rgba(255,255,255,.12); color:#FFF; transform:translateY(-2px)}
+.cal-day:disabled{opacity:.22; cursor:not-allowed}
+.cal-day.is-empty{background:none; border:0; cursor:default}
+.cal-day[aria-pressed="true"]{background:#F3F4F6; color:#0B0C0E; font-weight:600}
+.cal-day:focus-visible{outline:2px solid var(--brass-deep); outline-offset:2px}
+.cal-fallback{font-size:13.5px; color:var(--ink-soft); line-height:1.6}
+
+.slot-block{display:grid; gap:12px}
+.slots{display:flex; flex-wrap:wrap; gap:9px}
+.slot{
+  padding:11px 16px; border-radius:var(--radius-pill); cursor:pointer;
+  font-family:"Fragment Mono",monospace; font-size:12px; letter-spacing:.06em;
+  background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.11); color:#B7BCC4;
+  transition:background .28s var(--ease), color .28s var(--ease),
+             border-color .28s var(--ease), transform .28s var(--ease);
+}
+.slot:hover{transform:translateY(-2px); border-color:rgba(255,255,255,.26); color:#FFF}
+.slot[aria-pressed="true"]{background:#F3F4F6; border-color:#F3F4F6; color:#0B0C0E}
+.slot:focus-visible{outline:2px solid var(--brass-deep); outline-offset:2px}
+
+/* ---------- Consent, errors, submit ---------- */
+.consent{display:flex; gap:12px; align-items:flex-start; font-size:13.5px; line-height:1.55; color:#A8AEB7}
+.consent input{width:17px; height:17px; flex:0 0 auto; margin-top:2px; accent-color:#F3F4F6}
+.err{
+  display:block; font-size:12.5px; color:#F0A497; min-height:0;
+  opacity:0; transform:translateY(-4px); transition:opacity .3s, transform .3s;
+}
+.err.show{opacity:1; transform:none}
+.f.invalid input, .f.invalid select, .f.invalid textarea,
+.invalid > .chips, .invalid .slots{
+  border-color:rgba(240,164,151,.7);
+  animation:nudge .4s var(--ease);
+}
+@keyframes nudge{
+  0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)}
+  45%{transform:translateX(4px)} 70%{transform:translateX(-2px)}
+}
+.form-error{
+  font-size:14px; color:#F0A497; line-height:1.55;
+  padding:13px 16px; border-radius:12px;
+  background:rgba(240,164,151,.08); border:1px solid rgba(240,164,151,.24);
+}
+.form-error[hidden]{display:none}
+.hp{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden}
+
+.submit-row{display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-top:4px}
+.submit{
+  position:relative; overflow:hidden; cursor:pointer; border:0;
+  padding:17px 34px; border-radius:var(--radius-pill);
+  background:#F3F4F6; color:#0B0C0E;
+  font-family:inherit; font-size:15px; font-weight:600; letter-spacing:-.005em;
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease), padding .35s var(--ease);
+  box-shadow:0 14px 34px -18px rgba(255,255,255,.5);
+}
+.submit::after{             /* sheen that sweeps across on hover */
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(105deg, transparent 30%, rgba(255,255,255,.85) 48%, transparent 66%);
+  transform:translateX(-120%); transition:transform .7s var(--ease);
+}
+.submit:hover{transform:translateY(-2px); box-shadow:0 22px 44px -20px rgba(255,255,255,.6)}
+.submit:hover::after{transform:translateX(120%)}
+.submit:focus-visible{outline:2px solid #FFF; outline-offset:3px}
+.submit:disabled{cursor:progress; padding-left:52px}
+.submit-spin{
+  position:absolute; left:22px; top:50%; margin-top:-8px;
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid rgba(11,12,14,.25); border-top-color:#0B0C0E;
+  opacity:0; transition:opacity .3s;
+}
+.submit:disabled .submit-spin{opacity:1; animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.submit-note{font-size:13px; color:#7C828B; max-width:30ch; line-height:1.5}
+
+/* ---------- Success ---------- */
+.panel-done[hidden]{display:none}
+.panel-done{
+  display:grid; justify-items:start; gap:14px; padding:26px 0 12px;
+  animation:pane-in .6s var(--ease) both;
+}
+.tick{width:56px; height:56px}
+.tick-ring{stroke:rgba(255,255,255,.35); stroke-width:2;
+  stroke-dasharray:151; stroke-dashoffset:151;
+  animation:draw .7s var(--ease) forwards;
+}
+.tick-mark{stroke:#FFF; stroke-width:3; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:40; stroke-dashoffset:40;
+  animation:draw .45s var(--ease) .5s forwards;
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+.panel-done h3{
+  font-family:"Fraunces",serif; font-weight:340; font-size:clamp(26px,3vw,38px);
+  letter-spacing:-.015em; color:#FFF;
+}
+/* focused only so screen readers announce the result — not a keyboard stop */
+.panel-done h3:focus{outline:none}
+.panel-done p{font-size:16px; line-height:1.6; color:#A8AEB7; max-width:46ch}
+
+@media (max-width:1000px){
+  .convert-grid{grid-template-columns:1fr; gap:40px}
+}
+@media (max-width:640px){
+  .f-row{grid-template-columns:1fr}
+  .panel{padding:8px 20px 26px; border-radius:20px}
+  .panel-tabs{margin:0 -20px 24px; padding:0 20px}
+  .tab-ink{left:20px}
+  .cal-day{font-size:13px}
+  .submit{width:100%; text-align:center}
+}
+@media (prefers-reduced-motion: reduce){
+  .pane, .panel-done{animation:none}
+  .chip:hover span, .slot:hover, .cal-day:hover:not(:disabled), .submit:hover{transform:none}
+  .submit::after{display:none}
+  .tick-ring, .tick-mark{animation:none; stroke-dashoffset:0}
+  .f.invalid input, .f.invalid select, .f.invalid textarea{animation:none}
 }

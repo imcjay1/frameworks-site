@@ -322,14 +322,211 @@
 </section>
 </main>
 
-<!-- #region SHARED:cta -->
-<section class="contact" id="contact">
-  <div class="eyebrow reveal">Contact</div>
-  <h2 class="reveal">Bring your space <em>to the world.</em></h2>
-  <p class="reveal">We embrace every client's unique vision, delivering personalised, high-impact immersive marketing designed to save time and maximise results. Tell us about your space.</p>
-  <a class="btn-ivory reveal" href="/contact">Start a project</a>
+<section class="dark-band convert" id="enquire">
+  <div class="eyebrow" data-decode>START HERE</div>
+  <h2 data-split>Tell us what you need. <em>We reply within a day.</em></h2>
+
+  <div class="convert-grid">
+    <aside class="convert-aside">
+      <ul class="convert-points">
+        <li data-fade><b>One working day</b><span>Every enquiry gets a considered reply from the team who would do the work — not a sales queue.</span></li>
+        <li data-fade="120"><b>No obligation</b><span>The first conversation is a scoping call. You leave with a clear view of approach, timeline and cost.</span></li>
+        <li data-fade="240"><b>One team, one brief</b><span>Whoever you speak to is the team that designs, builds, publishes and measures it.</span></li>
+      </ul>
+      <div class="convert-meta" data-fade="340">
+        <span>Monaco · South of France · Dubai</span>
+        <span>Saudi Arabia · United Kingdom</span>
+      </div>
+    </aside>
+
+    <div class="panel" data-fade="140">
+      <div class="panel-tabs" role="tablist" aria-label="How to get in touch">
+        <button class="tab" type="button" role="tab" id="tab-enquiry" aria-controls="pane-enquiry" aria-selected="true">Send an enquiry</button>
+        <button class="tab" type="button" role="tab" id="tab-call" aria-controls="pane-call" aria-selected="false" tabindex="-1">Book a call</button>
+        <span class="tab-ink" aria-hidden="true"></span>
+      </div>
+
+      <!-- ENQUIRY -->
+      <form class="pane" id="pane-enquiry" role="tabpanel" aria-labelledby="tab-enquiry"
+            action="/api/contact" method="POST" novalidate>
+        <input type="hidden" name="mode" value="enquiry">
+        <input type="hidden" name="next" value="/digital-services?sent=enquiry#enquire">
+        <input type="hidden" name="source" value="Digital Services">
+
+        <fieldset class="f-chips">
+          <legend>What do you need? <span>Select any that apply</span></legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" name="services" value="AI"><span>AI</span></label>
+            <label class="chip"><input type="checkbox" name="services" value="3D Visualisation"><span>3D Visualisation</span></label>
+            <label class="chip"><input type="checkbox" name="services" value="Website Design"><span>Website Design</span></label>
+            <label class="chip"><input type="checkbox" name="services" value="SEO"><span>SEO</span></label>
+            <label class="chip"><input type="checkbox" name="services" value="Brand Identity"><span>Brand Identity</span></label>
+            <label class="chip"><input type="checkbox" name="services" value="Google / Social Ads"><span>Google / Social Ads</span></label>
+            <label class="chip"><input type="checkbox" name="services" value="Analytics & BI"><span>Analytics &amp; BI</span></label>
+            <label class="chip"><input type="checkbox" name="services" value="Content Creation"><span>Content Creation</span></label>
+          </div>
+        </fieldset>
+
+        <div class="f-row">
+          <p class="f">
+            <label for="e-name">Name <i>*</i></label>
+            <input id="e-name" name="name" type="text" autocomplete="name" required>
+            <span class="err" data-err-for="e-name"></span>
+          </p>
+          <p class="f">
+            <label for="e-email">Email <i>*</i></label>
+            <input id="e-email" name="email" type="email" autocomplete="email" required>
+            <span class="err" data-err-for="e-email"></span>
+          </p>
+        </div>
+
+        <div class="f-row">
+          <p class="f">
+            <label for="e-company">Company</label>
+            <input id="e-company" name="company" type="text" autocomplete="organization">
+          </p>
+          <p class="f">
+            <label for="e-phone">Phone</label>
+            <input id="e-phone" name="phone" type="tel" autocomplete="tel">
+          </p>
+        </div>
+
+        <div class="f-row">
+          <p class="f">
+            <label for="e-budget">Budget</label>
+            <select id="e-budget" name="budget">
+                <option>Not sure yet</option>
+                <option>Under €10k</option>
+                <option>€10k – €25k</option>
+                <option>€25k – €50k</option>
+                <option>€50k – €100k</option>
+                <option>€100k+</option>
+            </select>
+          </p>
+          <p class="f">
+            <label for="e-timeline">Timeline</label>
+            <select id="e-timeline" name="timeline">
+                <option>As soon as possible</option>
+                <option>Within a month</option>
+                <option>This quarter</option>
+                <option>Just exploring</option>
+            </select>
+          </p>
+        </div>
+
+        <p class="f wide">
+          <label for="e-message">Anything else we should know?</label>
+          <textarea id="e-message" name="message" rows="4" placeholder="The space, the audience, what a good outcome looks like."></textarea>
+        </p>
+
+        <p class="hp" aria-hidden="true">
+          <label for="e-site">Leave this empty</label>
+          <input id="e-site" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+        </p>
+
+        <label class="consent">
+          <input type="checkbox" name="consent" required>
+          <span>I agree to Frameworks Studios storing these details in order to respond. <i>*</i></span>
+        </label>
+        <span class="err" data-err-for="consent"></span>
+
+        <div class="submit-row">
+          <button class="submit" type="submit">
+            <span class="submit-label">Send enquiry</span>
+            <span class="submit-spin" aria-hidden="true"></span>
+          </button>
+          <span class="submit-note">No obligation. We reply within one working day.</span>
+        </div>
+        <p class="form-error" role="alert" hidden></p>
+      </form>
+
+      <!-- BOOK A CALL -->
+      <form class="pane" id="pane-call" role="tabpanel" aria-labelledby="tab-call" hidden
+            action="/api/contact" method="POST" novalidate>
+        <input type="hidden" name="mode" value="call">
+        <input type="hidden" name="next" value="/digital-services?sent=call#enquire">
+        <input type="hidden" name="source" value="Digital Services">
+
+        <div class="cal" data-calendar>
+          <div class="cal-head">
+            <button class="cal-nav" type="button" data-cal="prev" aria-label="Previous month">&lsaquo;</button>
+            <span class="cal-month" data-cal-month aria-live="polite"></span>
+            <button class="cal-nav" type="button" data-cal="next" aria-label="Next month">&rsaquo;</button>
+          </div>
+          <div class="cal-dow" aria-hidden="true"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
+          <div class="cal-grid" data-cal-grid role="group" aria-label="Choose a date"></div>
+          <noscript><p class="cal-fallback">Tell us a date and time that suits in the message field and we will confirm by email.</p></noscript>
+        </div>
+
+        <div class="slot-block">
+          <span class="slot-label">Time <i>(CET)</i></span>
+          <div class="slots" data-slots role="group" aria-label="Choose a time">
+            <button class="slot" type="button" data-slot="09:00">09:00</button>
+            <button class="slot" type="button" data-slot="10:00">10:00</button>
+            <button class="slot" type="button" data-slot="11:00">11:00</button>
+            <button class="slot" type="button" data-slot="12:00">12:00</button>
+            <button class="slot" type="button" data-slot="14:00">14:00</button>
+            <button class="slot" type="button" data-slot="15:00">15:00</button>
+            <button class="slot" type="button" data-slot="16:00">16:00</button>
+            <button class="slot" type="button" data-slot="17:00">17:00</button>
+          </div>
+        </div>
+
+        <input type="hidden" name="date" data-cal-value>
+        <input type="hidden" name="time" data-slot-value>
+        <span class="err" data-err-for="slot"></span>
+
+        <div class="f-row">
+          <p class="f">
+            <label for="c-name">Name <i>*</i></label>
+            <input id="c-name" name="name" type="text" autocomplete="name" required>
+            <span class="err" data-err-for="c-name"></span>
+          </p>
+          <p class="f">
+            <label for="c-email">Email <i>*</i></label>
+            <input id="c-email" name="email" type="email" autocomplete="email" required>
+            <span class="err" data-err-for="c-email"></span>
+          </p>
+        </div>
+
+        <p class="f wide">
+          <label for="c-message">What would you like to cover?</label>
+          <textarea id="c-message" name="message" rows="3" placeholder="Optional — a line on the project helps us prepare."></textarea>
+        </p>
+
+        <p class="hp" aria-hidden="true">
+          <label for="c-site">Leave this empty</label>
+          <input id="c-site" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+        </p>
+
+        <label class="consent">
+          <input type="checkbox" name="consent" required>
+          <span>I agree to Frameworks Studios storing these details in order to respond. <i>*</i></span>
+        </label>
+        <span class="err" data-err-for="consent"></span>
+
+        <div class="submit-row">
+          <button class="submit" type="submit">
+            <span class="submit-label">Request this time</span>
+            <span class="submit-spin" aria-hidden="true"></span>
+          </button>
+          <span class="submit-note">We confirm by email — nothing is booked until we do.</span>
+        </div>
+        <p class="form-error" role="alert" hidden></p>
+      </form>
+
+      <div class="panel-done" hidden>
+        <svg class="tick" viewBox="0 0 52 52" aria-hidden="true">
+          <circle class="tick-ring" cx="26" cy="26" r="24" fill="none"/>
+          <path class="tick-mark" fill="none" d="M15 27 l8 8 l15 -16"/>
+        </svg>
+        <h3 data-done-title>Thank you.</h3>
+        <p data-done-body></p>
+        <a class="more-link" href="/">Back to the studio</a>
+      </div>
+    </div>
+  </div>
 </section>
-<!-- #endregion SHARED:cta -->
 
 <!-- #region SHARED:foot -->
 <footer class="site-foot">

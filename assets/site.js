@@ -304,7 +304,9 @@
   /* ---------- contact form ----------
      The form posts natively and the endpoint redirects back with ?sent=1, so it
      works without JavaScript. Here we upgrade it to submit in place. */
-  const form = document.querySelector('form[action="/api/contact"]');
+  /* By id, not by action: Digital Services has its own forms posting to the same
+     endpoint, and they are driven by digital.js. */
+  const form = document.getElementById('contact-form');
   if(form){
     const status = document.createElement('p');
     status.className = 'form-status';
@@ -317,8 +319,10 @@
     else if(q.get('error')) say('error', q.get('error'));   /* textContent: never interpolated as HTML */
 
     form.addEventListener('submit', async e => {
+      e.preventDefault();                 /* before the validity check — returning
+                                             early without it lets the browser
+                                             submit the form for real */
       if(!form.reportValidity()) return;
-      e.preventDefault();
       const button = form.querySelector('button[type="submit"]');
       const label = button.textContent;
       button.disabled = true; button.textContent = 'Sending…';

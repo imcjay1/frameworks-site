@@ -282,7 +282,247 @@
     });
   }
 
-  /* ---------- 6 · scroll progress ---------- */
+  /* ---------- 6 · the conversion panel ----------
+     Two paths in one panel: an enquiry form and a call request. Both post to
+     /api/contact natively, so they still work with JavaScript off; everything
+     below is enhancement — tab switching, the date picker, inline validation
+     and the in-place success state. */
+  const panel = document.querySelector('.panel');
+  if(panel){
+    const tabs  = [...panel.querySelectorAll('.tab')];
+    const panes = tabs.map(t => document.getElementById(t.getAttribute('aria-controls')));
+    const ink   = panel.querySelector('.tab-ink');
+    const done  = panel.querySelector('.panel-done');
+
+    /* --- tabs --- */
+    const moveInk = tab => {
+      if(!ink) return;
+      const t = tab.getBoundingClientRect(), p = panel.querySelector('.panel-tabs').getBoundingClientRect();
+      ink.style.width = t.width + 'px';
+      ink.style.transform = 'translateX(' + (t.left - p.left - 34) + 'px)';
+    };
+    const select = index => {
+      tabs.forEach((t, i) => {
+        const on = i === index;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        panes[i].hidden = !on;
+      });
+      moveInk(tabs[index]);
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', e => {
+        const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if(!dir) return;
+        e.preventDefault();
+        const next = (i + dir + tabs.length) % tabs.length;
+        select(next); tabs[next].focus();
+      });
+    });
+    requestAnimationFrame(() => moveInk(tabs[0]));
+    addEventListener('resize', () => {
+      const active = tabs.find(t => t.getAttribute('aria-selected') === 'true');
+      if(active) moveInk(active);
+    }, {passive:true});
+
+    /* Without JavaScript the form posts for real and comes back here with a
+       flag; show the same success panel so both paths end the same way. */
+    const flag = new URLSearchParams(location.search);
+    if(flag.get('sent')){
+      const isCall = flag.get('sent') === 'call';
+      done.querySelector('[data-done-title]').textContent = isCall ? 'Time requested.' : 'Enquiry received.';
+      done.querySelector('[data-done-body]').textContent = isCall
+        ? 'We will confirm your call by email within one working day. Nothing is locked in until we do.'
+        : 'Thank you — the team will reply within one working day, from the people who would do the work.';
+      panel.querySelector('.panel-tabs').hidden = true;
+      panes.forEach(p => { if(p) p.hidden = true; });
+      done.hidden = false;
+    } else if(flag.get('error')){
+      const banner = panes[0].querySelector('.form-error');
+      banner.textContent = flag.get('error');
+      banner.hidden = false;
+    }
+
+    /* --- date picker --- */
+    const MONTHS = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    const cal = panel.querySelector('[data-calendar]');
+    if(cal){
+      const grid  = cal.querySelector('[data-cal-grid]');
+      const label = cal.querySelector('[data-cal-month]');
+      const value = panel.querySelector('[data-cal-value]');
+      const prev  = cal.querySelector('[data-cal="prev"]');
+      const next  = cal.querySelector('[data-cal="next"]');
+      const today = new Date(); today.setHours(0,0,0,0);
+      const limit = new Date(today); limit.setDate(limit.getDate() + 90);
+      let view = new Date(today.getFullYear(), today.getMonth(), 1);
+      let picked = null;
+
+      const iso = d => d.getFullYear() + '-' +
+        String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      const pretty = d => d.toLocaleDateString('en-GB',
+        { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+      function render(){
+        grid.textContent = '';
+        label.textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
+        const first = new Date(view.getFullYear(), view.getMonth(), 1);
+        const lead = (first.getDay() + 6) % 7;                 /* weeks start Monday */
+        const days = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+        for(let i = 0; i < lead; i++){
+          const blank = document.createElement('span');
+          blank.className = 'cal-day is-empty';
+          grid.appendChild(blank);
+        }
+        for(let d = 1; d <= days; d++){
+          const date = new Date(view.getFullYear(), view.getMonth(), d);
+          const weekend = date.getDay() === 0 || date.getDay() === 6;
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'cal-day';
+          b.textContent = d;
+          b.disabled = date <= today || date > limit || weekend;
+          b.setAttribute('aria-pressed', String(!!picked && iso(picked) === iso(date)));
+          b.setAttribute('aria-label', pretty(date));
+          b.addEventListener('click', () => {
+            picked = date;
+            value.value = iso(date);
+            clearError(cal.closest('form').querySelector('[data-err-for="slot"]'));
+            render();
+          });
+          grid.appendChild(b);
+        }
+        prev.disabled = view <= new Date(today.getFullYear(), today.getMonth(), 1);
+        next.disabled = view >= new Date(limit.getFullYear(), limit.getMonth(), 1);
+      }
+      prev.addEventListener('click', () => { view.setMonth(view.getMonth() - 1); render(); });
+      next.addEventListener('click', () => { view.setMonth(view.getMonth() + 1); render(); });
+      render();
+    }
+
+    /* --- time slots --- */
+    const slotWrap = panel.querySelector('[data-slots]');
+    if(slotWrap){
+      const slotValue = panel.querySelector('[data-slot-value]');
+      slotWrap.querySelectorAll('.slot').forEach(btn => {
+        btn.setAttribute('aria-pressed', 'false');
+        btn.addEventListener('click', () => {
+          slotWrap.querySelectorAll('.slot').forEach(o => o.setAttribute('aria-pressed', 'false'));
+          btn.setAttribute('aria-pressed', 'true');
+          slotValue.value = btn.dataset.slot;
+        });
+      });
+    }
+
+    /* --- validation --- */
+    const showError = (node, msg) => {
+      if(!node) return;
+      node.textContent = msg;
+      node.classList.add('show');
+    };
+    const clearError = node => { if(node){ node.textContent = ''; node.classList.remove('show'); } };
+
+    function validate(form){
+      let firstBad = null;
+      form.querySelectorAll('.f.invalid, .invalid').forEach(el => el.classList.remove('invalid'));
+      form.querySelectorAll('.err').forEach(clearError);
+
+      form.querySelectorAll('input[required], textarea[required]').forEach(input => {
+        const field = input.closest('.f') || input.closest('.consent');
+        const err = form.querySelector('[data-err-for="' + (input.id || 'consent') + '"]');
+        let msg = '';
+        if(input.type === 'checkbox' && !input.checked) msg = 'Please tick this to continue.';
+        else if(input.type !== 'checkbox' && !input.value.trim()) msg = 'This one is needed.';
+        else if(input.type === 'email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(input.value.trim()))
+          msg = 'That email address does not look right.';
+        if(!msg) return;
+        showError(err, msg);
+        if(field) field.classList.add('invalid');
+        if(!firstBad) firstBad = input;
+      });
+
+      if(form.id === 'pane-call'){
+        const date = form.querySelector('[data-cal-value]').value;
+        const time = form.querySelector('[data-slot-value]').value;
+        if(!date || !time){
+          showError(form.querySelector('[data-err-for="slot"]'),
+                    !date ? 'Choose a date above.' : 'Choose a time above.');
+          (date ? form.querySelector('.slots') : form.querySelector('.cal'))?.classList.add('invalid');
+          if(!firstBad) firstBad = form.querySelector(date ? '.slot' : '.cal-day:not(:disabled)');
+        }
+      }
+      return firstBad;
+    }
+
+    /* --- submit --- */
+    panes.forEach(form => {
+      if(!form || form.tagName !== 'FORM') return;
+      const banner = form.querySelector('.form-error');
+      const button = form.querySelector('.submit');
+      const label  = button.querySelector('.submit-label');
+
+      /* clear a field's error as soon as the visitor fixes it */
+      form.addEventListener('input', e => {
+        const field = e.target.closest('.f') || e.target.closest('.consent');
+        if(field) field.classList.remove('invalid');
+        clearError(form.querySelector('[data-err-for="' + (e.target.id || 'consent') + '"]'));
+      });
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        banner.hidden = true;
+
+        const bad = validate(form);
+        if(bad){
+          banner.textContent = 'Just a couple of details missing — they are marked below.';
+          banner.hidden = false;
+          bad.scrollIntoView({block:'center', behavior: reduced ? 'auto' : 'smooth'});
+          bad.focus({preventScroll:true});
+          return;
+        }
+
+        const original = label.textContent;
+        button.disabled = true; label.textContent = 'Sending';
+
+        try{
+          const data = new FormData(form);
+          const payload = {};
+          for(const [k, v] of data.entries()){
+            if(k === 'services') (payload.services ||= []).push(v);
+            else payload[k] = v;
+          }
+          const r = await fetch(form.action, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json', 'Accept':'application/json'},
+            body: JSON.stringify(payload),
+          });
+          const out = await r.json().catch(() => ({}));
+          if(!r.ok || !out.ok) throw new Error(out.message || '');
+
+          const isCall = form.id === 'pane-call';
+          done.querySelector('[data-done-title]').textContent =
+            isCall ? 'Time requested.' : 'Enquiry received.';
+          done.querySelector('[data-done-body]').textContent = isCall
+            ? 'We will confirm your call by email within one working day. Nothing is locked in until we do.'
+            : 'Thank you — the team will reply within one working day, from the people who would do the work.';
+          panel.querySelector('.panel-tabs').hidden = true;
+          panes.forEach(p => { if(p) p.hidden = true; });
+          done.hidden = false;
+          done.querySelector('h3').setAttribute('tabindex', '-1');
+          done.querySelector('h3').focus({preventScroll:true});
+        } catch(err){
+          banner.textContent = err.message ||
+            'That did not send. Please try again, or email cameron@frameworksstudios.com directly.';
+          banner.hidden = false;
+        } finally {
+          button.disabled = false; label.textContent = original;
+        }
+      });
+    });
+  }
+
+  /* ---------- 7 · scroll progress ---------- */
   const progress = document.querySelector('.progress');
   if(progress && !reduced){
     const update = () => {

@@ -1,30 +1,47 @@
-/* POST /api/contact — delivers the enquiry form.
+/* POST /api/contact — delivers enquiries and call requests.
  *
  * Vercel picks this up automatically on a static project; there is no build step
- * and no dependencies. The form posts natively, so it works with JavaScript
- * disabled; site.js upgrades it to a fetch when JS is available.
+ * and no dependencies. Both forms post natively, so they work with JavaScript
+ * disabled; site.js and digital.js upgrade them to submit in place.
  *
  * Environment variables (Vercel dashboard → Settings → Environment Variables):
- *   RESEND_API_KEY   an API key from resend.com
- *   CONTACT_TO       where enquiries are delivered, e.g. hello@example.com
- *   CONTACT_FROM     optional; a verified sender on your domain.
- *                    Defaults to onboarding@resend.dev, which Resend only
- *                    delivers to the address that owns the account.
+ *   RESEND_API_KEY   an API key from resend.com — required
+ *   CONTACT_TO       override the destination; defaults to the address below
+ *   CONTACT_FROM     optional; a verified sender on your own domain. Defaults to
+ *                    onboarding@resend.dev, which Resend will only deliver to
+ *                    the address that owns the account.
  */
 
-const FIELDS = ['name', 'company', 'email', 'phone', 'sector', 'location', 'message'];
+const DEFAULT_TO = 'cameron@frameworksstudios.com';
+
+const FIELDS = ['name', 'company', 'email', 'phone', 'sector', 'location',
+                'services', 'budget', 'timeline', 'date', 'time', 'message', 'source'];
 const LABELS = {
   name: 'Name', company: 'Company', email: 'Email', phone: 'Phone',
-  sector: 'Sector', location: 'Location', message: 'Project',
+  sector: 'Sector', location: 'Location', services: 'Services of interest',
+  budget: 'Budget', timeline: 'Timeline', date: 'Requested date',
+  time: 'Requested time (CET)', message: 'Notes', source: 'Enquiry from',
 };
 const LIMIT = 4000;
 
 const esc = s => String(s).replace(/[<>&"]/g, c => (
   { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
 
+/* Checkbox groups arrive as repeated keys; keep every value rather than the
+   last one, which is what a plain Object.fromEntries would leave you with. */
+function fromParams(raw) {
+  const out = {};
+  for (const [k, v] of new URLSearchParams(raw)) {
+    if (k in out) out[k] = [].concat(out[k], v);
+    else out[k] = v;
+  }
+  return out;
+}
+
 async function readBody(req) {
-  if (req.body && typeof req.body === 'object') return req.body;      // Vercel pre-parses
+  if (req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body)) return req.body;
   let raw = typeof req.body === 'string' ? req.body : '';
+  if (!raw && Buffer.isBuffer(req.body)) raw = req.body.toString('utf8');
   if (!raw) {
     const chunks = [];
     for await (const c of req) chunks.push(c);
@@ -32,8 +49,12 @@ async function readBody(req) {
   }
   const type = req.headers['content-type'] || '';
   if (type.includes('application/json')) { try { return JSON.parse(raw); } catch { return {}; } }
-  return Object.fromEntries(new URLSearchParams(raw));
+  return fromParams(raw);
 }
+
+const clean = v => (Array.isArray(v) ? v : [v])
+  .filter(x => x != null && String(x).trim() !== '')
+  .map(x => String(x).trim().slice(0, LIMIT));
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -43,34 +64,66 @@ export default async function handler(req, res) {
 
   const body = await readBody(req);
   const wantsJson = (req.headers.accept || '').includes('application/json');
+  const isCall = String(body.mode || '') === 'call';
+
+  /* Where a no-JavaScript submit lands. Only same-origin paths are honoured —
+     "//host" would leave the site, so it is rejected along with absolute URLs. */
+  const back = typeof body.next === 'string'
+      && body.next.startsWith('/') && !body.next.startsWith('//')
+    ? body.next
+    : '/contact?sent=1';
+  const fail = back.split('?')[0] + '?error=';
+
   const done = (status, ok, message) => wantsJson
     ? res.status(status).json({ ok, message })
-    : res.redirect(303, ok ? '/contact?sent=1' : `/contact?error=${encodeURIComponent(message)}#enquiry`);
+    : res.redirect(303, ok ? back : fail + encodeURIComponent(message) + '#enquire');
 
-  /* Honeypot: a real person never fills a field they cannot see. Answer as if
-     it succeeded so the bot has nothing to learn. */
-  if (body._gotcha) return done(200, true, 'Thank you — your enquiry is on its way.');
-
-  const data = {};
-  for (const f of FIELDS) data[f] = String(body[f] ?? '').trim().slice(0, LIMIT);
-
-  if (!data.name || !data.email || !data.message)
-    return done(400, false, 'Please complete your name, email and a note about the project.');
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email))
-    return done(400, false, 'That email address does not look right.');
-
-  const key = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_TO;
-  if (!key || !to) {
-    console.error('contact: RESEND_API_KEY and/or CONTACT_TO are not set');
-    return done(500, false, 'The enquiry form is not configured yet. Please email us directly.');
+  /* Honeypot: a real person never fills a field they cannot see. Answer as if it
+     succeeded so the bot has nothing to learn from the difference. */
+  if (clean(body._gotcha).length) {
+    return done(200, true, 'Thank you — your enquiry is on its way.');
   }
 
-  const lines = FIELDS.filter(f => data[f]).map(f => `${LABELS[f]}: ${data[f]}`);
-  const text = lines.join('\n');
-  const html = FIELDS.filter(f => data[f])
-    .map(f => `<p><strong>${LABELS[f]}</strong><br>${esc(data[f]).replace(/\n/g, '<br>')}</p>`)
-    .join('');
+  const data = {};
+  for (const f of FIELDS) {
+    const v = clean(body[f]);
+    if (v.length) data[f] = v.join(f === 'services' ? ', ' : ' ');
+  }
+
+  if (!data.name || !data.email) {
+    return done(400, false, 'Please give us your name and an email address.');
+  }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) {
+    return done(400, false, 'That email address does not look right.');
+  }
+  if (isCall && (!data.date || !data.time)) {
+    return done(400, false, 'Please choose a date and a time for the call.');
+  }
+
+  const key = process.env.RESEND_API_KEY;
+  const to = process.env.CONTACT_TO || DEFAULT_TO;
+  if (!key) {
+    console.error('contact: RESEND_API_KEY is not set');
+    return done(500, false,
+      `The form is not connected yet — please email ${to} directly.`);
+  }
+
+  const rows = FIELDS.filter(f => data[f]);
+  const text = rows.map(f => `${LABELS[f]}: ${data[f]}`).join('\n');
+  const html = `<div style="font-family:-apple-system,Segoe UI,sans-serif;line-height:1.55">
+    <h2 style="font-weight:600;margin:0 0 4px">${isCall ? 'Call request' : 'New enquiry'}</h2>
+    <p style="color:#666;margin:0 0 18px">${esc(data.source || 'Website')}</p>
+    <table cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+      ${rows.map(f => `<tr>
+        <td style="padding:7px 22px 7px 0;color:#666;vertical-align:top;white-space:nowrap">${LABELS[f]}</td>
+        <td style="padding:7px 0">${esc(data[f]).replace(/\n/g, '<br>')}</td>
+      </tr>`).join('')}
+    </table>
+  </div>`;
+
+  const subject = isCall
+    ? `Call request — ${data.name}${data.date ? ` · ${data.date} ${data.time}` : ''}`
+    : `Enquiry — ${data.name}${data.company ? ` (${data.company})` : ''}`;
 
   try {
     const r = await fetch('https://api.resend.com/emails', {
@@ -80,8 +133,7 @@ export default async function handler(req, res) {
         from: process.env.CONTACT_FROM || 'Frameworks Studios <onboarding@resend.dev>',
         to: [to],
         reply_to: data.email,
-        subject: `Enquiry — ${data.name}${data.company ? ` (${data.company})` : ''}`,
-        text, html,
+        subject, text, html,
       }),
     });
     if (!r.ok) {
@@ -93,5 +145,7 @@ export default async function handler(req, res) {
     return done(502, false, 'We could not send that just now. Please try again shortly.');
   }
 
-  return done(200, true, 'Thank you — your enquiry is on its way.');
+  return done(200, true, isCall
+    ? 'Thank you — we will confirm your call by email.'
+    : 'Thank you — your enquiry is on its way.');
 }
