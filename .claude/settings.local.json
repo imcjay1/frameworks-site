@@ -6,7 +6,18 @@
       "Bash(python3 -)",
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git -c user.name=\"Frameworks\" -c user.email=\"itscam7745@gmail.com\" commit -q -m \"Initial commit — single-page scroll site as delivered\")"
+      "Bash(git -c user.name=\"Frameworks\" -c user.email=\"itscam7745@gmail.com\" commit -q -m \"Initial commit — single-page scroll site as delivered\")",
+      "Bash(python3 -c \"import scipy; print\\('scipy', scipy.__version__\\)\")",
+      "Bash(python3 -c \"import numpy; print\\('numpy', numpy.__version__\\)\")",
+      "Bash(time python3 tools/build-logo.py)",
+      "Bash(node --check assets/site.js)",
+      "Bash(node --check assets/home.js)",
+      "Bash(python3 -c ' *)",
+      "Read(//Applications/**)",
+      "Read(//Users/cam77/.cache/**)",
+      "Bash(npx --no-install playwright --version)",
+      "Bash(node check.mjs http://127.0.0.1:8777 / --scroll=0.5 --shot=home-mid --shotdir=.)",
+      "Bash(git -c user.name=Frameworks -c user.email=itscam7745@gmail.com commit -q -m 'Extract inline CSS/JS into shared assets; derive transparent logo assets *)"
     ]
   }
 }
