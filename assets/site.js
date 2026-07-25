@@ -9,7 +9,7 @@
   const sm = (e0,e1,x)=>{ const t=Math.min(1,Math.max(0,(x-e0)/(e1-e0))); return t*t*(3-2*t); };
 
   const hooks = [];
-  window.FS = { onFrame(fn){ hooks.push(fn); }, reduced, finePointer, sm };
+  window.FS = { onFrame(fn){ hooks.push(fn); }, reduced, finePointer, sm, transitioning:false };
 
   const menuOpen = () => document.body.classList.contains('menu-open');
 
@@ -201,12 +201,17 @@
   });
 
   /* ---------- page transition ----------
-     Bars drop in to cover the page we are leaving, then keep dropping to
-     uncover the one we arrive at. The two halves are separate page loads, so a
-     sessionStorage flag tells the incoming page it owes the second half — a
-     cold load or a bookmarked URL never starts underneath a black cover. */
+     Bars drop in to cover the page we are leaving, then keep dropping to uncover
+     the one we arrive at. The two halves are separate page loads, so a
+     sessionStorage flag tells the incoming page it owes the second half — a cold
+     load or a bookmarked URL never starts underneath a black cover.
+
+     It runs only on the way into and out of Digital Services; the ivory pages
+     navigate between themselves plainly. */
   const BARS = 7, STAGGER = 42, COVER = 520, REVEAL = 620;
   const FLAG = 'fs-transition';
+  const DS = '/digital-services';
+  const isDS = path => path === DS || path === DS + '.html';
 
   if(!reduced){
     const curtain = document.createElement('div');
@@ -214,28 +219,51 @@
     curtain.setAttribute('aria-hidden', 'true');
     for(let i = 0; i < BARS; i++){
       const bar = document.createElement('i');
-      bar.style.transitionDelay = (i * STAGGER) + 'ms';
+      bar.style.setProperty('--i', i);      /* the stagger lives in CSS, so no
+                                               inline shorthand can wipe it */
       curtain.appendChild(bar);
     }
     document.body.appendChild(curtain);
     const lastBar = (BARS - 1) * STAGGER;
+    let timer = 0;
 
-    const clear = () => {
-      curtain.classList.remove('on', 'cover', 'reveal');
-      curtain.querySelectorAll('i').forEach(b => b.style.transition = '');
+    const STATES = ['is-covering', 'is-revealing', 'is-instant'];
+    const reset = () => { clearTimeout(timer); curtain.classList.remove(...STATES); };
+
+    /* Put the bars in a state without animating, so a new move never inherits
+       the position — or the leftover classes — of the one before it. is-instant
+       zeroes the delay as well as the duration: a zero duration with a delay
+       still schedules the change, and that shows as a stutter. */
+    const snap = state => {
+      reset();
+      curtain.classList.add('on', 'is-instant');
+      if(state) curtain.classList.add(state);
+      curtain.offsetHeight;                     /* flush, so the snap is committed */
+      curtain.classList.remove('is-instant');
+      curtain.offsetHeight;
+    };
+
+    const play = (from, to, ms, done) => {
+      clearTimeout(timer);
+      if(from){
+        snap(from);                 /* arriving: jump to covering, then fall away */
+        curtain.classList.remove(from);
+      } else {
+        /* leaving: the bars are already parked above the fold, so no snap and no
+           forced reflow — on a page this heavy a synchronous layout flush costs
+           more than the animation it is meant to prepare */
+        curtain.classList.remove(...STATES);
+        curtain.classList.add('on');
+      }
+      curtain.classList.add(to);
+      timer = setTimeout(done, ms);
     };
 
     if(sessionStorage.getItem(FLAG)){
       sessionStorage.removeItem(FLAG);
-      /* jump the bars to "covering" with no transition, then let them fall away */
-      curtain.querySelectorAll('i').forEach(b => b.style.transition = 'none');
-      curtain.classList.add('on', 'cover');
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        curtain.querySelectorAll('i').forEach(b => b.style.transition = '');
-        curtain.classList.remove('cover');
-        curtain.classList.add('reveal');
-        setTimeout(clear, REVEAL + lastBar + 60);
-      }));
+      /* second half: the bars are already covering; let them keep falling */
+      play('is-covering', 'is-revealing', REVEAL + lastBar + 80,
+           () => { reset(); curtain.classList.remove('on'); });
     }
 
     const internal = a => {
@@ -245,21 +273,32 @@
       const url = new URL(href, location.href);
       if(url.origin !== location.origin) return null;
       if(url.pathname === location.pathname && url.search === location.search) return null;
-      return url.href;
+      return url;
     };
 
     document.addEventListener('click', e => {
       if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const url = internal(e.target.closest('a[href]'));
       if(!url) return;
+      if(!isDS(location.pathname) && !isDS(url.pathname)) return;   /* entering or leaving only */
       e.preventDefault();
       sessionStorage.setItem(FLAG, '1');
-      curtain.classList.add('on', 'cover');
-      setTimeout(() => { location.href = url; }, COVER + lastBar - 40);
+      /* Idle the expensive per-frame work while the bars sweep — on Digital
+         Services the canvas repaint otherwise eats the frame budget and the
+         stagger arrives late. A flag, not a class: toggling a class on <body>
+         invalidates style for every blurred pane on the page. */
+      FS.transitioning = true;
+      /* first half: from hidden, drop in to cover, then hand over to the next page */
+      play(null, 'is-covering', COVER + lastBar - 40, () => { location.href = url.href; });
     });
 
     /* Returning through the bfcache restores the covered DOM — undo it. */
-    addEventListener('pageshow', e => { if(e.persisted){ sessionStorage.removeItem(FLAG); clear(); } });
+    addEventListener('pageshow', e => {
+      if(!e.persisted) return;
+      sessionStorage.removeItem(FLAG);
+      reset();
+      curtain.classList.remove('on');
+    });
   }
 
   /* ---------- contact form ----------

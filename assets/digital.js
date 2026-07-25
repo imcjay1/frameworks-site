@@ -110,7 +110,17 @@
       paint(0);
       addEventListener('resize', () => paint(0), {passive:true});
     } else {
-      FS.onFrame(() => { if(!document.hidden) paint(performance.now()); });
+      /* Capped at ~40fps. Every repaint of this canvas invalidates the backdrop
+         of every glass pane on screen, so the saving is much larger than the
+         canvas work itself, and the drift is far too slow to show the seam. */
+      let last = 0;
+      FS.onFrame(() => {
+        const now = performance.now();
+        if(document.hidden || now - last < 25) return;
+        if(FS.transitioning) return;              /* leave the frame to the curtain */
+        last = now;
+        paint(now);
+      });
     }
   }
 
@@ -214,7 +224,34 @@
     svc.addEventListener('fs:close', () => set(false));
   });
 
-  /* ---------- 5 · scroll progress ---------- */
+  /* ---------- 5 · glass ----------
+     The specular highlight on each pane tracks the pointer. Coordinates are
+     written as percentages into custom properties, so the gradient itself is
+     declared in CSS and nothing here touches layout. */
+  const panes = document.querySelectorAll('.pillar, .svc, .method-step');
+  if(!reduced && matchMedia('(pointer:fine)').matches){
+    panes.forEach(pane => {
+      pane.addEventListener('pointermove', e => {
+        const r = pane.getBoundingClientRect();
+        pane.style.setProperty('--mx', (((e.clientX - r.left) / r.width) * 100).toFixed(1) + '%');
+        pane.style.setProperty('--my', (((e.clientY - r.top) / r.height) * 100).toFixed(1) + '%');
+      }, {passive:true});
+    });
+  }
+
+  /* the aurora lags the scroll slightly, so the glass has moving light in it */
+  const aurora = document.querySelector('.aurora');
+  if(aurora && !reduced){
+    let current = 0, target = 0;
+    addEventListener('scroll', () => { target = scrollY * -0.06; }, {passive:true});
+    FS.onFrame(() => {
+      if(Math.abs(target - current) < 0.05) return;
+      current += (target - current) * 0.06;
+      aurora.style.transform = 'translate3d(0,' + current.toFixed(2) + 'px,0)';
+    });
+  }
+
+  /* ---------- 6 · scroll progress ---------- */
   const progress = document.querySelector('.progress');
   if(progress && !reduced){
     const update = () => {

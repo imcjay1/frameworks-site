@@ -100,16 +100,27 @@ one `<ul class="marquee-track">`:
 
 ## The page transition
 
-Clicking any internal link drops seven black bars down the screen, one after the
-other, then navigates. The incoming page finishes the move — the bars keep
-falling and clear off the bottom. The two halves are separate page loads, so
-`site.js` leaves a `sessionStorage` flag on the way out and the arriving page
-plays the second half only if it finds one; a bookmarked URL or a cold load never
-starts underneath a black cover.
+Navigating **into or out of `/digital-services`** drops seven black bars down the
+screen, one after the other, then navigates. The incoming page finishes the move
+— the bars keep falling and clear off the bottom. Links between the ivory pages
+navigate plainly. The two halves are separate page loads, so `site.js` leaves a
+`sessionStorage` flag on the way out and the arriving page plays the second half
+only if it finds one; a bookmarked URL or a cold load never starts underneath a
+black cover.
 
 Timings live at the top of that block in `site.js` (`BARS`, `STAGGER`, `COVER`,
 `REVEAL`). Under `prefers-reduced-motion` no curtain is built at all and links
 navigate normally.
+
+Two things there are load-bearing and easy to undo by accident:
+
+- The bars' stagger is a `transition-delay` set in CSS from a `--i` custom
+  property, and the duration is set with **longhands, never the `transition`
+  shorthand**. The shorthand resets `transition-delay` to zero, which lands every
+  bar at once — the whole effect is the offset.
+- The state classes are `is-covering` / `is-revealing` / `is-instant`. They must
+  not be called `reveal`: that is the site's scroll-reveal class, whose
+  `opacity:0` would hide the bars entirely.
 
 ## Digital Services — the dark page
 
@@ -129,6 +140,14 @@ files.
 - **The services accordion** opens one panel at a time. Collapsed panels are made
   `inert` so their content stays out of the tab order, and a `<noscript>` rule in
   the page opens every panel when JS is unavailable.
+- **Glass.** One recipe in `digital.css` covers every card — the pillars, the
+  eight service panes, the method steps and the hero pills: a blurred pane, a
+  bright top rim, a chromatic refracted edge, and a specular highlight that
+  tracks the pointer via `--mx` / `--my`. The `.aurora` layer of slow drifting
+  colour blobs is what makes any of it visible: `backdrop-filter` over flat black
+  has nothing to refract. Movement is split across independent properties on
+  purpose — the reveal owns `transform`, the hover lift and the pillars' float
+  own `translate` — because an animation on the same property wins over both.
 - Tokens are deliberately **not** inverted on this page — the nav's `.on-dark`
   rules and the shared contact band already treat ink as dark and ivory as light,
   and swapping the meanings underneath them turns the current-page pill inside
