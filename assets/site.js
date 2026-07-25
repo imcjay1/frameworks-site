@@ -140,8 +140,10 @@
     /* The nav floats over the page, so it has to invert itself when it crosses
        one of the ink bands or its ink-coloured links land on ink. */
     const darkBands = [...document.querySelectorAll('.contact, .site-foot')];
+    const alwaysDark = document.body.dataset.theme === 'dark';
     const navState = () => {
       nav.classList.toggle('scrolled', scrollY > 40);
+      if(alwaysDark){ nav.classList.add('on-dark'); return; }
       if(!darkBands.length) return;
       const r = nav.getBoundingClientRect();
       const mid = r.top + r.height / 2;
@@ -197,6 +199,68 @@
       m.classList.add('in-view');
     }
   });
+
+  /* ---------- page transition ----------
+     Bars drop in to cover the page we are leaving, then keep dropping to
+     uncover the one we arrive at. The two halves are separate page loads, so a
+     sessionStorage flag tells the incoming page it owes the second half — a
+     cold load or a bookmarked URL never starts underneath a black cover. */
+  const BARS = 7, STAGGER = 42, COVER = 520, REVEAL = 620;
+  const FLAG = 'fs-transition';
+
+  if(!reduced){
+    const curtain = document.createElement('div');
+    curtain.className = 'curtain';
+    curtain.setAttribute('aria-hidden', 'true');
+    for(let i = 0; i < BARS; i++){
+      const bar = document.createElement('i');
+      bar.style.transitionDelay = (i * STAGGER) + 'ms';
+      curtain.appendChild(bar);
+    }
+    document.body.appendChild(curtain);
+    const lastBar = (BARS - 1) * STAGGER;
+
+    const clear = () => {
+      curtain.classList.remove('on', 'cover', 'reveal');
+      curtain.querySelectorAll('i').forEach(b => b.style.transition = '');
+    };
+
+    if(sessionStorage.getItem(FLAG)){
+      sessionStorage.removeItem(FLAG);
+      /* jump the bars to "covering" with no transition, then let them fall away */
+      curtain.querySelectorAll('i').forEach(b => b.style.transition = 'none');
+      curtain.classList.add('on', 'cover');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        curtain.querySelectorAll('i').forEach(b => b.style.transition = '');
+        curtain.classList.remove('cover');
+        curtain.classList.add('reveal');
+        setTimeout(clear, REVEAL + lastBar + 60);
+      }));
+    }
+
+    const internal = a => {
+      if(!a || a.target === '_blank' || a.hasAttribute('download')) return null;
+      const href = a.getAttribute('href');
+      if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return null;
+      const url = new URL(href, location.href);
+      if(url.origin !== location.origin) return null;
+      if(url.pathname === location.pathname && url.search === location.search) return null;
+      return url.href;
+    };
+
+    document.addEventListener('click', e => {
+      if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const url = internal(e.target.closest('a[href]'));
+      if(!url) return;
+      e.preventDefault();
+      sessionStorage.setItem(FLAG, '1');
+      curtain.classList.add('on', 'cover');
+      setTimeout(() => { location.href = url; }, COVER + lastBar - 40);
+    });
+
+    /* Returning through the bfcache restores the covered DOM — undo it. */
+    addEventListener('pageshow', e => { if(e.persisted){ sessionStorage.removeItem(FLAG); clear(); } });
+  }
 
   /* ---------- contact form ----------
      The form posts natively and the endpoint redirects back with ?sent=1, so it

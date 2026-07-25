@@ -9,6 +9,9 @@
 <meta property="og:description" content="Immersive 360° tours, interactive digital brochures, Google Street View and Business Profile integration, brand identity, AI-assisted post-production and bespoke UI/UX." />
 <meta property="og:url" content="https://frameworks-studios.com/digital-services" />
 <meta name="twitter:card" content="summary_large_image" />
+<!-- this page is dark; the first theme-color wins, so it precedes the shared one -->
+<meta name="theme-color" content="#08090B" />
+<link rel="stylesheet" href="/assets/digital.css">
 <!-- #region SHARED:head — everything below is identical on every page. The
      per-page title, description, canonical and og:url sit above this block. -->
 <meta charset="UTF-8" />
@@ -22,7 +25,7 @@
 <link rel="stylesheet" href="/assets/site.css">
 <!-- #endregion SHARED:head -->
 </head>
-<body data-page="digital-services">
+<body data-page="digital-services" data-theme="dark">
 
 <!-- #region SHARED:nav — canonical copy lives in index.html. After editing it run
      tools/sync-partials.py; the only per-page difference is aria-current="page". -->
@@ -53,23 +56,232 @@
 </div>
 <!-- #endregion SHARED:nav -->
 
+<div class="field" aria-hidden="true"></div>
+<div class="progress" aria-hidden="true"></div>
+
 <main>
-<header class="page-head">
-  <div class="eyebrow reveal">Digital services</div>
-  <h1 class="reveal">Everything around the tour, <em>built in the same studio.</em></h1>
-  <p class="page-lede reveal">The tour is the centrepiece. These are the services that carry it into a campaign — one team, one brief, one standard of finish.</p>
+<!-- COPY: the service descriptions below expand the client's capability list and
+     are awaiting sign-off on wording. -->
+<header class="dh">
+  <div class="eyebrow" data-decode>DIGITAL TEAM — MONACO &amp; WORLDWIDE</div>
+  <h1 data-split data-step="62">The studio behind <em>the studio.</em></h1>
+  <p class="dh-lede" data-fade="520">A dedicated digital team working alongside our capture crews — building the identity, the interfaces, the campaigns and the intelligence that turn an immersive experience into a commercial result.</p>
+  <div class="dh-meta" data-fade="760">
+    <span>Eight disciplines</span>
+    <span>One brief</span>
+    <span>AI woven throughout</span>
+  </div>
+  <div class="scroll-cue" aria-hidden="true"><i></i>Scroll</div>
 </header>
 
-<section class="band">
-  <!-- COPY: this list is scaffolded from vocabulary already used across the site.
-       Awaiting the client's own service descriptions, pricing tiers and case studies. -->
-  <div class="sector-list reveal">
-    <div class="sector-row"><span class="sector-deg">01</span><span class="sector-name">Luxury 360° VR Tours</span><span class="sector-note">Bespoke, fully immersive, brand-aligned</span></div>
-    <div class="sector-row"><span class="sector-deg">02</span><span class="sector-name">Interactive Digital Brochures</span><span class="sector-note">The portfolio, made walkable</span></div>
-    <div class="sector-row"><span class="sector-deg">03</span><span class="sector-name">Google Street View &amp; Business Profile</span><span class="sector-note">Published by an accredited Google agency</span></div>
-    <div class="sector-row"><span class="sector-deg">04</span><span class="sector-name">Graphic Design &amp; Brand Identity</span><span class="sector-note">Consistent from first frame to last</span></div>
-    <div class="sector-row"><span class="sector-deg">05</span><span class="sector-name">AI-Assisted Post &amp; Digital Staging</span><span class="sector-note">Faster turnarounds, no loss of finish</span></div>
-    <div class="sector-row"><span class="sector-deg">06</span><span class="sector-name">Bespoke UI/UX &amp; Integration</span><span class="sector-note">Woven into your existing campaigns</span></div>
+<section class="dark-band">
+  <div class="eyebrow" data-decode>THE PREMISE</div>
+  <h2 data-split>A tour is the centrepiece. <em>It is not the campaign.</em></h2>
+  <div class="two-col">
+    <p data-fade>The most beautiful 360° experience in the world still needs somewhere to live, an identity to belong to, an audience to reach it, and a way of knowing what it did. That is what this team is for.</p>
+    <div>
+      <p data-fade="120">Our digital specialists cover eight disciplines in-house — from generative AI and 3D visualisation through to paid media and business intelligence. They work to the same brief and the same standard of finish as the capture team, which means no handover gaps, no reinterpretation of the brand, and no waiting on a third party to publish.</p>
+      <p data-fade="220">AI runs through all of it. Not as a novelty, but as the thing that removes the slow parts: assisted post-production, generative concepting, automated tagging and enrichment, and internal tooling built for our own pipeline.</p>
+    </div>
+  </div>
+  <div class="pillars">
+    <div class="pillar" data-fade><b>In-house</b><span>One team, one brief. The people who design the brand also build the site and run the media.</span></div>
+    <div class="pillar" data-fade="140"><b>AI-accelerated</b><span>Applied where it removes manual work, never where it costs finish.</span></div>
+    <div class="pillar" data-fade="280"><b>Measured</b><span>Every engagement instrumented, so the work can be judged on what it returned.</span></div>
+  </div>
+</section>
+
+<section class="dark-band" id="services">
+  <div class="eyebrow" data-decode>CAPABILITIES</div>
+  <h2 data-split>Eight disciplines, <em>one standard of finish.</em></h2>
+  <div class="svc-list">
+    <div class="svc" data-fade>
+      <button class="svc-head" type="button" id="svc-01" aria-expanded="false" aria-controls="svc-01-panel">
+        <span class="svc-num">01</span>
+        <span class="svc-title">AI</span>
+        <span class="svc-tease">Applied where it removes the slow parts</span>
+        <span class="svc-plus" aria-hidden="true"></span>
+      </button>
+      <div class="svc-panel" id="svc-01-panel" role="region" aria-labelledby="svc-01">
+        <div><div class="svc-body">
+          <p>Generative concepting for campaign and pitch imagery, AI-assisted retouching and upscaling across 360° captures, automated tagging and metadata enrichment so large libraries stay searchable, conversational assistants embedded directly into tours, and bespoke internal tooling built around our own production pipeline. The rule is simple: AI takes the repetitive work, people keep the judgement.</p>
+          <ul class="svc-tags">
+          <li>Generative concepting</li>
+          <li>Assisted post-production</li>
+          <li>Automation &amp; tagging</li>
+          <li>Conversational agents</li>
+          <li>Custom tooling</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+    <div class="svc" data-fade>
+      <button class="svc-head" type="button" id="svc-02" aria-expanded="false" aria-controls="svc-02-panel">
+        <span class="svc-num">02</span>
+        <span class="svc-title">3D Visualisation</span>
+        <span class="svc-tease">For spaces that do not exist yet</span>
+        <span class="svc-plus" aria-hidden="true"></span>
+      </button>
+      <div class="svc-panel" id="svc-02-panel" role="region" aria-labelledby="svc-02">
+        <div><div class="svc-body">
+          <p>Photoreal CGI stills, cinematic fly-throughs and real-time 3D built from architectural plans, CAD or point-cloud scans — so a development can be marketed before ground is broken and a refit can be seen before it is commissioned. Configurators let a prospect change finishes, layouts or specification and watch the result update in front of them.</p>
+          <ul class="svc-tags">
+          <li>Architectural CGI</li>
+          <li>Fly-throughs</li>
+          <li>Real-time 3D</li>
+          <li>Configurators</li>
+          <li>Digital twins</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+    <div class="svc" data-fade>
+      <button class="svc-head" type="button" id="svc-03" aria-expanded="false" aria-controls="svc-03-panel">
+        <span class="svc-num">03</span>
+        <span class="svc-title">Website Design</span>
+        <span class="svc-tease">The place the work lives</span>
+        <span class="svc-plus" aria-hidden="true"></span>
+      </button>
+      <div class="svc-panel" id="svc-03-panel" role="region" aria-labelledby="svc-03">
+        <div><div class="svc-body">
+          <p>Art direction, interface design and front-end build for brand sites, development microsites and campaign landing pages — each one designed around the immersive experience rather than bolted on beside it. Fast, accessible, and handed over on a content management system your own team can run.</p>
+          <ul class="svc-tags">
+          <li>Art direction</li>
+          <li>UI/UX</li>
+          <li>Front-end build</li>
+          <li>CMS</li>
+          <li>Performance &amp; accessibility</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+    <div class="svc" data-fade>
+      <button class="svc-head" type="button" id="svc-04" aria-expanded="false" aria-controls="svc-04-panel">
+        <span class="svc-num">04</span>
+        <span class="svc-title">SEO</span>
+        <span class="svc-tease">Being found by the right people</span>
+        <span class="svc-plus" aria-hidden="true"></span>
+      </button>
+      <div class="svc-panel" id="svc-04-panel" role="region" aria-labelledby="svc-04">
+        <div><div class="svc-body">
+          <p>Technical audits, site architecture, structured data and page performance, plus the local search work that matters most for physical destinations: Google Business Profile, Street View publishing and map presence. Content strategy built around what buyers actually search for, reported against positions that move revenue.</p>
+          <ul class="svc-tags">
+          <li>Technical audits</li>
+          <li>Structured data</li>
+          <li>Local &amp; map search</li>
+          <li>Content strategy</li>
+          <li>Reporting</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+    <div class="svc" data-fade>
+      <button class="svc-head" type="button" id="svc-05" aria-expanded="false" aria-controls="svc-05-panel">
+        <span class="svc-num">05</span>
+        <span class="svc-title">Brand Design &amp; Visual Identity</span>
+        <span class="svc-tease">The system everything else obeys</span>
+        <span class="svc-plus" aria-hidden="true"></span>
+      </button>
+      <div class="svc-panel" id="svc-05-panel" role="region" aria-labelledby="svc-05">
+        <div><div class="svc-body">
+          <p>Identity systems, typography, colour, photographic direction and the guidelines that keep them intact — then the collateral that puts them to work, in print and on screen. Existing brands are extended rather than overwritten; new ones are built to survive contact with every channel they will meet.</p>
+          <ul class="svc-tags">
+          <li>Identity systems</li>
+          <li>Typography</li>
+          <li>Art direction</li>
+          <li>Guidelines</li>
+          <li>Print &amp; digital collateral</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+    <div class="svc" data-fade>
+      <button class="svc-head" type="button" id="svc-06" aria-expanded="false" aria-controls="svc-06-panel">
+        <span class="svc-num">06</span>
+        <span class="svc-title">Google / Social Media Ads</span>
+        <span class="svc-tease">Putting the work in front of demand</span>
+        <span class="svc-plus" aria-hidden="true"></span>
+      </button>
+      <div class="svc-panel" id="svc-06-panel" role="region" aria-labelledby="svc-06">
+        <div><div class="svc-body">
+          <p>Paid search and paid social planned, produced and run in-house — including the creative itself, cut natively for each placement rather than resized from one master. Audience strategy, budget pacing and testing handled by the same team that made the assets, with spend reported against outcomes rather than impressions.</p>
+          <ul class="svc-tags">
+          <li>Paid search</li>
+          <li>Paid social</li>
+          <li>Creative production</li>
+          <li>Audience strategy</li>
+          <li>Budget &amp; measurement</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+    <div class="svc" data-fade>
+      <button class="svc-head" type="button" id="svc-07" aria-expanded="false" aria-controls="svc-07-panel">
+        <span class="svc-num">07</span>
+        <span class="svc-title">Data Analytics &amp; Business Intelligence</span>
+        <span class="svc-tease">Knowing what actually happened</span>
+        <span class="svc-plus" aria-hidden="true"></span>
+      </button>
+      <div class="svc-panel" id="svc-07-panel" role="region" aria-labelledby="svc-07">
+        <div><div class="svc-body">
+          <p>Tracking and consent set up properly from the start, dashboards that answer the questions leadership actually asks, and attribution across the whole journey. Immersive experiences add a layer no other medium offers: which rooms held attention, where visitors lingered, where they left — read directly from the tour and fed back into the marketing.</p>
+          <ul class="svc-tags">
+          <li>Tracking &amp; consent</li>
+          <li>Dashboards</li>
+          <li>Attribution</li>
+          <li>Tour engagement analytics</li>
+          <li>Forecasting</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+    <div class="svc" data-fade>
+      <button class="svc-head" type="button" id="svc-08" aria-expanded="false" aria-controls="svc-08-panel">
+        <span class="svc-num">08</span>
+        <span class="svc-title">Content Creation</span>
+        <span class="svc-tease">Enough to keep the channel fed</span>
+        <span class="svc-plus" aria-hidden="true"></span>
+      </button>
+      <div class="svc-panel" id="svc-08-panel" role="region" aria-labelledby="svc-08">
+        <div><div class="svc-body">
+          <p>Photography, film, copywriting and social-native editing produced around each capture, so a single visit to a property or a yacht yields a campaign rather than one asset. Delivered as a scheduled library your team can publish from, in the formats each platform expects.</p>
+          <ul class="svc-tags">
+          <li>Photography</li>
+          <li>Film</li>
+          <li>Copywriting</li>
+          <li>Social-native edits</li>
+          <li>Campaign asset libraries</li>
+          </ul>
+        </div></div>
+      </div>
+    </div>
+  </div>
+  <noscript><style>.svc-panel{grid-template-rows:1fr}.svc-body>p,.svc-tags li{opacity:1;transform:none}.svc-tease{display:none}</style></noscript>
+</section>
+
+<section class="ticker" aria-label="Capabilities at a glance">
+  <div class="marquee" data-marquee>
+    <ul class="marquee-track">
+      <li class="client"><span class="cap-word">AI</span></li>
+      <li class="client"><span class="cap-word">3D Visualisation</span></li>
+      <li class="client"><span class="cap-word">Website Design</span></li>
+      <li class="client"><span class="cap-word">SEO</span></li>
+      <li class="client"><span class="cap-word">Brand Identity</span></li>
+      <li class="client"><span class="cap-word">Paid Media</span></li>
+      <li class="client"><span class="cap-word">Analytics &amp; BI</span></li>
+      <li class="client"><span class="cap-word">Content Creation</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="dark-band">
+  <div class="eyebrow" data-decode>HOW IT RUNS</div>
+  <h2 data-split>Four moves, <em>brief to measured.</em></h2>
+  <div class="method">
+    <div class="method-step" data-fade><b>01 — Brief</b><h3>Understand the space</h3><p>What is being sold, to whom, and what a good outcome actually looks like in numbers.</p></div>
+    <div class="method-step" data-fade="120"><b>02 — Design</b><h3>Set the language</h3><p>Identity, art direction and interface decided once, then applied consistently everywhere.</p></div>
+    <div class="method-step" data-fade="240"><b>03 — Build</b><h3>Produce and publish</h3><p>Sites, tours, 3D, content and campaigns produced in parallel by one team.</p></div>
+    <div class="method-step" data-fade="360"><b>04 — Measure</b><h3>Read the result</h3><p>Instrumented from day one, reported plainly, and fed back into the next round.</p></div>
   </div>
 </section>
 </main>
@@ -97,5 +309,6 @@
 <!-- #endregion SHARED:foot -->
 
 <script src="/assets/site.js" defer></script>
+<script src="/assets/digital.js" defer></script>
 </body>
 </html>

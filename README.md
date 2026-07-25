@@ -17,6 +17,8 @@ assets/
   site.css                                  every page
   site.js                                   every page — owns the single rAF loop
   home.js                                   index.html only — the scrub hero
+  digital.css / digital.js                  digital-services.html only — dark theme,
+                                            reactive field, animated text, accordion
   showreel.mp4                              the scrub film (~18 MB)
   brand/                                    logo assets, generated (see below)
   sectors/                                  sector hover previews
@@ -95,6 +97,42 @@ one `<ul class="marquee-track">`:
 - Aim for 8–14 items. Logos are greyscaled until hover.
 - Only the first track is authored; `site.js` clones it for the seamless loop,
   so the list is maintained in one place.
+
+## The page transition
+
+Clicking any internal link drops seven black bars down the screen, one after the
+other, then navigates. The incoming page finishes the move — the bars keep
+falling and clear off the bottom. The two halves are separate page loads, so
+`site.js` leaves a `sessionStorage` flag on the way out and the arriving page
+plays the second half only if it finds one; a bookmarked URL or a cold load never
+starts underneath a black cover.
+
+Timings live at the top of that block in `site.js` (`BARS`, `STAGGER`, `COVER`,
+`REVEAL`). Under `prefers-reduced-motion` no curtain is built at all and links
+navigate normally.
+
+## Digital Services — the dark page
+
+`/digital-services` is the only dark page. It carries `data-theme="dark"` on
+`<body>`, which `assets/digital.css` scopes everything to, and it loads two extra
+files.
+
+- **The field** is a canvas of scan lines that bend away from the pointer and
+  drift with the scroll. Tunables are `RADIUS`, `PUSH`, `ROWS`, `COLS` in
+  `digital.js`. Without a pointer (touch, or before the first move) it wanders on
+  its own. The canvas is created by JS, so with JS off the CSS gradient behind it
+  is what shows.
+- **Text** is animated by attribute: `data-split` splits a heading into masked
+  words that rise in sequence (`data-step` sets the stagger), `data-fade` fades a
+  block up (its value is a delay in ms), and `data-decode` scrambles a monospace
+  label into place. All three are triggered by an IntersectionObserver.
+- **The services accordion** opens one panel at a time. Collapsed panels are made
+  `inert` so their content stays out of the tab order, and a `<noscript>` rule in
+  the page opens every panel when JS is unavailable.
+- Tokens are deliberately **not** inverted on this page — the nav's `.on-dark`
+  rules and the shared contact band already treat ink as dark and ivory as light,
+  and swapping the meanings underneath them turns the current-page pill inside
+  out. Only the surfaces this page paints are overridden.
 
 ## Contact form
 
