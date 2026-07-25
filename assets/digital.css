@@ -12,11 +12,20 @@
    this page actually paints are overridden. */
 body[data-theme="dark"]{
   background:#08090B;
-  color:#F4F1EC;
-  --ink-soft:#969CA6;          /* muted body text, readable on near-black */
+  color:#F5F6F7;
+  --ink-soft:#8E949E;          /* muted body text, readable on near-black */
   --ivory-deep:#16181C;
-  --line:rgba(244,241,236,.13);
-  --line-soft:rgba(244,241,236,.07);
+  --line:rgba(255,255,255,.13);
+  --line-soft:rgba(255,255,255,.07);
+  /* This page is chrome, not champagne. Rather than chase every rule that reads
+     a brand accent, the accent tokens themselves are neutralised here — the
+     spectral rim, the eyebrows, the progress rule and the open-service marker
+     all turn silver without touching the components that use them. */
+  --brass:#B9BDC4;
+  --brass-deep:#9BA1AA;
+  --spectral-gold:#F2F3F5;
+  --spectral-rose:#C8CCD2;
+  --spectral-blue:#A9AFB8;
 }
 body[data-theme="dark"] ::selection{background:var(--brass); color:#08090B}
 
@@ -39,8 +48,8 @@ body[data-theme="dark"] .spec-chips span{color:#B7BCC4}
   position:fixed; inset:0; z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(120% 80% at 70% -10%, rgba(165,133,79,.10), transparent 60%),
-    radial-gradient(90% 70% at 10% 110%, rgba(195,213,230,.07), transparent 65%);
+    radial-gradient(120% 80% at 70% -10%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(90% 70% at 10% 110%, rgba(255,255,255,.045), transparent 65%);
 }
 
 /* ---------- Aurora ----------
@@ -54,17 +63,17 @@ body[data-theme="dark"] .spec-chips span{color:#B7BCC4}
 }
 .aurora i:nth-child(1){
   width:52vw; height:52vw; left:-6vw; top:2vh;
-  background:radial-gradient(circle at 40% 40%, rgba(227,199,149,.40), rgba(165,133,79,.16) 55%, transparent 72%);
+  background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.30), rgba(200,206,214,.11) 55%, transparent 72%);
   animation:drift-a 38s cubic-bezier(.45,.05,.55,.95) infinite;
 }
 .aurora i:nth-child(2){
   width:44vw; height:44vw; right:-4vw; top:22vh;
-  background:radial-gradient(circle at 55% 45%, rgba(195,213,230,.34), rgba(139,168,199,.12) 58%, transparent 74%);
+  background:radial-gradient(circle at 55% 45%, rgba(226,231,238,.26), rgba(150,158,170,.10) 58%, transparent 74%);
   animation:drift-b 47s cubic-bezier(.45,.05,.55,.95) infinite;
 }
 .aurora i:nth-child(3){
   width:40vw; height:40vw; left:26vw; bottom:-6vh;
-  background:radial-gradient(circle at 50% 50%, rgba(239,201,187,.28), rgba(239,201,187,.09) 56%, transparent 72%);
+  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.20), rgba(190,196,204,.07) 56%, transparent 72%);
   animation:drift-c 53s cubic-bezier(.45,.05,.55,.95) infinite;
 }
 @keyframes drift-a{
@@ -92,7 +101,7 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
    One recipe, shared by every card on the page: a blurred pane, a bright rim
    where the light catches the top edge, a refracted chromatic edge, and a
    specular highlight that tracks the pointer (digital.js sets --mx/--my). */
-.pillar, .svc, .method-step, .dh-meta span{
+.pillar, .svc, .method-step{
   position:relative; isolation:isolate;
   border:0; border-radius:22px; overflow:hidden;
   background:
@@ -168,45 +177,174 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 
 [data-decode]{font-variant-ligatures:none}
 
-/* ---------- Hero ---------- */
+/* ---------- Hero ----------
+   Four blocks around a chrome orb: the headline lower-left, the statement
+   upper-right, the discipline list and the featured card along the bottom. */
 .dh{
-  min-height:100svh; display:flex; flex-direction:column; justify-content:center;
-  padding:150px var(--pad-x) 90px; position:relative;
+  --px:0; --py:0;                       /* pointer parallax, written by digital.js */
+  position:relative; min-height:100svh;
+  padding:158px var(--pad-x) 96px;
+  display:flex; flex-direction:column;
 }
-.dh h1{
-  font-size:clamp(52px,10.5vw,168px); line-height:.92; letter-spacing:-.03em;
-  font-weight:300; font-variation-settings:"opsz" 144; max-width:14ch;
+.dh-grid{
+  flex:1; display:grid; gap:48px 56px;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+  grid-template-rows:1fr auto;
+  grid-template-areas:"title side" "do feat";
+  align-items:start;
 }
-.dh h1 em{color:var(--spectral-gold)}
+.dh-title{grid-area:title; align-self:center; will-change:transform}
+.dh-side {grid-area:side;  padding-top:8px; will-change:transform}
+.dh-do   {grid-area:do;    align-self:end}
+.dh-feat {grid-area:feat;  align-self:end; justify-self:end; width:min(100%,340px)}
+
+/* Headline — a tight sans line over an oversized italic serif one, the second
+   deliberately wider than the first so it spills past the column. */
+.dh h1{font-size:inherit; line-height:1; letter-spacing:normal; max-width:none}
+.dh-l1, .dh-l2{display:block}
+.dh-l1{
+  font-family:"Archivo",system-ui,sans-serif; font-weight:500;
+  font-variation-settings:"wdth" 100;
+  font-size:clamp(44px,7.4vw,124px); line-height:.94; letter-spacing:-.045em;
+  color:#FFF;
+}
+.dh-l2{
+  font-family:"Fraunces",serif; font-style:italic; font-weight:300;
+  font-variation-settings:"opsz" 144;
+  font-size:clamp(52px,9.6vw,164px); line-height:.92; letter-spacing:-.02em;
+  margin-top:-.06em; margin-left:.04em;
+  background:linear-gradient(96deg,#FFFFFF 8%,#D7DBE1 38%,#9BA1AA 62%,#EDEFF2 88%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.dh .eyebrow{margin-bottom:26px}
+
+/* Statement */
 .dh-lede{
-  margin-top:38px; max-width:52ch; font-size:clamp(16px,1.4vw,19px);
-  line-height:1.6; color:#B7BCC4;
+  max-width:44ch; font-size:clamp(17px,1.55vw,23px); line-height:1.42;
+  letter-spacing:-.01em; color:#FFF; font-weight:400;
 }
-.dh-meta{
-  display:flex; flex-wrap:wrap; gap:12px; margin-top:52px;
-  font-family:"Fragment Mono",monospace; font-size:11px; letter-spacing:.16em;
-  text-transform:uppercase; color:#C6CBD2;
+.dh-lede .dh-c{color:#FFF; margin-right:.15em}
+.dh-lede .dim{color:#838992}
+.dh-rule{height:1px; background:var(--line); margin:38px 0 26px}
+.dh-row{display:flex; align-items:center; justify-content:space-between; gap:20px}
+.dh-contact{
+  font-size:16px; color:#FFF; text-decoration:none; letter-spacing:-.01em;
+  position:relative; padding-bottom:3px;
 }
-.dh-meta span{
-  display:flex; align-items:center; gap:10px;
-  padding:11px 18px; border-radius:var(--radius-pill);
-  backdrop-filter:blur(18px) saturate(1.6); -webkit-backdrop-filter:blur(18px) saturate(1.6);
+.dh-contact::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:1px;
+  background:currentColor; transform:scaleX(0); transform-origin:100% 50%;
+  transition:transform .5s var(--ease);
 }
-.dh-meta span::before{content:""; width:5px; height:5px; border-radius:50%; background:var(--brass)}
-/* right-hand side: at short viewport heights it would otherwise crowd the
-   meta pills, which sit at the bottom-left of the hero */
+.dh-contact:hover::after{transform:scaleX(1); transform-origin:0 50%}
+.dh-marks{display:flex; gap:9px}
+.dh-mark{
+  display:grid; place-items:center; width:38px; height:38px; border-radius:50%;
+  font-family:"Fragment Mono",monospace; font-size:9.5px; letter-spacing:.08em;
+  color:#C3C8CF;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.10);
+  -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+  transition:background .4s var(--ease), color .4s var(--ease);
+}
+.dh-mark:hover{background:rgba(255,255,255,.13); color:#FFF}
+
+/* We do */
+.dh-label{
+  display:block; font-size:15px; color:#FFF; padding-bottom:14px;
+  border-bottom:1px solid var(--line); margin-bottom:18px; max-width:340px;
+}
+.dh-do-list{display:grid; gap:9px; font-size:15.5px; color:#A8AEB7}
+.dh-do-list span{letter-spacing:-.005em}
+.dh-do-list i{font-style:normal; color:#5C626B; padding:0 6px}
+
+/* Featured */
+.dh-feat-head{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-size:15px; color:#FFF; padding-bottom:14px;
+  border-bottom:1px solid var(--line); margin-bottom:16px;
+}
+.dh-feat-head span:last-child{color:#7C828B; font-family:"Fragment Mono",monospace; font-size:12px}
+.dh-feat-card{
+  display:block; padding:20px 22px 18px; border-radius:18px; text-decoration:none;
+  background:linear-gradient(140deg, rgba(255,255,255,.10), rgba(255,255,255,.025));
+  -webkit-backdrop-filter:blur(22px) saturate(1.6); backdrop-filter:blur(22px) saturate(1.6);
+  box-shadow:0 26px 60px -34px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.22);
+  transition:translate .5s var(--ease), box-shadow .5s var(--ease);
+}
+.dh-feat-card:hover{translate:0 -4px; box-shadow:0 34px 70px -34px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,.3)}
+.dh-feat-line{
+  display:block; font-family:"Fraunces",serif; font-weight:340; font-size:19px;
+  line-height:1.25; letter-spacing:-.01em; color:#F2F3F5;
+}
+.dh-feat-go{
+  display:inline-flex; align-items:center; gap:8px; margin-top:14px;
+  font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:#9BA1AA;
+}
+.dh-feat-go::after{content:"→"; transition:transform .35s var(--ease)}
+.dh-feat-card:hover .dh-feat-go::after{transform:translateX(5px)}
+
+/* ---------- The orb ----------
+   A chrome sphere from gradients. Two details make it read as metal rather than
+   a pinwheel: the conic's convergence point is placed outside the visible
+   circle, and the whole body is heavily blurred so the bands melt into each
+   other the way a polished surface does. */
+.orb{
+  position:absolute; left:56%; top:70%; translate:-50% -50%;
+  width:min(46vw,640px); aspect-ratio:1; border-radius:50%;
+  pointer-events:none; z-index:0;
+  animation:orb-breathe 16s ease-in-out infinite;
+  will-change:transform;
+}
+.orb i{position:absolute; inset:-12%; border-radius:50%; display:block}
+.orb-body{
+  background:conic-gradient(from 190deg at 26% 118%,
+    #262a31, #08090b 12%, #949aa4 26%, #101318 38%, #5f656e 50%,
+    #090a0d 63%, #b2b8c1 75%, #14171c 87%, #262a31);
+  filter:blur(24px);
+  opacity:.74;
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 44%, rgba(0,0,0,.55) 62%, transparent 75%);
+          mask-image:radial-gradient(circle at 50% 50%, #000 44%, rgba(0,0,0,.55) 62%, transparent 75%);
+}
+.orb-spec{
+  background:
+    radial-gradient(30% 22% at 33% 25%, rgba(255,255,255,.62), transparent 68%),
+    radial-gradient(17% 11% at 69% 73%, rgba(255,255,255,.22), transparent 70%),
+    radial-gradient(62% 62% at 50% 50%, transparent 44%, rgba(0,0,0,.55) 68%, rgba(0,0,0,.9) 86%);
+  filter:blur(12px);
+  opacity:.95;
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 46%, transparent 76%);
+          mask-image:radial-gradient(circle at 50% 50%, #000 46%, transparent 76%);
+  animation:orb-turn 64s linear infinite;
+}
+/* the bright arc that runs along the edge of anything polished and round */
+.orb::after{
+  content:""; position:absolute; inset:6%; border-radius:50%; pointer-events:none;
+  background:conic-gradient(from 205deg,
+    transparent 0deg, rgba(255,255,255,.55) 42deg, transparent 116deg,
+    transparent 244deg, rgba(255,255,255,.26) 302deg, transparent 352deg);
+  -webkit-mask:radial-gradient(circle at 50% 50%, transparent 63%, #000 69%, #000 75%, transparent 82%);
+          mask:radial-gradient(circle at 50% 50%, transparent 63%, #000 69%, #000 75%, transparent 82%);
+  filter:blur(3px);
+  animation:orb-turn 64s linear infinite;
+}
+@keyframes orb-turn{to{rotate:360deg}}
+@keyframes orb-breathe{0%,100%{scale:1}50%{scale:1.04}}
+
+/* Scroll cue — centred between the two bottom blocks */
 .scroll-cue{
-  position:absolute; right:var(--pad-x); bottom:44px;
+  position:absolute; left:50%; translate:-50% 0; bottom:34px;
   display:flex; align-items:center; gap:12px;
   font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.18em;
-  text-transform:uppercase; color:var(--ink-soft);
+  text-transform:uppercase; color:#767C85;
 }
 .scroll-cue i{
   display:block; width:1px; height:40px; background:var(--line);
   position:relative; overflow:hidden;
 }
 .scroll-cue i::after{
-  content:""; position:absolute; inset:0; background:var(--spectral-gold);
+  content:""; position:absolute; inset:0; background:#FFF;
   animation:cue 2.4s var(--ease-io) infinite;
 }
 @keyframes cue{
@@ -344,7 +482,20 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   .svc-body{grid-template-columns:1fr; padding:0 22px 30px}
   .svc-body > p, .svc-tags{grid-column:1}
   .dark-band{padding:88px var(--pad-x)}
-  .dh{padding-top:132px}
+  /* the hero stacks: headline, statement, then the two footer blocks side by side */
+  .dh{padding:132px var(--pad-x) 92px}
+  .dh-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto auto;
+    grid-template-areas:"title" "side" "do" "feat";
+    gap:40px;
+  }
+  .dh-title{align-self:start}
+  .dh-feat{justify-self:stretch; width:100%}
+  .dh-l1{font-size:clamp(38px,11vw,72px)}
+  .dh-l2{font-size:clamp(44px,14vw,92px)}
+  .orb{width:min(120vw,620px); top:44%; opacity:.7}
+  .scroll-cue{display:none}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -354,6 +505,8 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   .svc-panel{transition:none}
   .aurora i{animation:none}
   .pillar{animation:none}
+  .orb, .orb-spec{animation:none}
+  .dh-title, .dh-side, .orb{transform:none !important}
   .pillar:hover, .method-step:hover, .svc:hover{translate:none}
   .svc-body > p, .svc-tags li{opacity:1; transform:none; transition:none}
   .progress{display:none}

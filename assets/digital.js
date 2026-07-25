@@ -55,8 +55,8 @@
 
       /* the pointer carries a soft light with it */
       const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, RADIUS * 1.7);
-      glow.addColorStop(0, 'rgba(227,199,149,0.085)');
-      glow.addColorStop(0.55, 'rgba(195,213,230,0.025)');
+      glow.addColorStop(0, 'rgba(255,255,255,0.075)');
+      glow.addColorStop(0.55, 'rgba(214,220,228,0.022)');
       glow.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, w, h);
@@ -236,6 +236,37 @@
         pane.style.setProperty('--mx', (((e.clientX - r.left) / r.width) * 100).toFixed(1) + '%');
         pane.style.setProperty('--my', (((e.clientY - r.top) / r.height) * 100).toFixed(1) + '%');
       }, {passive:true});
+    });
+  }
+
+  /* ---------- hero parallax ----------
+     The headline, the statement and the orb drift by different amounts as the
+     pointer moves, which gives the hero depth without anything actually moving
+     far. Each layer is eased separately; the orb leads because it is furthest
+     back. transform is used here and nowhere else on these elements — the word
+     reveals animate their own inner spans, and the orb centres with `translate`
+     and breathes with `scale`, so none of them collide. */
+  const hero = document.querySelector('.dh');
+  if(hero && !reduced && matchMedia('(pointer:fine)').matches){
+    const layers = [
+      { el: hero.querySelector('.orb'),      x: 30, y: 22 },
+      { el: hero.querySelector('.dh-title'), x: -16, y: -11 },
+      { el: hero.querySelector('.dh-side'),  x: -9,  y: -6 },
+    ].filter(l => l.el);
+    const aim = { x:0, y:0 }, now = { x:0, y:0 };
+    addEventListener('pointermove', e => {
+      aim.x = (e.clientX / innerWidth) * 2 - 1;      /* -1 … 1 */
+      aim.y = (e.clientY / innerHeight) * 2 - 1;
+    }, {passive:true});
+    FS.onFrame(() => {
+      if(FS.transitioning) return;
+      if(Math.abs(aim.x - now.x) < 0.001 && Math.abs(aim.y - now.y) < 0.001) return;
+      now.x += (aim.x - now.x) * 0.045;
+      now.y += (aim.y - now.y) * 0.045;
+      for(const l of layers){
+        l.el.style.transform =
+          'translate3d(' + (now.x * l.x).toFixed(2) + 'px,' + (now.y * l.y).toFixed(2) + 'px,0)';
+      }
     });
   }
 
