@@ -17,7 +17,12 @@
       "Read(//Users/cam77/.cache/**)",
       "Bash(npx --no-install playwright --version)",
       "Bash(node check.mjs http://127.0.0.1:8777 / --scroll=0.5 --shot=home-mid --shotdir=.)",
-      "Bash(git -c user.name=Frameworks -c user.email=itscam7745@gmail.com commit -q -m 'Extract inline CSS/JS into shared assets; derive transparent logo assets *)"
+      "Bash(git -c user.name=Frameworks -c user.email=itscam7745@gmail.com commit -q -m 'Extract inline CSS/JS into shared assets; derive transparent logo assets *)",
+      "Bash(python3 /private/tmp/claude-501/-Users-cam77-Documents-FRAMEWORK-frameworks-site/8cf43bb4-98bb-4afe-b1c5-52d0c96b8edb/scratchpad/gen.py)",
+      "Bash(python3 tools/sync-partials.py)",
+      "Bash(python3 tools/sync-partials.py --check)",
+      "Bash(node check.mjs http://127.0.0.1:8780 /craft /contact --shotdir=.)",
+      "Bash(node check.mjs http://127.0.0.1:8780 /contact --shot=contact2 --shotdir=.)"
     ]
   }
 }

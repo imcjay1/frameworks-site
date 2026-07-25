@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Contact — Start a Project | Frameworks Studios</title>
+<meta name="description" content="Tell Frameworks Studios about your space. Luxury 360° VR tours and immersive digital brochures, from Monaco to the world." />
+<link rel="canonical" href="https://frameworks-studios.com/contact" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Contact — Start a Project | Frameworks Studios" />
+<meta property="og:description" content="Tell Frameworks Studios about your space. Luxury 360° VR tours and immersive digital brochures, from Monaco to the world." />
+<meta property="og:url" content="https://frameworks-studios.com/contact" />
+<meta name="twitter:card" content="summary_large_image" />
+<!-- #region SHARED:head — everything below is identical on every page. The
+     per-page title, description, canonical and og:url sit above this block. -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#F2EEE8" />
+<link rel="icon" href="/assets/brand/favicon-48.png" sizes="48x48" />
+<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+<!-- #endregion SHARED:head -->
+</head>
+<body data-page="contact">
+
+<!-- #region SHARED:nav — canonical copy lives in index.html. After editing it run
+     tools/sync-partials.py; the only per-page difference is aria-current="page". -->
+<nav class="nav-wrap" id="nav" aria-label="Primary">
+  <a class="brandmark glass" href="/" aria-label="Frameworks Studios — home">
+    <img class="mark" src="/assets/brand/mark-ink.png" alt="" width="96" height="96">
+    <img class="wordmark" src="/assets/brand/wordmark-ink.png" alt="Frameworks Studios" width="582" height="48">
+  </a>
+  <div class="island glass">
+    <span class="island-mini" aria-hidden="true"><span class="rec-dot"></span><img src="/assets/brand/mark-ink.png" alt="" width="96" height="96"></span>
+    <a href="/">Home</a>
+    <a href="/craft">Craft</a>
+    <a href="/sectors">Sectors</a>
+    <a href="/studio">Studio</a>
+    <a href="/digital-services">Digital Services</a>
+    <a href="/contact" aria-current="page">Contact</a>
+  </div>
+  <button class="nav-toggle glass" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><i></i></button>
+</nav>
+<div class="mobile-menu" id="mobile-menu" hidden>
+  <a href="/">Home</a>
+  <a href="/craft">Craft</a>
+  <a href="/sectors">Sectors</a>
+  <a href="/studio">Studio</a>
+  <a href="/digital-services">Digital Services</a>
+  <a href="/contact" aria-current="page">Contact</a>
+  <div class="mobile-foot">Monaco · South of France · Dubai<br>Saudi Arabia · United Kingdom</div>
+</div>
+<!-- #endregion SHARED:nav -->
+
+<main>
+<header class="page-head">
+  <div class="eyebrow reveal">Contact</div>
+  <h1 class="reveal">Bring your space <em>to the world.</em></h1>
+  <p class="page-lede reveal">We embrace every client's unique vision, delivering personalised, high-impact immersive marketing designed to save time and maximise results. Tell us about your space.</p>
+</header>
+
+<section class="contact" id="enquiry">
+  <div class="eyebrow reveal">Enquiry</div>
+  <h2 class="reveal">Tell us about <em>the space.</em></h2>
+
+  <form class="form-grid reveal" action="/api/contact" method="POST">
+    <div class="field">
+      <label for="f-name">Name</label>
+      <input id="f-name" name="name" type="text" autocomplete="name" required>
+    </div>
+    <div class="field">
+      <label for="f-company">Company</label>
+      <input id="f-company" name="company" type="text" autocomplete="organization">
+    </div>
+    <div class="field">
+      <label for="f-email">Email</label>
+      <input id="f-email" name="email" type="email" autocomplete="email" required>
+    </div>
+    <div class="field">
+      <label for="f-phone">Phone</label>
+      <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+    </div>
+    <div class="field">
+      <label for="f-sector">Sector</label>
+      <select id="f-sector" name="sector">
+          <option value="">Select a sector</option>
+          <option>Luxury Real Estate</option>
+          <option>Super-Yachts</option>
+          <option>Automotive</option>
+          <option>Event Venues</option>
+          <option>Stadiums</option>
+          <option>Golf Courses</option>
+          <option>Premium Hospitality</option>
+          <option>Something else</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="f-location">Where is the space?</label>
+      <input id="f-location" name="location" type="text" placeholder="City or region">
+    </div>
+    <div class="field wide">
+      <label for="f-message">About the project</label>
+      <textarea id="f-message" name="message" required placeholder="The space, the audience, and what a good outcome looks like."></textarea>
+    </div>
+    <p class="hp" aria-hidden="true">
+      <label for="f-website">Leave this field empty</label>
+      <input id="f-website" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+    </p>
+    <div class="consent">
+      <input id="f-consent" name="consent" type="checkbox" required>
+      <label for="f-consent">I agree to Frameworks Studios storing these details in order to respond to my enquiry.</label>
+    </div>
+    <div class="form-actions">
+      <button class="btn-ivory" type="submit">Send enquiry</button>
+      <p class="form-note">We reply to every enquiry within one working day.</p>
+    </div>
+  </form>
+
+  <div class="contact-details">
+    <span>Monaco · Headquarters</span>
+    <span>South of France · Dubai · Saudi Arabia · United Kingdom</span>
+  </div>
+</section>
+</main>
+
+<!-- #region SHARED:foot -->
+<footer class="site-foot">
+  <a class="footer-mark" href="/" aria-label="Frameworks Studios — home">
+    <img src="/assets/brand/lockup-ivory.png" alt="Frameworks Studios" width="320" height="320">
+  </a>
+  <nav class="footer-nav" aria-label="Footer"><a href="/">Home</a> <a href="/craft">Craft</a> <a href="/sectors">Sectors</a> <a href="/studio">Studio</a> <a href="/digital-services">Digital Services</a> <a href="/contact" aria-current="page">Contact</a></nav>
+  <div class="footer-bar">
+    <span>© 2026 FRAMEWORKS STUDIOS</span>
+    <span>MONACO · SOUTH OF FRANCE · DUBAI · SAUDI ARABIA · UNITED KINGDOM</span>
+  </div>
+</footer>
+<!-- #endregion SHARED:foot -->
+
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

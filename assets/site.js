@@ -137,8 +137,21 @@
   /* ---------- island shrinks into liquid glass once you leave the top ---------- */
   const nav = document.getElementById('nav');
   if(nav){
-    const navState = () => nav.classList.toggle('scrolled', scrollY > 40);
+    /* The nav floats over the page, so it has to invert itself when it crosses
+       one of the ink bands or its ink-coloured links land on ink. */
+    const darkBands = [...document.querySelectorAll('.contact, .site-foot')];
+    const navState = () => {
+      nav.classList.toggle('scrolled', scrollY > 40);
+      if(!darkBands.length) return;
+      const r = nav.getBoundingClientRect();
+      const mid = r.top + r.height / 2;
+      nav.classList.toggle('on-dark', darkBands.some(b => {
+        const d = b.getBoundingClientRect();
+        return d.top < mid && d.bottom > mid;
+      }));
+    };
     addEventListener('scroll', navState, {passive:true});
+    addEventListener('resize', navState, {passive:true});
     navState();
   }
 
@@ -184,6 +197,49 @@
       m.classList.add('in-view');
     }
   });
+
+  /* ---------- contact form ----------
+     The form posts natively and the endpoint redirects back with ?sent=1, so it
+     works without JavaScript. Here we upgrade it to submit in place. */
+  const form = document.querySelector('form[action="/api/contact"]');
+  if(form){
+    const status = document.createElement('p');
+    status.className = 'form-status';
+    status.setAttribute('role', 'status');
+    form.appendChild(status);
+    const say = (state, msg) => { status.dataset.state = state; status.textContent = msg; };
+
+    const q = new URLSearchParams(location.search);
+    if(q.get('sent')) say('ok', 'Thank you — your enquiry is on its way. We reply within one working day.');
+    else if(q.get('error')) say('error', q.get('error'));   /* textContent: never interpolated as HTML */
+
+    form.addEventListener('submit', async e => {
+      if(!form.reportValidity()) return;
+      e.preventDefault();
+      const button = form.querySelector('button[type="submit"]');
+      const label = button.textContent;
+      button.disabled = true; button.textContent = 'Sending…';
+      say('', '');
+      try{
+        const r = await fetch(form.action, {
+          method: 'POST',
+          headers: {'Accept':'application/json'},
+          body: new URLSearchParams(new FormData(form)),
+        });
+        const data = await r.json().catch(() => ({}));
+        if(r.ok && data.ok){
+          form.reset();
+          say('ok', data.message || 'Thank you — your enquiry is on its way.');
+        } else {
+          say('error', data.message || 'We could not send that just now. Please try again shortly.');
+        }
+      } catch(err){
+        say('error', 'That did not send — check your connection and try again.');
+      } finally {
+        button.disabled = false; button.textContent = label;
+      }
+    });
+  }
 
   /* ---------- section reveals ---------- */
   if(!reduced && 'IntersectionObserver' in window){
