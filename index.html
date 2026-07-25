@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Frameworks Studios — Luxury 360° VR Tours &amp; Immersive Digital Brochures</title>
+<meta name="description" content="Frameworks Studios is a premier immersive digital marketing agency specialising in luxury bespoke 360° VR tours and interactive digital brochures. Headquartered in Monaco, operating worldwide." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Tokens · Frameworks Studios ---------- */
+  :root{
+    --ivory:#F2EEE8;            /* matched to the showreel's background frames */
+    --ivory-deep:#E7E1D8;
+    --ink:#16181C;              /* night-harbour black */
+    --ink-soft:#50535A;
+    --brass:#A5854F;            /* champagne brass — detail accent */
+    --brass-deep:#8A6D3F;
+    --carmine:#B8402F;          /* live/rec indicator only */
+    --spectral-blue:#C3D5E6;
+    --spectral-rose:#EFC9BB;
+    --spectral-gold:#E3C795;
+    --glass-fill:rgba(255,255,255,0.42);
+    --glass-stroke:rgba(255,255,255,0.65);
+    --glass-shadow:0 18px 40px -18px rgba(22,24,28,0.18), 0 2px 6px rgba(22,24,28,0.05);
+    --radius-pill:999px;
+    --ease:cubic-bezier(.22,.61,.21,.99);
+    --ease-io:cubic-bezier(.65,0,.35,1);   /* ease-in-out for the island collapse/expand */
+    --pad-x:min(6vw,84px);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:auto}
+  body{
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:"Archivo",system-ui,sans-serif;
+    font-variation-settings:"wdth" 100;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--brass); color:var(--ivory)}
+
+  /* ---------- Glass primitives ---------- */
+  .glass{
+    background:linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.28));
+    -webkit-backdrop-filter:blur(18px) saturate(1.4);
+    backdrop-filter:blur(18px) saturate(1.4);
+    border:1px solid var(--glass-stroke);
+    box-shadow:var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.8);
+    position:relative;
+    transition:background .45s var(--ease), border-color .45s var(--ease),
+               box-shadow .45s var(--ease),
+               -webkit-backdrop-filter .45s var(--ease), backdrop-filter .45s var(--ease);
+  }
+  /* spectral edge — light through a lens; the one place pastel colour is allowed */
+  .glass::before{
+    content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;
+    background:linear-gradient(120deg, var(--spectral-blue), transparent 30%, transparent 65%, var(--spectral-rose) 85%, var(--spectral-gold));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:.5; pointer-events:none;
+    transition:opacity .45s var(--ease);
+  }
+
+  /* ---------- Island nav ---------- */
+  .nav-wrap{
+    position:fixed; top:22px; left:0; right:0; z-index:50;
+    display:flex; justify-content:center; align-items:center; gap:12px;
+    padding:0 20px;
+    transition:top .4s var(--ease);
+  }
+  .brandmark{
+    font-family:"Fraunces",serif; font-weight:400; font-size:15px; letter-spacing:.01em;
+    color:var(--ink); text-decoration:none; white-space:nowrap;
+    padding:13px 20px; border-radius:var(--radius-pill);
+    transition:padding .4s var(--ease), font-size .4s var(--ease);
+  }
+  .brandmark em{font-style:italic; color:var(--brass-deep)}
+  .island{
+    display:flex; align-items:center; gap:2px;
+    border-radius:var(--radius-pill);
+    padding:5px;
+    transition:padding .4s var(--ease);
+  }
+  .island a{
+    font-size:14.5px; font-weight:500; letter-spacing:.01em;
+    color:var(--ink-soft); text-decoration:none;
+    padding:9px 17px; border-radius:var(--radius-pill);
+    max-width:150px; overflow:hidden;
+    transition:color .25s var(--ease), background .25s var(--ease),
+               padding .55s var(--ease-io), font-size .55s var(--ease-io),
+               max-width .55s var(--ease-io), opacity .35s var(--ease-io);
+    white-space:nowrap;
+  }
+  /* mini state content — hidden until the island collapses */
+  .island-mini{
+    display:flex; align-items:center; gap:8px;
+    max-width:0; opacity:0; overflow:hidden; white-space:nowrap;
+    padding:5px 0;
+    font-family:"Fraunces",serif; font-style:italic; font-size:14px; color:var(--ink);
+    transition:max-width .55s var(--ease-io), opacity .35s var(--ease-io), padding .55s var(--ease-io);
+    pointer-events:none;
+  }
+  .island-mini .rec-dot{flex:0 0 auto}
+  .island a:hover{color:var(--ink)}
+  .island a:focus-visible, .cta:focus-visible, .btn-solid:focus-visible, .brandmark:focus-visible{outline:2px solid var(--brass-deep); outline-offset:2px}
+  .island a.active{
+    background:var(--ink); color:var(--ivory);
+    box-shadow:0 6px 16px -6px rgba(22,24,28,.55);
+  }
+  .cta{
+    border-radius:var(--radius-pill);
+    padding:14px 22px;
+    font-size:14.5px; font-weight:600; color:var(--ink);
+    text-decoration:none; white-space:nowrap;
+    transition:transform .25s var(--ease), padding .4s var(--ease), font-size .4s var(--ease);
+  }
+  .cta:hover{transform:translateY(-1px)}
+
+  /* Shrunk state — liquid glass: smaller island, more transparent, deeper blur */
+  .nav-wrap.scrolled{top:10px}
+  .nav-wrap.scrolled .glass{
+    background:linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.09));
+    -webkit-backdrop-filter:blur(30px) saturate(1.95);
+    backdrop-filter:blur(30px) saturate(1.95);
+    border-color:rgba(255,255,255,0.48);
+    box-shadow:0 14px 34px -18px rgba(22,24,28,0.25), 0 1px 3px rgba(22,24,28,0.04),
+               inset 0 1px 0 rgba(255,255,255,0.95);
+  }
+  .nav-wrap.scrolled .glass::before{opacity:.9}
+  .nav-wrap.scrolled .island{padding:2px}
+  .nav-wrap.scrolled .island a{padding:5px 10px; font-size:12px}
+  .nav-wrap.scrolled .cta{padding:8px 13px; font-size:12px}
+  .nav-wrap.scrolled .brandmark{padding:6px 11px; font-size:12px}
+
+  /* Collapsed: the island shortens to a tiny FS pill; hovering (or tabbing into it)
+     eases it back open. Hover-capable devices only. */
+  @media (hover:hover) and (pointer:fine){
+    .nav-wrap.scrolled .island:not(:hover):not(:focus-within) a{
+      max-width:0; padding:5px 0; opacity:0;
+    }
+    .nav-wrap.scrolled .island:not(:hover):not(:focus-within) .island-mini{
+      max-width:88px; opacity:1; padding:5px 16px;
+    }
+  }
+
+  /* ---------- Scroll track + pinned hero ---------- */
+  .scrub-track{height:1380vh; position:relative}
+  .stage{
+    position:sticky; top:0; height:100vh; overflow:hidden;
+    display:flex; align-items:flex-end;
+  }
+  .stage{background:var(--ivory)}
+  .stage video, .stage .poster{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:contain; object-position:center;  /* complete frame, full aspect ratio, no crop */
+  }
+  /* Poster shows until the showreel's metadata loads */
+  .poster{
+    background:
+      radial-gradient(52% 64% at 74% 30%, rgba(227,199,149,.34), transparent 70%),
+      radial-gradient(46% 60% at 24% 76%, rgba(195,213,230,.30), transparent 72%),
+      linear-gradient(180deg, var(--ivory) 0%, var(--ivory) 55%, var(--ivory-deep) 100%);
+  }
+  .poster svg{position:absolute; inset:0; width:100%; height:100%}
+
+  /* ---------- Hero copy ---------- */
+  .hero-copy{
+    position:relative; z-index:5;
+    padding:0 var(--pad-x) 9vh;
+    max-width:760px;
+    will-change:opacity, transform;
+  }
+  .spec-eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:"Fragment Mono",monospace; font-size:11.5px; letter-spacing:.14em;
+    color:var(--ink-soft);
+    padding:8px 14px; border-radius:var(--radius-pill);
+    margin-bottom:22px;
+  }
+  .rec-dot{width:7px;height:7px;border-radius:50%;background:var(--carmine);
+    animation:rec 1.6s ease-in-out infinite}
+  @keyframes rec{0%,100%{opacity:1}50%{opacity:.25}}
+
+  h1{
+    font-family:"Fraunces",serif;
+    font-weight:340; font-variation-settings:"opsz" 120;
+    font-size:clamp(44px, 6.4vw, 92px);
+    line-height:1.02; letter-spacing:-0.015em;
+  }
+  h1 em, h2 em{font-style:italic; font-weight:300}
+  .hero-sub{
+    margin-top:20px; max-width:48ch;
+    font-size:16.5px; line-height:1.55; color:var(--ink-soft); font-weight:400;
+  }
+  .hero-actions{display:flex; gap:14px; margin-top:30px; flex-wrap:wrap}
+  .btn-solid{
+    background:var(--ink); color:var(--ivory);
+    border-radius:var(--radius-pill); padding:15px 26px;
+    font-size:15px; font-weight:600; text-decoration:none;
+    transition:transform .25s var(--ease), background .25s var(--ease);
+    display:inline-block;
+  }
+  .btn-solid:hover{transform:translateY(-1px); background:#000}
+
+  /* ---------- Viewfinder chrome (signature) ---------- */
+  .vf{position:absolute; z-index:6; font-family:"Fragment Mono",monospace;
+      font-size:11px; letter-spacing:.1em; color:var(--ink-soft);
+      will-change:opacity}
+  .vf-tr{top:96px; right:min(5vw,64px); text-align:right}
+  .vf-tr .glass, .vf-bl .glass{padding:9px 14px; border-radius:12px; display:inline-block}
+  .vf-bl{bottom:9vh; right:min(5vw,64px); display:flex; flex-direction:column; gap:8px; align-items:flex-end}
+
+  /* ---------- Scroll captions — rise in beside the film, recede into the distance ---------- */
+  .cap{
+    position:absolute; z-index:4; max-width:min(36vw, 34ch);
+    opacity:0; pointer-events:none;
+    will-change:opacity, transform, filter;
+  }
+  .cap-l{left:var(--pad-x)}
+  .cap-r{right:var(--pad-x); text-align:right}
+  .cap-kicker{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.16em;
+    color:var(--brass-deep); text-transform:uppercase; margin-bottom:12px;
+  }
+  .cap-kicker::before{content:""; width:26px; height:1px; background:var(--brass); opacity:.6}
+  .cap-r .cap-kicker{flex-direction:row-reverse}
+  .cap-line{
+    font-family:"Fraunces",serif; font-weight:360; font-variation-settings:"opsz" 110;
+    font-size:clamp(24px, 2.9vw, 42px); line-height:1.12; letter-spacing:-.012em; color:var(--ink);
+  }
+  .cap-line em{font-style:italic; font-weight:300}
+  /* word masks — each word rises out of a clipped line */
+  .wm{display:inline-block; overflow:hidden; vertical-align:top;
+      padding:0 .03em .12em; margin:0 -.03em -.12em}
+  .wi{display:inline-block; transform:translateY(115%); will-change:transform}
+
+  /* ---------- Hero load-in: words rise, supporting copy fades up ---------- */
+  .hw{display:inline-block; overflow:hidden; vertical-align:bottom;
+      padding-bottom:.09em; margin-bottom:-.09em}
+  .hw span{display:inline-block; transform:translateY(112%);
+      animation:riseWord 1s var(--ease) forwards}
+  @keyframes riseWord{to{transform:translateY(0)}}
+  .hero-fade{opacity:0; transform:translateY(16px);
+      animation:fadeUp .85s var(--ease) forwards}
+  @keyframes fadeUp{to{opacity:1; transform:none}}
+
+  /* ---------- Custom cursor — dot + trailing focus ring ---------- */
+  .cursor{position:fixed; top:0; left:0; z-index:200; pointer-events:none;
+      mix-blend-mode:difference; opacity:0; transition:opacity .3s}
+  body.cursor-on .cursor{opacity:1}
+  #curDot{width:6px; height:6px; border-radius:50%; background:#fff}
+  #curRing{width:36px; height:36px; border-radius:50%; border:1.25px solid rgba(255,255,255,.9)}
+  body.cursor-on, body.cursor-on a, body.cursor-on button{cursor:none}
+
+  /* ---------- Sector hover previews — image follows the cursor ---------- */
+  .sector-preview{
+    position:fixed; top:0; left:0; z-index:80;
+    width:min(360px, 30vw); aspect-ratio:4/3;
+    border-radius:16px; overflow:hidden; pointer-events:none;
+    opacity:0; will-change:transform, opacity;
+    box-shadow:0 30px 60px -22px rgba(22,24,28,.38), 0 4px 12px rgba(22,24,28,.10);
+    border:1px solid rgba(255,255,255,.65);
+    background:var(--ivory-deep);
+  }
+  .sector-preview img{width:100%; height:100%; object-fit:cover; display:block}
+  .sector-preview::after{content:""; position:absolute; inset:0; border-radius:inherit;
+    border:1px solid rgba(255,255,255,.35); pointer-events:none}
+  @media (hover:none), (max-width:820px){ .sector-preview{display:none} }
+
+  /* ---------- Teardown captions — top-centre, retro glitch ---------- */
+  .tcap{
+    position:absolute; top:70px; left:50%; z-index:6;
+    transform:translateX(-50%); text-align:center;
+    opacity:0; pointer-events:none; width:max-content; max-width:92vw;
+    will-change:opacity, transform;
+  }
+  .t-main{
+    position:relative; display:inline-block;
+    font-family:"Fragment Mono",monospace;
+    font-size:clamp(14px, 1.7vw, 21px); letter-spacing:.26em;
+    color:var(--ink); text-transform:uppercase; white-space:nowrap;
+  }
+  .t-main::before, .t-main::after{
+    content:attr(data-text); position:absolute; inset:0; opacity:0;
+  }
+  .t-main::before{color:#C33D2E; z-index:-1}
+  .t-main::after{color:#5B84AD; z-index:-2}
+  .tcap.live .t-main{animation:gl-jit .9s steps(2) infinite}
+  .tcap.live .t-main::before{opacity:.7; animation:gl-a 2.2s steps(8) infinite}
+  .tcap.live .t-main::after{opacity:.7; animation:gl-b 2.6s steps(8) infinite}
+  .t-sub{
+    display:block; margin-top:9px;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink-soft); font-weight:500;
+  }
+  @keyframes gl-a{
+    0%{clip-path:inset(0 0 82% 0); transform:translate(-2px,-1px)}
+    25%{clip-path:inset(58% 0 12% 0); transform:translate(2px,1px)}
+    50%{clip-path:inset(28% 0 48% 0); transform:translate(-1px,0)}
+    75%{clip-path:inset(78% 0 6% 0); transform:translate(1px,-1px)}
+    100%{clip-path:inset(8% 0 74% 0); transform:translate(-2px,1px)}
+  }
+  @keyframes gl-b{
+    0%{clip-path:inset(70% 0 8% 0); transform:translate(2px,1px)}
+    25%{clip-path:inset(10% 0 72% 0); transform:translate(-2px,-1px)}
+    50%{clip-path:inset(50% 0 30% 0); transform:translate(1px,0)}
+    75%{clip-path:inset(20% 0 60% 0); transform:translate(-1px,1px)}
+    100%{clip-path:inset(62% 0 20% 0); transform:translate(2px,-1px)}
+  }
+  @keyframes gl-jit{0%,100%{transform:translate(0,0)}50%{transform:translate(.5px,-.5px)}}
+
+  /* film-transport scroll progress — sweeps 0° → 360° as you scroll */
+  .transport{
+    position:fixed; left:24px; top:50%; transform:translateY(-50%);
+    z-index:40; display:flex; flex-direction:column; gap:7px;
+  }
+  .transport i{display:block; width:14px; height:1.5px; background:#CFCBC2;
+    transition:background .2s, width .2s}
+  .transport i.lit{background:var(--ink); width:22px}
+
+  /* ---------- Page sections ---------- */
+  section.band{padding:120px var(--pad-x)}
+  .eyebrow{
+    display:flex; align-items:center; gap:14px;
+    font-family:"Fragment Mono",monospace; font-size:11.5px; letter-spacing:.16em;
+    color:var(--brass-deep); text-transform:uppercase; margin-bottom:34px;
+  }
+  .eyebrow::after{content:""; height:1px; flex:0 0 56px; background:var(--brass); opacity:.5}
+  h2{
+    font-family:"Fraunces",serif; font-weight:340; font-variation-settings:"opsz" 110;
+    font-size:clamp(32px, 4.2vw, 56px); line-height:1.08; letter-spacing:-0.012em;
+  }
+  .body-copy{font-size:16.5px; line-height:1.62; color:var(--ink-soft); max-width:62ch}
+  .body-copy + .body-copy{margin-top:1.1em}
+
+  /* Studio */
+  .studio-grid{display:grid; grid-template-columns:5fr 6fr; gap:64px; align-items:start}
+  .studio-grid h2{max-width:16ch}
+
+  /* Sectors — a full panorama of luxury, one heading per bearing */
+  .sector-list{margin-top:10px; border-top:1px solid var(--ivory-deep)}
+  .sector-row{
+    display:grid; grid-template-columns:110px 1fr auto; gap:24px; align-items:baseline;
+    padding:26px 8px; border-bottom:1px solid var(--ivory-deep);
+    transition:background .3s var(--ease), padding-left .3s var(--ease);
+  }
+  .sector-row:hover{background:rgba(231,225,216,.55); padding-left:16px}
+  .sector-deg{font-family:"Fragment Mono",monospace; font-size:12px; letter-spacing:.1em; color:var(--ink-soft);
+    transition:color .3s}
+  .sector-row:hover .sector-deg{color:var(--brass-deep)}
+  .sector-name{font-family:"Fraunces",serif; font-weight:400; font-size:clamp(22px,2.6vw,32px); letter-spacing:-.01em}
+  .sector-note{font-size:13.5px; color:var(--ink-soft); text-align:right; max-width:34ch}
+
+  /* Craft */
+  .craft-grid{display:grid; grid-template-columns:6fr 5fr; gap:64px; align-items:start}
+  .spec-chips{display:flex; flex-wrap:wrap; gap:10px; margin-top:28px}
+  .spec-chips span{
+    font-family:"Fragment Mono",monospace; font-size:11px; letter-spacing:.12em;
+    padding:9px 14px; border-radius:var(--radius-pill); color:var(--ink-soft);
+  }
+
+  /* Results */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:36px; margin-top:16px}
+  .stat{border-top:1px solid var(--brass); padding-top:18px}
+  .stat b{
+    display:block; font-family:"Fraunces",serif; font-weight:340;
+    font-size:clamp(34px,3.6vw,52px); letter-spacing:-.015em; margin-bottom:8px;
+  }
+  .stat span{font-family:"Fragment Mono",monospace; font-size:11px; letter-spacing:.12em;
+    color:var(--ink-soft); text-transform:uppercase; line-height:1.6; display:block}
+  .stat-foot{margin-top:44px; font-family:"Fragment Mono",monospace; font-size:11px;
+    letter-spacing:.1em; color:var(--ink-soft)}
+  .google-line{margin-top:26px; font-size:15px; color:var(--ink-soft); max-width:60ch; line-height:1.6}
+  .google-line strong{color:var(--ink); font-weight:600}
+
+  /* Presence */
+  .presence{background:var(--ivory-deep); border-top:1px solid rgba(165,133,79,.25); border-bottom:1px solid rgba(165,133,79,.25)}
+  .office-list{display:flex; flex-wrap:wrap; gap:14px 44px; margin-top:34px; align-items:baseline}
+  .office{font-family:"Fraunces",serif; font-size:clamp(24px,3vw,40px); font-weight:340; letter-spacing:-.01em}
+  .office small{
+    display:block; font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+    color:var(--brass-deep); text-transform:uppercase; margin-top:6px;
+  }
+  .presence .body-copy{margin-top:34px}
+
+  /* Contact close */
+  .contact{background:var(--ink); color:var(--ivory); padding:130px var(--pad-x)}
+  .contact .eyebrow{color:var(--spectral-gold)}
+  .contact .eyebrow::after{background:var(--spectral-gold)}
+  .contact h2{color:var(--ivory); max-width:18ch}
+  .contact p{margin-top:22px; max-width:52ch; color:#B9BCC2; font-size:16.5px; line-height:1.6}
+  .btn-ivory{
+    display:inline-block; margin-top:36px;
+    background:var(--ivory); color:var(--ink);
+    border-radius:var(--radius-pill); padding:16px 30px;
+    font-size:15px; font-weight:600; text-decoration:none;
+    transition:transform .25s var(--ease);
+  }
+  .btn-ivory:hover{transform:translateY(-1px)}
+  .footer-bar{
+    margin-top:90px; padding-top:26px; border-top:1px solid rgba(242,238,232,.14);
+    display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
+    font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.12em; color:#8B8F97;
+  }
+
+  /* Scroll reveal */
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity .7s var(--ease), transform .7s var(--ease)}
+  .reveal.in{opacity:1; transform:none}
+
+  @media (max-width:960px){
+    .studio-grid, .craft-grid{grid-template-columns:1fr; gap:36px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .sector-note{display:none}
+    .sector-row{grid-template-columns:84px 1fr}
+  }
+  @media (max-width:820px){
+    .brandmark{display:none}
+    .island a{padding:8px 12px; font-size:13.5px}
+    .island a:nth-child(3), .island a:nth-child(4){display:none} /* trim on small screens */
+    .nav-wrap.scrolled .island a{padding:6px 10px; font-size:12.5px}
+    .vf-tr{display:none}
+    .transport{display:none}
+    section.band{padding:88px var(--pad-x)}
+    .cap{max-width:62vw}
+    .cap-line{font-size:clamp(20px,5.4vw,28px)}
+    .tcap{top:58px}
+    .t-main{font-size:12.5px; letter-spacing:.16em; white-space:normal}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cap{display:none}
+    .tcap{display:none}
+    .hw span{transform:none; animation:none}
+    .hero-fade{opacity:1; transform:none; animation:none}
+    .cursor{display:none}
+    .rec-dot{animation:none}
+    .scrub-track{height:auto}
+    .stage{position:relative; height:100vh}
+    .reveal{opacity:1; transform:none; transition:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ ISLAND NAV ============ -->
+<nav class="nav-wrap" id="nav" aria-label="Primary">
+  <a class="brandmark glass" href="#top">Frameworks <em>Studios</em></a>
+  <div class="island glass">
+    <span class="island-mini" aria-hidden="true"><span class="rec-dot"></span>FS</span>
+    <a href="#top" class="active" aria-current="page">Home</a>
+    <a href="#craft">Craft</a>
+    <a href="#results">Results</a>
+    <a href="#studio">Studio</a>
+    <a href="#sectors">Sectors</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="cta glass">Start a project</a>
+</nav>
+
+<!-- ============ SCRUB HERO ============ -->
+<div class="scrub-track" id="track">
+  <a id="top"></a>
+  <section class="stage" aria-label="Showreel">
+
+    <div class="poster" aria-hidden="true">
+      <!-- Faint 360° equirectangular graticule, shown until the film loads -->
+      <svg viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#16181C" stroke-width="1" fill="none" opacity="0.07">
+          <line x1="180" y1="0" x2="180" y2="810"/>
+          <line x1="360" y1="0" x2="360" y2="810"/>
+          <line x1="540" y1="0" x2="540" y2="810"/>
+          <line x1="720" y1="0" x2="720" y2="810"/>
+          <line x1="900" y1="0" x2="900" y2="810"/>
+          <line x1="1080" y1="0" x2="1080" y2="810"/>
+          <line x1="1260" y1="0" x2="1260" y2="810"/>
+          <path d="M0,150 Q720,110 1440,150"/>
+          <path d="M0,275 Q720,255 1440,275"/>
+          <path d="M0,535 Q720,555 1440,535"/>
+          <path d="M0,660 Q720,700 1440,660"/>
+        </g>
+        <line x1="0" y1="405" x2="1440" y2="405" stroke="#8A6D3F" stroke-width="1" opacity="0.28"/>
+        <circle cx="1065" cy="240" r="46" fill="#E3C795" opacity="0.5"/>
+        <circle cx="1065" cy="240" r="92" fill="#E3C795" opacity="0.16"/>
+      </svg>
+    </div>
+    <!-- Showreel embedded inline (scrub-encoded, keyframe every 1/3s).
+         For the live cPanel deployment, swap the data URI for src="showreel.mp4"
+         and upload the MP4 alongside this file — better for caching. -->
+    <video id="scrub" src="assets/showreel.mp4" muted playsinline preload="auto"></video>
+
+    <!-- Scroll captions — each rises in during its window, then recedes into the distance.
+         data-start / data-end are scroll-progress fractions (0 -> 1) of the full two-part pan.
+         The sequence ends on technology, landing the scrub at the Craft section. -->
+    <div class="cap cap-l" data-start="0.065" data-end="0.23" style="top:24%">
+      <span class="cap-kicker">The craft</span>
+      <p class="cap-line">Luxury bespoke <em>360° VR tours.</em></p>
+    </div>
+    <div class="cap cap-r" data-start="0.16" data-end="0.33" style="top:42%">
+      <span class="cap-kicker">The reach</span>
+      <p class="cap-line">From Monaco, <em>to the world.</em></p>
+    </div>
+    <div class="cap cap-l" data-start="0.27" data-end="0.43" style="top:30%">
+      <span class="cap-kicker">The result</span>
+      <p class="cap-line">€400m+ in client sales <em>since 2018.</em></p>
+    </div>
+    <div class="cap cap-r" data-start="0.37" data-end="0.53" style="top:46%">
+      <span class="cap-kicker">The detail</span>
+      <p class="cap-line">Ultra-high-res HDR, <em>captured on DSLR.</em></p>
+    </div>
+    <div class="cap cap-l" data-start="0.46" data-end="0.62" style="top:34%">
+      <span class="cap-kicker">The technology</span>
+      <p class="cap-line">Precision, <em>in every direction.</em></p>
+    </div>
+    <!-- Teardown + rebuild captions — top-centre, retro glitch + character scramble -->
+    <div class="tcap" data-start="0.635" data-end="0.735">
+      <span class="t-main" data-text="HIGH-RESOLUTION SENSORS">HIGH-RESOLUTION SENSORS</span>
+      <span class="t-sub">Ultra-high-res HDR &middot; exceptional depth of field</span>
+    </div>
+    <div class="tcap" data-start="0.715" data-end="0.815">
+      <span class="t-main" data-text="BUILT FOR 360&deg;">BUILT FOR 360&deg;</span>
+      <span class="t-sub">Every layer engineered for immersion</span>
+    </div>
+    <div class="tcap" data-start="0.815" data-end="0.90">
+      <span class="t-main" data-text="SEAMLESSLY STITCHED">SEAMLESSLY STITCHED</span>
+      <span class="t-sub">Every angle, one flawless frame</span>
+    </div>
+    <div class="tcap" data-start="0.885" data-end="0.965">
+      <span class="t-main" data-text="THE COMPLETE SYSTEM">THE COMPLETE SYSTEM</span>
+      <span class="t-sub">Capture &middot; stitch &middot; stage &middot; deliver</span>
+    </div>
+    <!-- Viewfinder chrome -->
+    <div class="vf vf-tr">
+      <span class="glass">ULTRA-HD &nbsp;·&nbsp; HDR &nbsp;·&nbsp; EQUIRECTANGULAR</span>
+    </div>
+    <div class="vf vf-bl">
+      <span class="glass"><span class="rec-dot" style="display:inline-block;margin-right:8px"></span>LIVE&nbsp; <span id="pan">PAN 000°</span></span>
+      <span class="glass">SCROLL TO PAN ▼</span>
+    </div>
+
+    <!-- Copy -->
+    <div class="hero-copy" id="heroCopy">
+      <span class="spec-eyebrow glass hero-fade" style="animation-delay:.1s"><span class="rec-dot"></span>FRAMEWORKS&nbsp;STUDIOS&nbsp;—&nbsp;MONACO&nbsp;·&nbsp;SINCE&nbsp;2018</span>
+      <h1>
+        <span class="hw"><span style="animation-delay:.18s">Step</span></span>
+        <span class="hw"><span style="animation-delay:.27s">inside,</span></span>
+        <em><span class="hw"><span style="animation-delay:.38s">from</span></span>
+        <span class="hw"><span style="animation-delay:.47s">anywhere.</span></span></em>
+      </h1>
+      <p class="hero-sub hero-fade" style="animation-delay:.62s">Luxury bespoke 360° VR tours and interactive digital brochures — immersive experiences that bring prestigious spaces to life and turn viewings into enquiries, bookings and sales.</p>
+      <div class="hero-actions hero-fade" style="animation-delay:.78s">
+        <a class="btn-solid" href="#contact">Start a project</a>
+        <a class="cta glass" href="#studio">Explore the studio</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- film transport progress -->
+<div class="transport" aria-hidden="true" id="transport"></div>
+
+<!-- ============ CRAFT ============ -->
+<section class="band" id="craft">
+  <div class="eyebrow reveal">The craft</div>
+  <div class="craft-grid">
+    <div>
+      <h2 class="reveal">Every frame to the highest technical and aesthetic standard.</h2>
+      <div class="spec-chips reveal">
+        <span class="glass">DSLR CAPTURE</span>
+        <span class="glass">ULTRA-HIGH-RES · HDR</span>
+        <span class="glass">360° EQUIRECTANGULAR</span>
+        <span class="glass">AI-ASSISTED POST</span>
+        <span class="glass">DIGITAL STAGING</span>
+        <span class="glass">BESPOKE UI/UX</span>
+      </div>
+    </div>
+    <div>
+      <p class="body-copy reveal">Using professional high-end DSLR cameras, we capture ultra-high-resolution, HDR, 360° equirectangular images with exceptional depth of field and perfect exposure.</p>
+      <p class="body-copy reveal">Advanced AI tools work alongside our cutting-edge software, post-production, graphic design and digital staging to deliver immediate visual impact — with tailor-made, graphically designed UI/UX woven seamlessly into every experience.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section class="band" id="results" style="padding-top:40px">
+  <div class="eyebrow reveal">Results</div>
+  <div class="stats reveal">
+    <div class="stat"><b>€400m+</b><span>Client sales contributed since 2018</span></div>
+    <div class="stat"><b>€6.3m</b><span>Monthly rental agreements facilitated</span></div>
+    <div class="stat"><b>15m+</b><span>Organic views generated to date</span></div>
+    <div class="stat"><b>60+</b><span>Seasoned professionals worldwide</span></div>
+  </div>
+  <p class="google-line reveal">As a <strong>Trusted &amp; Accredited Google Agency</strong>, we amplify digital visibility through seamless Google Street View and Google My Business integrations.</p>
+  <p class="stat-foot reveal">GLOBAL VR MARKET · c. USD 20.8BN (2025) → USD 170BN+ PROJECTED BY 2034 · ~26% CAGR</p>
+</section>
+
+<!-- ============ STUDIO ============ -->
+<section class="band" id="studio">
+  <div class="eyebrow reveal">The studio</div>
+  <div class="studio-grid">
+    <h2 class="reveal">Immersive marketing for the world's most prestigious spaces.</h2>
+    <div>
+      <p class="body-copy reveal">Frameworks Studios is a premier immersive digital marketing agency specialising in luxury bespoke 360° virtual reality tours and interactive immersive digital brochures. In today's digital-first world, immersive experiences are no longer a luxury — they are essential.</p>
+      <p class="body-copy reveal">We craft visually stunning, fully immersive tours that elevate brand presence, deepen audience engagement and directly accelerate enquiries, bookings and sales. Every experience integrates seamlessly into your existing campaigns, adding depth and interactivity that resonate with today's experience-driven audiences — all fully aligned with your unique brand identity.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTORS ============ -->
+<section class="band" id="sectors" style="padding-top:40px">
+  <div class="eyebrow reveal">Sectors — a full panorama of luxury</div>
+  <div class="sector-list reveal">
+    <div class="sector-row" data-img="https://d8j0ntlcm91z4.cloudfront.net/user_3GvBOeIqhzkYZZugRI37Gjrr3Fl/hf_20260725_095634_cd013f63-9852-4cba-8b13-81aa83be508f.png"><span class="sector-deg">000°</span><span class="sector-name">Luxury Real Estate</span><span class="sector-note">Residences that sell before the first viewing</span></div>
+    <div class="sector-row" data-img="https://d8j0ntlcm91z4.cloudfront.net/user_3GvBOeIqhzkYZZugRI37Gjrr3Fl/hf_20260725_095638_2a88522b-c4cd-424d-aa21-d33915ab13b4.png"><span class="sector-deg">051°</span><span class="sector-name">Super-Yachts</span><span class="sector-note">Every deck, walkable from any harbour</span></div>
+    <div class="sector-row" data-img="https://d8j0ntlcm91z4.cloudfront.net/user_3GvBOeIqhzkYZZugRI37Gjrr3Fl/hf_20260725_095642_c90fffe6-64b9-4363-ac5c-10248f700c2d.png"><span class="sector-deg">103°</span><span class="sector-name">Automotive</span><span class="sector-note">Showrooms without borders</span></div>
+    <div class="sector-row" data-img="https://d8j0ntlcm91z4.cloudfront.net/user_3GvBOeIqhzkYZZugRI37Gjrr3Fl/hf_20260725_095647_8e213d68-f8b5-4955-bf6d-5a7142a3b1ab.png"><span class="sector-deg">154°</span><span class="sector-name">Event Venues</span><span class="sector-note">Let planners stand in the room</span></div>
+    <div class="sector-row" data-img="https://d8j0ntlcm91z4.cloudfront.net/user_3GvBOeIqhzkYZZugRI37Gjrr3Fl/hf_20260725_095651_e2d78f9a-dd6c-40b1-9be5-57948a89bd1e.png"><span class="sector-deg">206°</span><span class="sector-name">Stadiums</span><span class="sector-note">Hospitality boxes, seen from the seat</span></div>
+    <div class="sector-row" data-img="https://d8j0ntlcm91z4.cloudfront.net/user_3GvBOeIqhzkYZZugRI37Gjrr3Fl/hf_20260725_095658_56676c06-0063-4065-a26e-293197585efe.png"><span class="sector-deg">257°</span><span class="sector-name">Golf Courses</span><span class="sector-note">The course, hole by hole</span></div>
+    <div class="sector-row" data-img="https://d8j0ntlcm91z4.cloudfront.net/user_3GvBOeIqhzkYZZugRI37Gjrr3Fl/hf_20260725_095702_949859d6-8903-4ca6-9b4b-816c483ca447.png"><span class="sector-deg">309°</span><span class="sector-name">Premium Hospitality</span><span class="sector-note">Hotels, resorts &amp; leisure destinations</span></div>
+  </div>
+</section>
+
+<!-- ============ PRESENCE ============ -->
+<section class="band presence" id="presence">
+  <div class="eyebrow reveal">Global presence</div>
+  <div class="office-list reveal">
+    <span class="office">Monaco<small>Headquarters</small></span>
+    <span class="office">South of France<small>Office</small></span>
+    <span class="office">Dubai<small>Office</small></span>
+    <span class="office">Saudi Arabia<small>Office</small></span>
+    <span class="office">United Kingdom<small>Office</small></span>
+  </div>
+  <p class="body-copy reveal">Our multidisciplinary team of over 60 seasoned professionals combines expertise in 360° photography, VR production, graphic design, brand identity, AI and immersive interactive media — delivering bespoke solutions on a truly global scale.</p>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+  <div class="eyebrow reveal">Contact</div>
+  <h2 class="reveal">Bring your space <em>to the world.</em></h2>
+  <p class="reveal">We embrace every client's unique vision, delivering personalised, high-impact immersive marketing designed to save time and maximise results. Tell us about your space.</p>
+  <!-- TODO: point this at the live contact form or booking email once confirmed -->
+  <a class="btn-ivory reveal" href="#">Start a project</a>
+  <div class="footer-bar">
+    <span>© 2026 FRAMEWORKS STUDIOS</span>
+    <span>MONACO · SOUTH OF FRANCE · DUBAI · SAUDI ARABIA · UNITED KINGDOM</span>
+  </div>
+</section>
+
+<script>
+(function(){
+  const video = document.getElementById('scrub');
+  const track = document.getElementById('track');
+  const poster = document.querySelector('.poster');
+  const pan = document.getElementById('pan');
+  const nav = document.getElementById('nav');
+  const heroCopy = document.getElementById('heroCopy');
+  const vfs = [...document.querySelectorAll('.vf')];
+
+  /* split caption lines into masked words for the staggered reveal */
+  function splitWords(el){
+    const process = node => {
+      if(node.nodeType === 3){
+        const frag = document.createDocumentFragment();
+        node.textContent.split(/(\s+)/).forEach(part => {
+          if(!part) return;
+          if(/^\s+$/.test(part)){ frag.appendChild(document.createTextNode(part)); return; }
+          const m = document.createElement('span'); m.className = 'wm';
+          const w = document.createElement('span'); w.className = 'wi'; w.textContent = part;
+          m.appendChild(w); frag.appendChild(m);
+        });
+        node.parentNode.replaceChild(frag, node);
+      } else if(node.nodeType === 1){
+        [...node.childNodes].forEach(process);
+      }
+    };
+    [...el.childNodes].forEach(process);
+    return [...el.querySelectorAll('.wi')];
+  }
+  const caps = [...document.querySelectorAll('.cap')].map(el => ({
+    el, a:+el.dataset.start, b:+el.dataset.end,
+    words: splitWords(el.querySelector('.cap-line'))
+  }));
+  const GLYPHS = '0123456789#$%&/<>[]*+=?!';
+  let fc = 0;                                     /* frame counter for scramble throttling */
+  const tcaps = [...document.querySelectorAll('.tcap')].map(el => {
+    const main = el.querySelector('.t-main');
+    return { el, main, text: main.textContent,
+             a:+el.dataset.start, b:+el.dataset.end, live:false, done:false };
+  });
+  const sm = (e0,e1,x)=>{ const t=Math.min(1,Math.max(0,(x-e0)/(e1-e0))); return t*t*(3-2*t); };
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(pointer:fine)').matches;
+
+  /* transport ticks — one per 15° of pan */
+  const transport = document.getElementById('transport');
+  const TICKS = 24;
+  for(let i=0;i<TICKS;i++){ transport.appendChild(document.createElement('i')); }
+  const ticks = [...transport.children];
+
+  let duration = 0, target = 0, current = 0, ready = false;
+
+  function armVideo(){
+    if(ready || video.readyState < 1) return;   /* HAVE_METADATA or better */
+    duration = video.duration; ready = true;
+    poster.style.display = 'none';
+    video.pause();
+    try{ video.currentTime = 0; }catch(e){}
+    if(reduced){ video.play(); }                /* reduced motion: just play once */
+  }
+  video.addEventListener('loadedmetadata', armVideo);
+  video.addEventListener('loadeddata', armVideo);
+  video.addEventListener('canplay', armVideo);
+  video.addEventListener('error', () => { video.style.display='none'; });
+  armVideo();                                    /* inline data URI may already be loaded */
+
+  function progress(){
+    const r = track.getBoundingClientRect();
+    const total = r.height - innerHeight;
+    if(total <= 0) return 0;
+    return Math.min(1, Math.max(0, -r.top / total));
+  }
+
+  function frame(){
+    fc++;
+    const p = progress();
+    ticks.forEach((t,i)=> t.classList.toggle('lit', i/TICKS <= p));
+    pan.textContent = 'PAN ' + String(Math.round(p*360)).padStart(3,'0') + '\u00B0';
+
+    /* smooth delayed scroll — the page eases toward the wheel target */
+    if(smooth.on){
+      smooth.cur += (smooth.target - smooth.cur) * 0.07;
+      if(Math.abs(smooth.target - smooth.cur) > 0.5){ scrollTo(0, smooth.cur); }
+    }
+
+    /* cursor: dot snaps, ring trails behind */
+    if(cursor.on){
+      cursor.dot.style.transform = 'translate(' + (cursor.mx - 3) + 'px,' + (cursor.my - 3) + 'px)';
+      cursor.rx += (cursor.mx - cursor.rx) * 0.14;
+      cursor.ry += (cursor.my - cursor.ry) * 0.14;
+      cursor.ring.style.transform = 'translate(' + (cursor.rx - 18) + 'px,' + (cursor.ry - 18) + 'px) scale(' + cursor.scale + ')';
+    }
+
+    /* sector preview trails the cursor, tilts with motion, recedes when idle */
+    if(pv.active){
+      pv.cx += (pv.x - pv.cx) * 0.16;
+      pv.cy += (pv.y - pv.cy) * 0.16;
+      pv.o  += ((pv.on ? 1 : 0) - pv.o) * 0.14;
+      const tiltT = Math.max(-8, Math.min(8, pv.vx * 0.45));
+      pv.vx *= 0.82;
+      pv.tilt += (tiltT - pv.tilt) * 0.12;
+      pv.el.style.opacity = pv.o;
+      pv.el.style.transform =
+        'translate(' + pv.cx + 'px,' + pv.cy + 'px) ' +
+        'scale(' + (0.88 + pv.o * 0.12) + ') rotate(' + pv.tilt + 'deg)';
+    }
+
+    /* hero text + viewfinder chrome dissolve as the film takes over */
+    if(!reduced){
+      const fade = Math.max(0, 1 - p / 0.12);       /* fully gone by 12% of the pan */
+      heroCopy.style.opacity = fade;
+      heroCopy.style.transform = 'translateY(' + ((1 - fade) * -22) + 'px)';
+      heroCopy.style.pointerEvents = fade < 0.5 ? 'none' : '';
+      vfs.forEach(v => { v.style.opacity = fade; });
+
+      /* captions: words rise in one by one, hold for most of the window,
+         then the whole line shrinks + blurs upward — receding into the distance */
+      caps.forEach(c => {
+        const t = (p - c.a) / (c.b - c.a);
+        if(t <= 0 || t >= 1){ c.el.style.opacity = 0; return; }
+        const outT = sm(.85, 1, t);
+        c.el.style.opacity = sm(0, .04, t) * (1 - outT);
+        c.el.style.transform =
+          'translateY(' + (-outT * 54) + 'px) ' +
+          'scale(' + (1 - outT * 0.2) + ')';
+        c.el.style.filter = 'blur(' + (outT * 7) + 'px)';
+        const rt = Math.min(1, t / 0.20);           /* words fully in by 20% of window */
+        c.words.forEach((w,i) => {
+          const wIn = sm(i * 0.06, i * 0.06 + 0.36, rt);
+          w.style.transform = 'translateY(' + ((1 - wIn) * 115) + '%)';
+        });
+      });
+
+      /* final-frame scroll-out: the film eases into a rounded card,
+         lifts slightly, and hands the page over to the sections below */
+      const outro = sm(0.955, 1, p);
+      const vT = 'scale(' + (1 - outro * 0.06) + ') translateY(' + (-outro * 24) + 'px)';
+      video.style.transform = vT;
+      poster.style.transform = vT;
+      video.style.borderRadius = poster.style.borderRadius = (outro * 28) + 'px';
+
+      /* teardown captions: characters scramble to symbols as they appear
+         and again as they dissolve; long steady hold in between */
+      tcaps.forEach(c => {
+        const t = (p - c.a) / (c.b - c.a);
+        const inside = t > 0 && t < 1;
+        if(inside !== c.live){ c.live = inside; c.el.classList.toggle('live', inside); }
+        if(!inside){
+          c.el.style.opacity = 0;
+          if(!c.done){ c.main.textContent = c.text; c.main.setAttribute('data-text', c.text); c.done = true; }
+          return;
+        }
+        c.done = false;
+        const oIn = sm(0, .09, t), oOut = sm(.92, 1, t);
+        c.el.style.opacity = oIn * (1 - oOut);
+        c.el.style.transform = 'translateX(-50%) translateY(' + ((1 - oIn) * 8 - oOut * 8) + 'px)';
+        /* decode wave: resolves left-to-right on entry, re-scrambles right-to-left on exit */
+        const reveal = sm(.02, .26, t) * (1 - sm(.80, .97, t));
+        if(fc % 2 === 0){
+          let s = '';
+          for(let i = 0; i < c.text.length; i++){
+            const ch = c.text[i];
+            if(ch === ' '){ s += ' '; continue; }
+            s += (reveal >= (i + 1) / c.text.length)
+              ? ch
+              : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+          }
+          c.main.textContent = s;
+          c.main.setAttribute('data-text', s);
+        }
+      });
+    }
+
+    if(ready && !reduced){
+      target = p * (duration - 0.05);
+      current += (target - current) * 0.18;          /* lerp = silky scrub */
+      /* seek only when we've moved at least half a source frame (12fps source) —
+         issuing a seek every rAF overwhelms the decoder and causes stutter */
+      if(Math.abs(current - video.currentTime) > 0.042) video.currentTime = current;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- smooth delayed scroll (desktop wheel only) ---------- */
+  const smooth = { on:false, target:scrollY, cur:scrollY };
+  if(!reduced && finePointer){
+    smooth.on = true;
+    const maxScroll = () => document.documentElement.scrollHeight - innerHeight;
+    addEventListener('wheel', e => {
+      e.preventDefault();
+      const d = e.deltaMode === 1 ? e.deltaY * 33 : e.deltaY;
+      smooth.target = Math.max(0, Math.min(maxScroll(), smooth.target + d));
+    }, {passive:false});
+    /* resync if the user scrolls another way (scrollbar drag, keyboard) */
+    addEventListener('scroll', () => {
+      if(Math.abs(scrollY - smooth.cur) > 2){ smooth.target = smooth.cur = scrollY; }
+    }, {passive:true});
+    /* anchor links glide through the eased scroller */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      const href = a.getAttribute('href');
+      if(href.length < 2) return;
+      const el = document.querySelector(href);
+      if(!el) return;
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        smooth.target = Math.max(0, Math.min(maxScroll(), el.getBoundingClientRect().top + scrollY));
+      });
+    });
+  }
+
+  /* ---------- sector hover previews ---------- */
+  const pv = { on:false, o:0, x:innerWidth/2, y:innerHeight/2, cx:innerWidth/2, cy:innerHeight/2,
+               vx:0, tilt:0, el:null, img:null, active:false };
+  if(!reduced && finePointer){
+    pv.el = document.createElement('div');
+    pv.el.className = 'sector-preview';
+    pv.img = document.createElement('img');
+    pv.img.alt = '';
+    pv.el.appendChild(pv.img);
+    document.body.appendChild(pv.el);
+    pv.active = true;
+    let lastX = innerWidth/2;
+    document.querySelectorAll('.sector-row[data-img]').forEach(row => {
+      const src = row.dataset.img;
+      const pre = new Image(); pre.src = src;      /* preload */
+      row.addEventListener('mouseenter', () => { pv.img.src = src; pv.on = true; });
+      row.addEventListener('mouseleave', () => { pv.on = false; });
+    });
+    addEventListener('mousemove', e => {
+      pv.vx = e.clientX - lastX; lastX = e.clientX;
+      const w = pv.el.offsetWidth || 360, h = pv.el.offsetHeight || 270;
+      let x = e.clientX + 30;
+      if(x + w > innerWidth - 16) x = e.clientX - 30 - w;   /* flip to the left near the edge */
+      let y = e.clientY - h/2;
+      y = Math.max(16, Math.min(innerHeight - h - 16, y));
+      pv.x = x; pv.y = y;
+    }, {passive:true});
+  }
+
+  /* ---------- animated cursor: dot + trailing focus ring ---------- */
+  const cursor = { on:false, mx:innerWidth/2, my:innerHeight/2, rx:innerWidth/2, ry:innerHeight/2, scale:1 };
+  if(!reduced && finePointer){
+    const ring = document.createElement('div');
+    ring.className = 'cursor'; ring.id = 'curRing';
+    const dot = document.createElement('div');
+    dot.className = 'cursor'; dot.id = 'curDot';
+    document.body.append(ring, dot);
+    cursor.dot = dot; cursor.ring = ring; cursor.on = true;
+    addEventListener('mousemove', e => {
+      cursor.mx = e.clientX; cursor.my = e.clientY;
+      document.body.classList.add('cursor-on');
+    }, {passive:true});
+    document.addEventListener('mouseleave', () => document.body.classList.remove('cursor-on'));
+    document.addEventListener('mouseover', e => {
+      cursor.scale = e.target.closest('a, button, .sector-row') ? 1.7 : 1;
+    });
+  }
+
+  requestAnimationFrame(frame);
+
+  /* island shrinks into liquid glass once you leave the top */
+  function navState(){ nav.classList.toggle('scrolled', scrollY > 40); }
+  addEventListener('scroll', navState, {passive:true});
+  navState();
+
+  /* section reveals */
+  if(!reduced && 'IntersectionObserver' in window){
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{threshold:.18});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+  }
+})();
+</script>
+</body>
+</html>
