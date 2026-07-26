@@ -1,10 +1,13 @@
 /* Digital Services — page behaviour. Loaded only by digital-services.html.
  *
- *   1. the reactive field behind the page (canvas)
- *   2. word-by-word heading reveals and staggered fades
- *   3. monospace labels that decode into place
- *   4. the services accordion
- *   5. the scroll progress rule
+ *   1. the backdrop film
+ *   2. the reactive field over it (canvas)
+ *   3. word-by-word heading reveals and staggered fades
+ *   4. monospace labels that decode into place
+ *   5. the services accordion
+ *   6. glass panes and hero parallax
+ *   7. the enquiry / call panel
+ *   8. the scroll progress rule
  *
  * Everything degrades: with JavaScript off the text is plain HTML, the field is
  * the CSS gradient underneath it, and the service panels are opened by a
@@ -13,7 +16,33 @@
 (function(){
   const { reduced, sm } = window.FS;
 
-  /* ---------- 1 · the reactive field ----------
+  /* ---------- 1 · the backdrop film ----------
+     11 MB of 1080p is not something to push at every visitor, so the <video>
+     ships with no src and gets one only when it is worth it: a wide screen, a
+     connection that has not asked us to save data, and motion not suppressed.
+     Everyone else keeps the poster, which is also what a JS-less visitor sees. */
+  const backdrop = document.querySelector('.backdrop');
+  if(backdrop){
+    const film = backdrop.querySelector('.backdrop-film');
+    const conn = navigator.connection || {};
+    const thrifty = conn.saveData === true || /2g/.test(conn.effectiveType || '');
+    const roomy = matchMedia('(min-width: 821px)').matches;
+
+    if(film && roomy && !thrifty && !reduced){
+      film.addEventListener('canplay', () => backdrop.classList.add('is-playing'), {once:true});
+      film.preload = 'auto';
+      film.src = film.dataset.src;
+      const go = film.play();
+      if(go && go.catch) go.catch(() => {});   /* autoplay refused: poster stays */
+      /* a paused tab should not keep decoding frames */
+      document.addEventListener('visibilitychange', () => {
+        if(document.hidden) film.pause();
+        else if(backdrop.classList.contains('is-playing')) film.play().catch(() => {});
+      });
+    }
+  }
+
+  /* ---------- 2 · the reactive field ----------
      Scan lines that bend away from the pointer. The canvas is created here, so
      a JS-less visitor simply keeps the gradient the .field div already carries. */
   const field = document.querySelector('.field');
@@ -39,6 +68,8 @@
     addEventListener('pointermove', e => { p.tx = e.clientX; p.ty = e.clientY; p.real = true; }, {passive:true});
     addEventListener('pointerdown', e => { p.tx = e.clientX; p.ty = e.clientY; p.real = true; }, {passive:true});
 
+    /* Kept deliberately faint now that the film sits behind it: this layer is
+       here for the pointer to push against, not to be looked at. */
     const RADIUS = 270;      /* how far the distortion reaches */
     const PUSH   = 52;       /* how hard it pushes at the centre */
     const ROWS   = 30, COLS = 56, VLINES = 9;
@@ -55,8 +86,8 @@
 
       /* the pointer carries a soft light with it */
       const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, RADIUS * 1.7);
-      glow.addColorStop(0, 'rgba(255,255,255,0.075)');
-      glow.addColorStop(0.55, 'rgba(214,220,228,0.022)');
+      glow.addColorStop(0, 'rgba(255,255,255,0.055)');
+      glow.addColorStop(0.55, 'rgba(214,220,228,0.016)');
       glow.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, w, h);
@@ -70,7 +101,7 @@
       for(let i = 0; i < ROWS; i++){
         const baseY = i * gapY;
         const near = Math.exp(-Math.pow((baseY - p.y) / 230, 2));
-        ctx.strokeStyle = 'rgba(244,241,236,' + (0.042 + near * 0.115).toFixed(4) + ')';
+        ctx.strokeStyle = 'rgba(255,255,255,' + (0.018 + near * 0.07).toFixed(4) + ')';
         ctx.beginPath();
         for(let j = 0; j < COLS; j++){
           const x0 = j * gapX;
@@ -88,7 +119,7 @@
 
       /* a few verticals give the field a sense of depth rather than stripes */
       const gapV = w / (VLINES - 1);
-      ctx.strokeStyle = 'rgba(244,241,236,0.035)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.016)';
       for(let i = 0; i < VLINES; i++){
         const baseX = i * gapV;
         ctx.beginPath();
@@ -124,7 +155,7 @@
     }
   }
 
-  /* ---------- 2 · text ----------
+  /* ---------- 3 · text ----------
      Headings are split into words, each masked and lifted into place. The walk
      preserves inline markup (<em>, <br>) instead of flattening to text. */
   function splitWords(el){
@@ -158,7 +189,7 @@
     if(el.dataset.fade) el.style.setProperty('--d', el.dataset.fade + 'ms');
   });
 
-  /* ---------- 3 · decoding labels ---------- */
+  /* ---------- 4 · decoding labels ---------- */
   const GLYPHS = '0123456789#$%&/<>[]*+=?!';
   function decode(el){
     const text = el.dataset.text || el.textContent;
@@ -197,7 +228,7 @@
     targets.forEach(el => el.classList.add('in'));
   }
 
-  /* ---------- 4 · services accordion ----------
+  /* ---------- 5 · services accordion ----------
      One open at a time. Collapsed panels are made inert so their links and text
      stay out of the tab order and out of the accessibility tree. */
   const services = [...document.querySelectorAll('.svc')];
@@ -224,7 +255,7 @@
     svc.addEventListener('fs:close', () => set(false));
   });
 
-  /* ---------- 5 · glass ----------
+  /* ---------- 6 · glass ----------
      The specular highlight on each pane tracks the pointer. Coordinates are
      written as percentages into custom properties, so the gradient itself is
      declared in CSS and nothing here touches layout. */
@@ -249,9 +280,9 @@
   const hero = document.querySelector('.dh');
   if(hero && !reduced && matchMedia('(pointer:fine)').matches){
     const layers = [
-      { el: hero.querySelector('.orb'),      x: 30, y: 22 },
-      { el: hero.querySelector('.dh-title'), x: -16, y: -11 },
-      { el: hero.querySelector('.dh-side'),  x: -9,  y: -6 },
+      { el: document.querySelector('.backdrop-film'), x: 26, y: 18 },
+      { el: hero.querySelector('.dh-title'),          x: -16, y: -11 },
+      { el: hero.querySelector('.dh-side'),           x: -9,  y: -6 },
     ].filter(l => l.el);
     const aim = { x:0, y:0 }, now = { x:0, y:0 };
     addEventListener('pointermove', e => {
@@ -270,19 +301,7 @@
     });
   }
 
-  /* the aurora lags the scroll slightly, so the glass has moving light in it */
-  const aurora = document.querySelector('.aurora');
-  if(aurora && !reduced){
-    let current = 0, target = 0;
-    addEventListener('scroll', () => { target = scrollY * -0.06; }, {passive:true});
-    FS.onFrame(() => {
-      if(Math.abs(target - current) < 0.05) return;
-      current += (target - current) * 0.06;
-      aurora.style.transform = 'translate3d(0,' + current.toFixed(2) + 'px,0)';
-    });
-  }
-
-  /* ---------- 6 · the conversion panel ----------
+  /* ---------- 7 · the conversion panel ----------
      Two paths in one panel: an enquiry form and a call request. Both post to
      /api/contact natively, so they still work with JavaScript off; everything
      below is enhancement — tab switching, the date picker, inline validation
@@ -522,7 +541,7 @@
     });
   }
 
-  /* ---------- 7 · scroll progress ---------- */
+  /* ---------- 8 · scroll progress ---------- */
   const progress = document.querySelector('.progress');
   if(progress && !reduced){
     const update = () => {

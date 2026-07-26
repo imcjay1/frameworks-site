@@ -11,7 +11,7 @@
    underneath them would turn the current-page pill inside out. Only the surfaces
    this page actually paints are overridden. */
 body[data-theme="dark"]{
-  background:#08090B;
+  background:#000;
   color:#F5F6F7;
   --ink-soft:#8E949E;          /* muted body text, readable on near-black */
   --ivory-deep:#16181C;
@@ -34,6 +34,13 @@ body[data-theme="dark"] ::selection{background:var(--brass); color:#08090B}
 body[data-theme="dark"] .contact,
 body[data-theme="dark"] .site-foot{background:transparent}
 body[data-theme="dark"] .contact{border-top:1px solid var(--line-soft)}
+/* Sections carry their own veil so the film reads through the page without ever
+   fighting the text sitting on it. */
+body[data-theme="dark"] .dark-band,
+body[data-theme="dark"] .ticker,
+body[data-theme="dark"] .contact,
+body[data-theme="dark"] .site-foot{background:rgba(0,0,0,.62)}
+body[data-theme="dark"] .dark-band + .dark-band{border-top-color:rgba(255,255,255,.06)}
 
 body[data-theme="dark"] .glass{
   background:linear-gradient(135deg, rgba(244,241,236,.09), rgba(244,241,236,.03));
@@ -48,53 +55,41 @@ body[data-theme="dark"] .spec-chips span{color:#B7BCC4}
   position:fixed; inset:0; z-index:0;
   pointer-events:none;
   background:
-    radial-gradient(120% 80% at 70% -10%, rgba(255,255,255,.06), transparent 60%),
-    radial-gradient(90% 70% at 10% 110%, rgba(255,255,255,.045), transparent 65%);
+    radial-gradient(120% 80% at 70% -10%, rgba(255,255,255,.035), transparent 60%),
+    radial-gradient(90% 70% at 10% 110%, rgba(255,255,255,.025), transparent 65%);
 }
 
-/* ---------- Aurora ----------
-   Slow luminous blobs behind everything. They are what the glass actually
-   refracts — backdrop-filter over flat black would be an invisible effect, so
-   this layer is what makes the cards read as glass at all. */
-/* horizontally flush with the viewport: reaching past it would add page scroll.
-   The blobs are clipped by this element's own overflow. */
-.aurora{position:fixed; inset:-12vh 0; z-index:0; pointer-events:none; overflow:hidden}
-.aurora i{
-  position:absolute; display:block; border-radius:50%;
-  filter:blur(90px); will-change:transform;
+/* ---------- Backdrop ----------
+   A looping film of the chrome form, fixed behind the whole page, with a veil
+   over it so type stays legible wherever it lands. The film is what the glass
+   panes refract — there is no separate colour layer any more. */
+/* z-index:-1, not 0. At 0 this fixed layer composited over content further down
+   the page even though <main> was lifted above it — the last section's heading
+   painted and was then covered by the veil. Sitting genuinely behind everything
+   removes the ordering question entirely, and it still paints above the body's
+   background, so the film is unaffected. */
+.backdrop{position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden}
+.backdrop-film{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:50% 62%;
+  opacity:0; transition:opacity 1.2s var(--ease);
+  will-change:transform;
 }
-.aurora i:nth-child(1){
-  width:52vw; height:52vw; left:-6vw; top:2vh;
-  background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.30), rgba(200,206,214,.11) 55%, transparent 72%);
-  animation:drift-a 38s cubic-bezier(.45,.05,.55,.95) infinite;
+.backdrop.is-playing .backdrop-film{opacity:1}
+/* the poster stands in until the film is ready, and remains for anyone who
+   never loads it */
+.backdrop::before{
+  content:""; position:absolute; inset:0;
+  background:#000 url("/assets/backdrop-poster.jpg") 50% 62% / cover no-repeat;
 }
-.aurora i:nth-child(2){
-  width:44vw; height:44vw; right:-4vw; top:22vh;
-  background:radial-gradient(circle at 55% 45%, rgba(226,231,238,.26), rgba(150,158,170,.10) 58%, transparent 74%);
-  animation:drift-b 47s cubic-bezier(.45,.05,.55,.95) infinite;
+.backdrop-veil{
+  position:absolute; inset:0; display:block;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.86) 0%, rgba(0,0,0,.55) 22%, rgba(0,0,0,.35) 46%, rgba(0,0,0,.72) 88%, #000 100%),
+    radial-gradient(120% 70% at 18% 34%, rgba(0,0,0,.72), transparent 62%);
 }
-.aurora i:nth-child(3){
-  width:40vw; height:40vw; left:26vw; bottom:-6vh;
-  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.20), rgba(190,196,204,.07) 56%, transparent 72%);
-  animation:drift-c 53s cubic-bezier(.45,.05,.55,.95) infinite;
-}
-@keyframes drift-a{
-  0%,100%{transform:translate3d(0,0,0) scale(1)}
-  33%{transform:translate3d(14vw,10vh,0) scale(1.14)}
-  66%{transform:translate3d(4vw,-7vh,0) scale(.92)}
-}
-@keyframes drift-b{
-  0%,100%{transform:translate3d(0,0,0) scale(1.04)}
-  40%{transform:translate3d(-16vw,12vh,0) scale(.9)}
-  70%{transform:translate3d(-6vw,-10vh,0) scale(1.16)}
-}
-@keyframes drift-c{
-  0%,100%{transform:translate3d(0,0,0) scale(.96)}
-  45%{transform:translate3d(12vw,-14vh,0) scale(1.18)}
-  75%{transform:translate3d(-10vw,-4vh,0) scale(1)}
-}
-/* lift the content off the field without touching the fixed-position elements
-   (nav, drawer, curtain, progress) that sit alongside it */
+
+/* the canvas field still needs lifting over; the backdrop sits below both */
 body[data-theme="dark"] main,
 body[data-theme="dark"] .contact,
 body[data-theme="dark"] .site-foot{position:relative; z-index:1}
@@ -107,13 +102,13 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   position:relative; isolation:isolate;
   border:0; border-radius:22px; overflow:hidden;
   background:
-    linear-gradient(140deg, rgba(255,255,255,.10), rgba(255,255,255,.022) 46%, rgba(255,255,255,.055));
-  -webkit-backdrop-filter:blur(26px) saturate(1.75);
-          backdrop-filter:blur(26px) saturate(1.75);
+    linear-gradient(140deg, rgba(255,255,255,.075), rgba(255,255,255,.012) 46%, rgba(255,255,255,.04));
+  -webkit-backdrop-filter:blur(30px) saturate(1.5) brightness(.72);
+          backdrop-filter:blur(30px) saturate(1.5) brightness(.72);
   box-shadow:
-    0 34px 70px -36px rgba(0,0,0,.95),
-    inset 0 1px 0 rgba(255,255,255,.24),
-    inset 0 -20px 44px -32px rgba(255,255,255,.30);
+    0 40px 80px -38px #000,
+    inset 0 1px 0 rgba(255,255,255,.22),
+    inset 0 -20px 44px -32px rgba(255,255,255,.24);
   transition:translate .65s var(--ease), box-shadow .65s var(--ease);
 }
 /* the refracted rim — the rainbow that runs along a thick glass edge */
@@ -290,53 +285,6 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .dh-feat-go::after{content:"→"; transition:transform .35s var(--ease)}
 .dh-feat-card:hover .dh-feat-go::after{transform:translateX(5px)}
 
-/* ---------- The orb ----------
-   A chrome sphere from gradients. Two details make it read as metal rather than
-   a pinwheel: the conic's convergence point is placed outside the visible
-   circle, and the whole body is heavily blurred so the bands melt into each
-   other the way a polished surface does. */
-.orb{
-  position:absolute; left:56%; top:70%; translate:-50% -50%;
-  width:min(46vw,640px); aspect-ratio:1; border-radius:50%;
-  pointer-events:none; z-index:0;
-  animation:orb-breathe 16s ease-in-out infinite;
-  will-change:transform;
-}
-.orb i{position:absolute; inset:-12%; border-radius:50%; display:block}
-.orb-body{
-  background:conic-gradient(from 190deg at 26% 118%,
-    #262a31, #08090b 12%, #949aa4 26%, #101318 38%, #5f656e 50%,
-    #090a0d 63%, #b2b8c1 75%, #14171c 87%, #262a31);
-  filter:blur(24px);
-  opacity:.74;
-  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 44%, rgba(0,0,0,.55) 62%, transparent 75%);
-          mask-image:radial-gradient(circle at 50% 50%, #000 44%, rgba(0,0,0,.55) 62%, transparent 75%);
-}
-.orb-spec{
-  background:
-    radial-gradient(30% 22% at 33% 25%, rgba(255,255,255,.62), transparent 68%),
-    radial-gradient(17% 11% at 69% 73%, rgba(255,255,255,.22), transparent 70%),
-    radial-gradient(62% 62% at 50% 50%, transparent 44%, rgba(0,0,0,.55) 68%, rgba(0,0,0,.9) 86%);
-  filter:blur(12px);
-  opacity:.95;
-  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 46%, transparent 76%);
-          mask-image:radial-gradient(circle at 50% 50%, #000 46%, transparent 76%);
-  animation:orb-turn 64s linear infinite;
-}
-/* the bright arc that runs along the edge of anything polished and round */
-.orb::after{
-  content:""; position:absolute; inset:6%; border-radius:50%; pointer-events:none;
-  background:conic-gradient(from 205deg,
-    transparent 0deg, rgba(255,255,255,.55) 42deg, transparent 116deg,
-    transparent 244deg, rgba(255,255,255,.26) 302deg, transparent 352deg);
-  -webkit-mask:radial-gradient(circle at 50% 50%, transparent 63%, #000 69%, #000 75%, transparent 82%);
-          mask:radial-gradient(circle at 50% 50%, transparent 63%, #000 69%, #000 75%, transparent 82%);
-  filter:blur(3px);
-  animation:orb-turn 64s linear infinite;
-}
-@keyframes orb-turn{to{rotate:360deg}}
-@keyframes orb-breathe{0%,100%{scale:1}50%{scale:1.04}}
-
 /* Scroll cue — centred between the two bottom blocks */
 .scroll-cue{
   position:absolute; left:50%; translate:-50% 0; bottom:34px;
@@ -499,7 +447,6 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   .dh-feat{justify-self:stretch; width:100%}
   .dh-l1{font-size:clamp(38px,11vw,72px)}
   .dh-l2{font-size:clamp(44px,14vw,92px)}
-  .orb{width:min(120vw,620px); top:44%; opacity:.7}
   .scroll-cue{display:none}
 }
 
@@ -508,10 +455,8 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   [data-fade]{opacity:1; transform:none; transition:none}
   .scroll-cue i::after{animation:none}
   .svc-panel{transition:none}
-  .aurora i{animation:none}
   .pillar{animation:none}
-  .orb, .orb-spec{animation:none}
-  .dh-title, .dh-side, .orb{transform:none !important}
+  .dh-title, .dh-side, .backdrop-film{transform:none !important}
   .pillar:hover, .method-step:hover, .svc:hover{translate:none}
   .svc-body > p, .svc-tags li{opacity:1; transform:none; transition:none}
   .progress{display:none}
@@ -545,9 +490,10 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .panel{
   position:relative; isolation:isolate; border-radius:26px; overflow:hidden;
   padding:12px 34px 34px;
-  background:linear-gradient(150deg, rgba(255,255,255,.10), rgba(255,255,255,.022) 46%, rgba(255,255,255,.06));
-  -webkit-backdrop-filter:blur(30px) saturate(1.7); backdrop-filter:blur(30px) saturate(1.7);
-  box-shadow:0 44px 90px -44px rgba(0,0,0,.95),
+  background:linear-gradient(150deg, rgba(255,255,255,.075), rgba(255,255,255,.012) 46%, rgba(255,255,255,.045));
+  -webkit-backdrop-filter:blur(34px) saturate(1.5) brightness(.7);
+          backdrop-filter:blur(34px) saturate(1.5) brightness(.7);
+  box-shadow:0 50px 100px -44px #000,
              inset 0 1px 0 rgba(255,255,255,.24),
              inset 0 -24px 50px -34px rgba(255,255,255,.28);
 }

@@ -56,7 +56,15 @@
 </div>
 <!-- #endregion SHARED:nav -->
 
-<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<!-- Page backdrop. The <video> carries no src: digital.js adds it once it knows
+     the visitor is not on a narrow screen, a metered connection or reduced
+     motion. Without JavaScript the poster still shows, so the page never
+     appears on flat black. -->
+<div class="backdrop" aria-hidden="true">
+  <video class="backdrop-film" poster="/assets/backdrop-poster.jpg"
+         muted loop playsinline preload="none" data-src="/assets/backdrop.mp4"></video>
+  <span class="backdrop-veil"></span>
+</div>
 <div class="field" aria-hidden="true"></div>
 <div class="progress" aria-hidden="true"></div>
 
@@ -64,8 +72,6 @@
 <!-- COPY: the service descriptions below expand the client's capability list and
      are awaiting sign-off on wording. -->
 <header class="dh">
-  <div class="orb" aria-hidden="true"><i class="orb-body"></i><i class="orb-spec"></i></div>
-
   <div class="dh-grid">
     <div class="dh-title">
       <div class="eyebrow" data-decode>DIGITAL TEAM — MONACO &amp; WORLDWIDE</div>

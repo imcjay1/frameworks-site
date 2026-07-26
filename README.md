@@ -20,6 +20,7 @@ assets/
   digital.css / digital.js                  digital-services.html only — dark theme,
                                             reactive field, animated text, accordion
   showreel.mp4                              the scrub film (~18 MB)
+  backdrop.mp4 / backdrop-poster.jpg        digital-services backdrop (~11 MB / 83 KB)
   brand/                                    logo assets, generated (see below)
   sectors/                                  sector hover previews
   clients/                                  trusted-by logos (empty until supplied)
@@ -128,11 +129,23 @@ Two things there are load-bearing and easy to undo by accident:
 `<body>`, which `assets/digital.css` scopes everything to, and it loads two extra
 files.
 
+- **The backdrop** is `assets/backdrop.mp4` (1920×1080, 6s loop, 11 MB) fixed
+  behind the whole page, with `assets/backdrop-poster.jpg` (83 KB) standing in
+  until it is ready. The `<video>` ships with **no `src`**; `digital.js` adds one
+  only on a screen wider than 820px, on a connection that has not asked to save
+  data, and when motion is not suppressed. Everyone else — including anyone
+  without JavaScript — keeps the poster, so a phone never pulls 11 MB.
+
+  **`.backdrop` must stay at `z-index:-1`.** At `0` this fixed layer composited
+  *over* content further down the page even though `<main>` was lifted above it:
+  the last section's heading painted and was then hidden by the veil. Sitting
+  genuinely behind everything removes the ordering question, and a negative
+  z-index still paints above the body background, so the film is unaffected.
 - **The field** is a canvas of scan lines that bend away from the pointer and
-  drift with the scroll. Tunables are `RADIUS`, `PUSH`, `ROWS`, `COLS` in
-  `digital.js`. Without a pointer (touch, or before the first move) it wanders on
-  its own. The canvas is created by JS, so with JS off the CSS gradient behind it
-  is what shows.
+  drift with the scroll, kept deliberately faint now that the film sits behind
+  it — it is there for the pointer to push against, not to be looked at.
+  Tunables are `RADIUS`, `PUSH`, `ROWS`, `COLS` in `digital.js`. Without a
+  pointer (touch, or before the first move) it wanders on its own.
 - **Text** is animated by attribute: `data-split` splits a heading into masked
   words that rise in sequence (`data-step` sets the stagger), `data-fade` fades a
   block up (its value is a delay in ms), and `data-decode` scrambles a monospace
