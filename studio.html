@@ -21,6 +21,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 <!-- #endregion SHARED:head -->
+<!-- page overrides, after site.css so equal-specificity rules win -->
+<link rel="stylesheet" href="/assets/studio.css">
 </head>
 <body data-page="studio">
 
@@ -54,9 +56,61 @@
 <!-- #endregion SHARED:nav -->
 
 <main>
-<header class="page-head">
-  <div class="eyebrow" data-decode>THE STUDIO</div>
-  <h1 data-split data-step="52">Immersive marketing for the world's most prestigious spaces.</h1>
+<header class="sh">
+  <!-- The hero film loops without pause. No src in the markup: studio.js adds one
+       only on a wide screen, an unmetered connection and with motion allowed;
+       everyone else keeps the poster. -->
+  <div class="sh-film-wrap">
+    <video class="sh-film" poster="/assets/studio-hero-poster.jpg"
+           muted loop playsinline preload="none" data-src="/assets/studio-hero.mp4"></video>
+    <span class="sh-veil"></span>
+  </div>
+  <span class="sh-scan" aria-hidden="true"></span>
+
+  <div class="sh-copy">
+    <div class="eyebrow" data-decode>THE STUDIO — MONACO &amp; WORLDWIDE</div>
+    <h1>
+      <span class="sh-l1">Immersive marketing for</span>
+      <span class="sh-rot">
+        <span>the world's most prestigious spaces.</span>
+        <span>residences that sell before the viewing.</span>
+        <span>decks you can walk from any harbour.</span>
+        <span>showrooms without borders.</span>
+      </span>
+    </h1>
+    <p class="sh-lede" data-fade="520">Full-frame bodies, prime glass and a crew that shoots the stills, the film and the 360° capture on the same visit — then finishes all three under one roof.</p>
+    <div class="sh-actions" data-fade="700">
+      <a class="btn-solid" href="#enquire">Start a project</a>
+      <a class="cta glass" href="#disciplines">What we do</a>
+    </div>
+  </div>
+
+  <!-- Read-outs from the kit this page is about. Decorative, hence aria-hidden. -->
+  <div class="cam-islands" aria-hidden="true">
+    <div class="cam-island cam-rec glass"><span class="rec-dot"></span>REC <b data-timecode>00:00:00:00</b></div>
+    <div class="cam-island cam-iris glass">
+        <svg class="iris" viewBox="0 0 48 48" aria-hidden="true">
+          <circle class="iris-ring" cx="24" cy="24" r="21"/>
+          <g class="iris-blades">
+            <polygon class="iris-hex" points="24,8 37.9,16 37.9,32 24,40 10.1,32 10.1,16"/>
+            <g class="iris-spokes">
+              <line x1="24" y1="8" x2="24" y2="2"/><line x1="37.9" y1="16" x2="43.1" y2="13"/>
+              <line x1="37.9" y1="32" x2="43.1" y2="35"/><line x1="24" y1="40" x2="24" y2="46"/>
+              <line x1="10.1" y1="32" x2="4.9" y2="35"/><line x1="10.1" y1="16" x2="4.9" y2="13"/>
+            </g>
+          </g>
+        </svg>
+      <span><span class="cam-k">Aperture</span><span class="cam-v" data-tick="iris">f/1.4</span></span>
+    </div>
+    <div class="cam-island cam-exp glass">
+      <span><span class="cam-k">ISO</span><span class="cam-v" data-tick="iso">400</span></span>
+      <span><span class="cam-k">Shutter</span><span class="cam-v" data-tick="shutter">1/250</span></span>
+      <span><span class="cam-k">EV</span><span class="cam-v" data-tick="ev">+0.3</span></span>
+    </div>
+  </div>
+  <div class="focus-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <div class="sh-cue" aria-hidden="true"><i></i>Scroll</div>
 </header>
 
 <section class="band">
@@ -416,5 +470,6 @@
 <!-- #endregion SHARED:foot -->
 
 <script src="/assets/site.js" defer></script>
+<script src="/assets/studio.js" defer></script>
 </body>
 </html>

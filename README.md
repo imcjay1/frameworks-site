@@ -19,6 +19,8 @@ assets/
   home.js                                   index.html only — the scrub hero
   digital.css / digital.js                  digital-services.html only — dark tokens,
                                             hero film, dot field, parallax
+  studio.css / studio.js                    studio.html only — camera hero
+  studio-hero.mp4 / -poster.jpg             studio hero film (~11 MB / 45 KB)
   showreel.mp4                              the scrub film (~18 MB)
   backdrop.mp4 / backdrop-poster.jpg        digital-services backdrop (~11 MB / 83 KB)
   brand/                                    logo assets, generated (see below)
@@ -30,6 +32,11 @@ tools/sync-partials.py                      keeps the shared header/footer in sy
 
 Extensionless URLs come from `"cleanUrls": true` in `vercel.json`; `/craft/`
 redirects to `/craft` via `"trailingSlash": false`.
+
+**Page stylesheets load after `site.css`**, below the `SHARED:head` region. They
+were briefly above it, which meant `site.css` won every equal-specificity rule —
+the studio hero's islands inherited `.glass{position:relative}` and stretched to
+full width.
 
 ## Shared header and footer
 
@@ -122,6 +129,26 @@ Two things there are load-bearing and easy to undo by accident:
 - The state classes are `is-covering` / `is-revealing` / `is-instant`. They must
   not be called `reveal`: that is the site's scroll-reveal class, whose
   `opacity:0` would hide the bars entirely.
+
+## Studio — the camera hero
+
+Full-screen, with `assets/studio-hero.mp4` looping behind it. The film's subject
+sits right-of-centre and its left third is empty, which is why the type is on the
+left and `object-position` is `72% 50%`. Same loading rule as the other hero
+film: no `src` in the markup, attached by `studio.js` only on a wide screen, an
+unmetered connection and with motion allowed; otherwise the 45 KB poster stands
+in. It pauses when the hero scrolls out of view or the tab is hidden.
+
+- **The heading rotates every five seconds.** The `<h1>` keeps a stable opening
+  clause and only its second line changes, so the heading still reads as one
+  sentence to a crawler and to a screen reader. `studio.js` measures the tallest
+  phrase and reserves that height — without it the lede and buttons jump 67px
+  each time the shortest line comes round.
+- **The camera read-outs** are glass islands: an aperture whose iris opens and
+  closes, ISO / shutter / EV stepping between plausible settings on separate
+  timers, a timecode running at 25fps, and focus brackets that snap to a lock in
+  carmine. Values step rather than interpolate — a camera does not ease its ISO.
+- All of it is `aria-hidden`, decorative, and stops under `prefers-reduced-motion`.
 
 ## Digital Services — the dark page
 
