@@ -17,8 +17,8 @@ assets/
   site.css                                  every page
   site.js                                   every page — owns the single rAF loop
   home.js                                   index.html only — the scrub hero
-  digital.css / digital.js                  digital-services.html only — dark theme,
-                                            reactive field, animated text, accordion
+  digital.css / digital.js                  digital-services.html only — dark tokens,
+                                            hero film, dot field, parallax
   showreel.mp4                              the scrub film (~18 MB)
   backdrop.mp4 / backdrop-poster.jpg        digital-services backdrop (~11 MB / 83 KB)
   brand/                                    logo assets, generated (see below)
@@ -175,17 +175,38 @@ files.
   and swapping the meanings underneath them turns the current-page pill inside
   out. Only the surfaces this page paints are overridden.
 
+## Shared components
+
+The glass cards, the revealed text (`data-split` / `data-fade` / `data-decode`),
+the discipline accordion and the enquiry / call panel are defined **once** —
+markup, CSS in `site.css`, behaviour in `site.js` — and used by both
+`/digital-services` (dark) and `/studio` (ivory).
+
+Only the colours differ, and they come from tokens declared in `:root` in
+`site.css` and overridden under `body[data-theme="dark"]` in `digital.css`:
+`--gc-*` for the glass recipe, `--fm-*` for the form and accordion. **To restyle
+either theme, change the tokens — not the component rules.**
+
+Every shared block is a no-op when its markup is absent, so pages that use none
+of it pay only the bytes.
+
+One thing to keep together: the `prefers-reduced-motion` fallbacks for those
+components live in `site.css` beside the rules they undo. They were briefly in
+`digital.css`, which meant the studio page — which never loads that file — hid
+its own headings under reduced motion.
+
 ## Forms
 
-There are three, all posting to the one endpoint, `api/contact.js`, which emails
+There are five, all posting to the one endpoint, `api/contact.js`, which emails
 via [Resend](https://resend.com). Every form posts natively and works with
-JavaScript disabled; the scripts upgrade them to submit in place.
+JavaScript disabled; the scripts upgrade them to submit in place. Each carries a
+`source` field so you can see which page it came from.
 
 | form | where | handled by |
 |---|---|---|
 | Enquiry | `/contact` | `site.js` (bound by `#contact-form`) |
-| Enquiry | `/digital-services` | `digital.js` |
-| Call request | `/digital-services` | `digital.js` |
+| Enquiry + call request | `/digital-services` | `site.js` (shared panel) |
+| Enquiry + call request | `/studio` | `site.js` (shared panel) |
 
 **Enquiries go to `cameron@frameworksstudios.com`** — set as the default in
 `api/contact.js`, overridable with a `CONTACT_TO` environment variable.
@@ -204,13 +225,15 @@ directly, rather than failing silently. A hidden `_gotcha` honeypot absorbs bots
 and it answers those as if they succeeded so there is nothing to learn from the
 difference.
 
-### The Digital Services conversion panel
+### The conversion panel
 
 One glass panel with two tabs. Both are built for as little friction as possible:
 only name and email are required, everything else qualifies the lead.
 
 - **Send an enquiry** — service chips (multi-select, so one visitor can pick
-  several), name, email, company, phone, budget, timeline, free-text notes.
+  several), name, email, company, phone, budget, timeline, free-text notes. The
+  chips differ per page: disciplines on `/digital-services`, capture services on
+  `/studio`.
   Checkbox groups arrive as repeated keys, which is why the endpoint parses the
   body itself rather than using `Object.fromEntries` — that keeps only the last
   value of a repeated key and would silently drop every service but one.
