@@ -36,53 +36,63 @@
   /* ---------- 2 · the rotating line ----------
      The <h1> keeps a stable opening clause; only its second line changes, so the
      heading still reads as one sentence to a crawler and to a screen reader.
-     Each phrase is pre-split into masked words, then lifted out and in. */
+
+     One text node, replaced in place. An earlier version used one element per
+     phrase and put both the outgoing and incoming ones in flow during the swap,
+     which stacked two lines and shoved the copy below down for the length of the
+     transition. Nothing is added to the DOM here: the line slides up and fades,
+     its text is swapped while it is invisible, and it rises back into place. */
   const rot = document.querySelector('.sh-rot');
   if(rot && !reduced){
-    const phrases = [...rot.children];
-    if(phrases.length > 1){
-      phrases.forEach(phrase => {
-        const words = phrase.textContent.trim().split(/\s+/);
-        phrase.textContent = '';
-        words.forEach((word, i) => {
-          const mask = document.createElement('span'); mask.className = 'w';
-          const inner = document.createElement('span');
-          inner.textContent = word + (i < words.length - 1 ? ' ' : '');
-          inner.style.setProperty('--d', (i * 48) + 'ms');
-          mask.appendChild(inner); phrase.appendChild(mask);
-        });
-      });
+    let phrases = [];
+    try{ phrases = JSON.parse(rot.dataset.rotate || '[]'); }catch(e){}
 
-      /* Reserve the tallest phrase's height, or the lede and buttons below jump
-         every time a shorter line comes round. Measured, not guessed, because
-         how many lines each phrase takes depends on the viewport. */
+    if(phrases.length > 1){
+      const line = document.createElement('span');
+      line.className = 'sh-rot-t';
+      line.textContent = rot.textContent.trim();
+      rot.textContent = '';
+      rot.appendChild(line);
+
+      /* Reserve the tallest phrase's height or the lede and buttons below shift
+         every time a shorter line comes round. Measured, because how many lines
+         a phrase takes depends on the viewport. */
       const fit = () => {
+        const held = line.textContent;
         rot.style.minHeight = '';
-        const was = phrases.map(p => p.className);
         let tallest = 0;
-        phrases.forEach(p => {
-          p.classList.add('is-on');
-          tallest = Math.max(tallest, p.getBoundingClientRect().height);
-          p.className = '';
-        });
-        phrases.forEach((p, i) => p.className = was[i]);
+        for(const phrase of phrases){
+          line.textContent = phrase;
+          /* the container, not the line: min-height is a border-box measurement
+             here, so it has to include the mask's padding or it falls short */
+          tallest = Math.max(tallest, rot.getBoundingClientRect().height);
+        }
+        line.textContent = held;
         rot.style.minHeight = Math.ceil(tallest) + 'px';
       };
       fit();
       addEventListener('resize', fit, {passive:true});
 
-      let at = 0;
-      phrases[0].classList.add('is-on');
-      setInterval(() => {
-        const out = phrases[at];
+      const OUT = 440;                       /* matches the transition in CSS */
+      let at = 0, busy = false;
+
+      const swap = () => {
+        if(busy || document.hidden) return;  /* never queue up behind a hidden tab */
+        busy = true;
         at = (at + 1) % phrases.length;
-        const next = phrases[at];
-        out.classList.add('is-out');
-        next.classList.add('is-on');
-        /* the outgoing line keeps its slot until the incoming one has arrived,
-           so the block never collapses mid-swap */
-        setTimeout(() => { out.classList.remove('is-on', 'is-out'); }, 900);
-      }, 5000);
+        line.classList.add('is-out');
+        setTimeout(() => {
+          line.classList.add('no-anim', 'is-next');
+          line.classList.remove('is-out');
+          line.textContent = phrases[at];
+          line.offsetHeight;                 /* commit the jump below the mask */
+          line.classList.remove('no-anim');
+          line.offsetHeight;
+          line.classList.remove('is-next');  /* and rise back into place */
+          setTimeout(() => { busy = false; }, OUT);
+        }, OUT);
+      };
+      setInterval(swap, 5000);
     }
   }
 

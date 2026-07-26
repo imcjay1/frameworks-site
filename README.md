@@ -141,9 +141,17 @@ in. It pauses when the hero scrolls out of view or the tab is hidden.
 
 - **The heading rotates every five seconds.** The `<h1>` keeps a stable opening
   clause and only its second line changes, so the heading still reads as one
-  sentence to a crawler and to a screen reader. `studio.js` measures the tallest
-  phrase and reserves that height — without it the lede and buttons jump 67px
-  each time the shortest line comes round.
+  sentence to a crawler and to a screen reader. The alternatives live in a
+  `data-rotate` attribute; without JavaScript the one canonical line shows.
+
+  It is **one text node, replaced in place** — the line slides up and fades, its
+  text is swapped while invisible, then it rises back. An earlier version used an
+  element per phrase and put both the outgoing and incoming ones in flow during
+  the swap, which stacked two lines and shoved the copy below down for the length
+  of the transition. `studio.js` also measures the tallest phrase and reserves
+  that height, measuring the *container* rather than the line: `min-height` is a
+  border-box value here, so measuring the inner line falls short by the mask's
+  padding and the copy below still shifts a few pixels.
 - **The camera read-outs** are glass islands: an aperture whose iris opens and
   closes, ISO / shutter / EV stepping between plausible settings on separate
   timers, a timecode running at 25fps, and focus brackets that snap to a lock in
