@@ -129,23 +129,32 @@ Two things there are load-bearing and easy to undo by accident:
 `<body>`, which `assets/digital.css` scopes everything to, and it loads two extra
 files.
 
-- **The backdrop** is `assets/backdrop.mp4` (1920×1080, 6s loop, 11 MB) fixed
-  behind the whole page, with `assets/backdrop-poster.jpg` (83 KB) standing in
-  until it is ready. The `<video>` ships with **no `src`**; `digital.js` adds one
-  only on a screen wider than 820px, on a connection that has not asked to save
-  data, and when motion is not suppressed. Everyone else — including anyone
-  without JavaScript — keeps the poster, so a phone never pulls 11 MB.
+- **The hero film** is `assets/backdrop.mp4` (1920×1080, 6s loop, 11 MB), sitting
+  *inside* `.dh` and scrolling away with the hero rather than following the page.
+  `assets/backdrop-poster.jpg` (83 KB) stands in until it is ready. The `<video>`
+  ships with **no `src`**; `digital.js` adds one only on a screen wider than
+  820px, on a connection that has not asked to save data, and when motion is not
+  suppressed. Everyone else — including anyone without JavaScript — keeps the
+  poster, so a phone never pulls 11 MB. It also pauses whenever the hero leaves
+  the viewport or the tab is hidden.
 
-  **`.backdrop` must stay at `z-index:-1`.** At `0` this fixed layer composited
-  *over* content further down the page even though `<main>` was lifted above it:
-  the last section's heading painted and was then hidden by the veil. Sitting
-  genuinely behind everything removes the ordering question, and a negative
-  z-index still paints above the body background, so the film is unaffected.
-- **The field** is a canvas of scan lines that bend away from the pointer and
-  drift with the scroll, kept deliberately faint now that the film sits behind
-  it — it is there for the pointer to push against, not to be looked at.
-  Tunables are `RADIUS`, `PUSH`, `ROWS`, `COLS` in `digital.js`. Without a
-  pointer (touch, or before the first move) it wanders on its own.
+  It was briefly a `position:fixed` layer behind the whole page, and that is
+  worth knowing about if it is ever tried again: at `z-index:0` the fixed layer
+  composited *over* content further down the page even though `<main>` was lifted
+  above it — the last section's heading painted and was then hidden by the veil.
+  Now that it is an ordinary absolutely-positioned child of the hero, with
+  `.dh-grid` above it, the question does not arise.
+- **Below the hero** the page carries its own background: `.bloom` (two slow
+  monochrome light blooms, CSS only) plus the dot field on canvas. That is what
+  the glass refracts once the film has gone by, and it keeps the lower page from
+  reading as flat black.
+- **The dot field** is a canvas matrix echoing the film's own particles: dots
+  displaced away from the pointer, undulating on two crossed waves, brighter
+  where the pointer passes. It fades in as the hero leaves, so the two textures
+  never fight. Tunables are `RADIUS`, `PUSH`, `COLS`, `ROWS` and `LEVELS` in
+  `digital.js` — dots are drawn one `fillStyle` per brightness band rather than
+  per dot. Without a pointer (touch, or before the first move) it wanders on its
+  own.
 - **Text** is animated by attribute: `data-split` splits a heading into masked
   words that rise in sequence (`data-step` sets the stagger), `data-fade` fades a
   block up (its value is a delay in ms), and `data-decode` scrambles a monospace

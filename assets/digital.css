@@ -36,10 +36,12 @@ body[data-theme="dark"] .site-foot{background:transparent}
 body[data-theme="dark"] .contact{border-top:1px solid var(--line-soft)}
 /* Sections carry their own veil so the film reads through the page without ever
    fighting the text sitting on it. */
+/* Lighter than it was: with the film confined to the hero there is no bright
+   footage below to hold back, so the dot field can read through. */
 body[data-theme="dark"] .dark-band,
 body[data-theme="dark"] .ticker,
 body[data-theme="dark"] .contact,
-body[data-theme="dark"] .site-foot{background:rgba(0,0,0,.62)}
+body[data-theme="dark"] .site-foot{background:rgba(0,0,0,.38)}
 body[data-theme="dark"] .dark-band + .dark-band{border-top-color:rgba(255,255,255,.06)}
 
 body[data-theme="dark"] .glass{
@@ -50,9 +52,38 @@ body[data-theme="dark"] .glass{
 body[data-theme="dark"] .glass::before{opacity:.3}
 body[data-theme="dark"] .spec-chips span{color:#B7BCC4}
 
+/* ---------- Below the hero ----------
+   Two slow blooms give the glass something to refract once the film has gone by,
+   and keep the lower page from reading as flat black. Monochrome, on theme. */
+.bloom{position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden}
+.bloom i{
+  position:absolute; display:block; border-radius:50%;
+  filter:blur(110px); will-change:transform;
+}
+.bloom i:nth-child(1){
+  width:58vw; height:58vw; left:-10vw; top:22vh;
+  background:radial-gradient(circle at 45% 45%, rgba(255,255,255,.17), rgba(190,196,204,.05) 56%, transparent 74%);
+  animation:bloom-a 44s cubic-bezier(.45,.05,.55,.95) infinite;
+}
+.bloom i:nth-child(2){
+  width:46vw; height:46vw; right:-6vw; top:52vh;
+  background:radial-gradient(circle at 55% 45%, rgba(226,231,238,.13), rgba(150,158,170,.04) 58%, transparent 76%);
+  animation:bloom-b 57s cubic-bezier(.45,.05,.55,.95) infinite;
+}
+@keyframes bloom-a{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  40%{transform:translate3d(16vw,-10vh,0) scale(1.16)}
+  70%{transform:translate3d(4vw,9vh,0) scale(.92)}
+}
+@keyframes bloom-b{
+  0%,100%{transform:translate3d(0,0,0) scale(1.05)}
+  45%{transform:translate3d(-18vw,-12vh,0) scale(.9)}
+  75%{transform:translate3d(-5vw,10vh,0) scale(1.2)}
+}
+
 /* ---------- The reactive field ---------- */
 .field{
-  position:fixed; inset:0; z-index:0;
+  position:fixed; inset:0; z-index:-1;
   pointer-events:none;
   background:
     radial-gradient(120% 80% at 70% -10%, rgba(255,255,255,.035), transparent 60%),
@@ -63,12 +94,10 @@ body[data-theme="dark"] .spec-chips span{color:#B7BCC4}
    A looping film of the chrome form, fixed behind the whole page, with a veil
    over it so type stays legible wherever it lands. The film is what the glass
    panes refract — there is no separate colour layer any more. */
-/* z-index:-1, not 0. At 0 this fixed layer composited over content further down
-   the page even though <main> was lifted above it — the last section's heading
-   painted and was then covered by the veil. Sitting genuinely behind everything
-   removes the ordering question entirely, and it still paints above the body's
-   background, so the film is unaffected. */
-.backdrop{position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden}
+/* Absolute, inside the hero: the film is the hero and scrolls away with it.
+   Ordinary in-flow stacking — the content above it is positioned with a higher
+   z-index, so there is no fixed-layer compositing to get wrong. */
+.backdrop{position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden}
 .backdrop-film{
   position:absolute; inset:0; width:100%; height:100%;
   object-fit:cover; object-position:50% 62%;
@@ -85,8 +114,8 @@ body[data-theme="dark"] .spec-chips span{color:#B7BCC4}
 .backdrop-veil{
   position:absolute; inset:0; display:block;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.86) 0%, rgba(0,0,0,.55) 22%, rgba(0,0,0,.35) 46%, rgba(0,0,0,.72) 88%, #000 100%),
-    radial-gradient(120% 70% at 18% 34%, rgba(0,0,0,.72), transparent 62%);
+    linear-gradient(180deg, rgba(0,0,0,.84) 0%, rgba(0,0,0,.5) 24%, rgba(0,0,0,.3) 52%, rgba(0,0,0,.8) 90%, #000 100%),
+    radial-gradient(120% 70% at 18% 34%, rgba(0,0,0,.7), transparent 62%);
 }
 
 /* the canvas field still needs lifting over; the backdrop sits below both */
@@ -182,11 +211,10 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   position:relative; min-height:100svh;
   padding:158px var(--pad-x) 96px;
   display:flex; flex-direction:column;
-  /* clip, not hidden: the orb must not widen the page, but it is still free to
-     bleed past the bottom edge into the section below */
-  overflow-x:clip;
+  overflow:clip;                      /* the film stops at the hero's edges */
 }
 .dh-grid{
+  position:relative; z-index:1;       /* over the film */
   flex:1; display:grid; gap:48px 56px;
   grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
   grid-template-rows:1fr auto;
@@ -456,6 +484,7 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   .scroll-cue i::after{animation:none}
   .svc-panel{transition:none}
   .pillar{animation:none}
+  .bloom i{animation:none}
   .dh-title, .dh-side, .backdrop-film{transform:none !important}
   .pillar:hover, .method-step:hover, .svc:hover{translate:none}
   .svc-body > p, .svc-tags li{opacity:1; transform:none; transition:none}

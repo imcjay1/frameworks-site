@@ -1,7 +1,7 @@
 /* Digital Services — page behaviour. Loaded only by digital-services.html.
  *
- *   1. the backdrop film
- *   2. the reactive field over it (canvas)
+ *   1. the backdrop film — the hero only, it scrolls away
+ *   2. the page's own dot field below it (canvas)
  *   3. word-by-word heading reveals and staggered fades
  *   4. monospace labels that decode into place
  *   5. the services accordion
@@ -34,17 +34,24 @@
       film.src = film.dataset.src;
       const go = film.play();
       if(go && go.catch) go.catch(() => {});   /* autoplay refused: poster stays */
-      /* a paused tab should not keep decoding frames */
-      document.addEventListener('visibilitychange', () => {
-        if(document.hidden) film.pause();
-        else if(backdrop.classList.contains('is-playing')) film.play().catch(() => {});
-      });
+      /* Nothing should keep decoding 1080p once it cannot be seen — neither a
+         hidden tab nor a hero that has been scrolled past. */
+      let onScreen = true, visible = true;
+      const sync = () => {
+        if(onScreen && visible) film.play().catch(() => {});
+        else film.pause();
+      };
+      document.addEventListener('visibilitychange', () => { visible = !document.hidden; sync(); });
+      if('IntersectionObserver' in window){
+        new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; sync(); })
+          .observe(backdrop);
+      }
     }
   }
 
-  /* ---------- 2 · the reactive field ----------
-     Scan lines that bend away from the pointer. The canvas is created here, so
-     a JS-less visitor simply keeps the gradient the .field div already carries. */
+  /* ---------- 2 · the page's dot field ----------
+     Created here, so a JS-less visitor simply keeps the CSS gradient and blooms
+     that the .field and .bloom divs already carry. */
   const field = document.querySelector('.field');
   if(field){
     const c = document.createElement('canvas');
@@ -68,11 +75,18 @@
     addEventListener('pointermove', e => { p.tx = e.clientX; p.ty = e.clientY; p.real = true; }, {passive:true});
     addEventListener('pointerdown', e => { p.tx = e.clientX; p.ty = e.clientY; p.real = true; }, {passive:true});
 
-    /* Kept deliberately faint now that the film sits behind it: this layer is
-       here for the pointer to push against, not to be looked at. */
-    const RADIUS = 270;      /* how far the distortion reaches */
-    const PUSH   = 52;       /* how hard it pushes at the centre */
-    const ROWS   = 30, COLS = 56, VLINES = 9;
+    /* The film's signature is a dot matrix that curves and catches light, so the
+       page carries the same thing on canvas below the hero: dots displaced away
+       from the pointer, undulating, brighter where the pointer passes. Quiet
+       under the hero — the film is doing the work there — and full strength once
+       it has scrolled by. */
+    const RADIUS = 300;      /* how far the distortion reaches */
+    const PUSH   = 44;       /* how hard it pushes at the centre */
+    const COLS = 76, ROWS = 44;
+    const LEVELS = ['rgba(255,255,255,.075)', 'rgba(255,255,255,.13)',
+                    'rgba(255,255,255,.18)', 'rgba(255,255,255,.30)',
+                    'rgba(255,255,255,.48)'];
+    const buckets = LEVELS.map(() => []);
 
     function paint(time){
       if(!p.real){
@@ -84,56 +98,48 @@
 
       ctx.clearRect(0, 0, w, h);
 
+      /* fade in as the hero leaves, so the two textures never fight */
+      const past = Math.min(1, Math.max(0, (scrollY - h * 0.25) / (h * 0.6)));
+      const strength = 0.22 + past * 0.78;
+
       /* the pointer carries a soft light with it */
-      const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, RADIUS * 1.7);
-      glow.addColorStop(0, 'rgba(255,255,255,0.055)');
-      glow.addColorStop(0.55, 'rgba(214,220,228,0.016)');
+      const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, RADIUS * 1.8);
+      glow.addColorStop(0, 'rgba(255,255,255,' + (0.05 * strength).toFixed(3) + ')');
+      glow.addColorStop(0.55, 'rgba(214,220,228,' + (0.016 * strength).toFixed(3) + ')');
       glow.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, w, h);
 
-      /* scroll winds the ambient wave forward, so the field moves with the page */
-      const phase = time * 0.00042 + scrollY * 0.0017;
+      const phase = time * 0.00035 + scrollY * 0.0016;
       const r2 = 2 * RADIUS * RADIUS;
-      ctx.lineWidth = 1;
+      const gapX = w / (COLS - 1), gapY = h / (ROWS - 1);
+      for(const b of buckets) b.length = 0;
 
-      const gapY = h / (ROWS - 1), gapX = w / (COLS - 1);
       for(let i = 0; i < ROWS; i++){
         const baseY = i * gapY;
-        const near = Math.exp(-Math.pow((baseY - p.y) / 230, 2));
-        ctx.strokeStyle = 'rgba(255,255,255,' + (0.018 + near * 0.07).toFixed(4) + ')';
-        ctx.beginPath();
         for(let j = 0; j < COLS; j++){
           const x0 = j * gapX;
-          const y0 = baseY + Math.sin(x0 * 0.0055 + phase + i * 0.5) * 7;
+          /* two crossed waves give the matrix its slow swell */
+          const y0 = baseY + Math.sin(x0 * 0.0048 + phase + i * 0.38) * 9
+                           + Math.cos(x0 * 0.0016 - phase * 0.6) * 5;
           const dx = x0 - p.x, dy = y0 - p.y;
           const d2 = dx*dx + dy*dy;
-          const push = PUSH * Math.exp(-d2 / r2);
+          const near = Math.exp(-d2 / r2);
+          const push = PUSH * near;
           const d = Math.sqrt(d2) || 1;
-          const x = x0 + (dx / d) * push;
-          const y = y0 + (dy / d) * push;
-          j ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+          const a = (0.31 + near * 1.45) * strength;
+          const level = a < 0.28 ? 0 : a < 0.5 ? 1 : a < 0.8 ? 2 : a < 1.15 ? 3 : 4;
+          buckets[level].push(x0 + (dx / d) * push, y0 + (dy / d) * push);
         }
-        ctx.stroke();
       }
 
-      /* a few verticals give the field a sense of depth rather than stripes */
-      const gapV = w / (VLINES - 1);
-      ctx.strokeStyle = 'rgba(255,255,255,0.016)';
-      for(let i = 0; i < VLINES; i++){
-        const baseX = i * gapV;
-        ctx.beginPath();
-        for(let j = 0; j < ROWS; j++){
-          const y0 = j * gapY;
-          const x0 = baseX + Math.cos(y0 * 0.005 + phase * 0.8 + i * 0.6) * 5;
-          const dx = x0 - p.x, dy = y0 - p.y;
-          const d2 = dx*dx + dy*dy;
-          const push = PUSH * 0.8 * Math.exp(-d2 / r2);
-          const d = Math.sqrt(d2) || 1;
-          const x = x0 + (dx / d) * push, y = y0 + (dy / d) * push;
-          j ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-        }
-        ctx.stroke();
+      /* one fillStyle per brightness band rather than per dot */
+      for(let l = 0; l < LEVELS.length; l++){
+        const pts = buckets[l];
+        if(!pts.length) continue;
+        ctx.fillStyle = LEVELS[l];
+        const size = l > 2 ? 1.7 : 1.2;
+        for(let k = 0; k < pts.length; k += 2) ctx.fillRect(pts[k], pts[k+1], size, size);
       }
     }
 

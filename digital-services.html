@@ -56,15 +56,9 @@
 </div>
 <!-- #endregion SHARED:nav -->
 
-<!-- Page backdrop. The <video> carries no src: digital.js adds it once it knows
-     the visitor is not on a narrow screen, a metered connection or reduced
-     motion. Without JavaScript the poster still shows, so the page never
-     appears on flat black. -->
-<div class="backdrop" aria-hidden="true">
-  <video class="backdrop-film" poster="/assets/backdrop-poster.jpg"
-         muted loop playsinline preload="none" data-src="/assets/backdrop.mp4"></video>
-  <span class="backdrop-veil"></span>
-</div>
+<!-- Below the hero: a drifting dot field on canvas plus two soft light blooms,
+     so the page carries the film's texture once the film itself has scrolled by. -->
+<div class="bloom" aria-hidden="true"><i></i><i></i></div>
 <div class="field" aria-hidden="true"></div>
 <div class="progress" aria-hidden="true"></div>
 
@@ -72,6 +66,15 @@
 <!-- COPY: the service descriptions below expand the client's capability list and
      are awaiting sign-off on wording. -->
 <header class="dh">
+  <!-- The film belongs to the hero and scrolls away with it. The <video> carries
+       no src: digital.js adds one only when the visitor is not on a narrow
+       screen, a metered connection or reduced motion. Without JavaScript the
+       poster still shows, so the hero is never flat black. -->
+  <div class="backdrop" aria-hidden="true">
+    <video class="backdrop-film" poster="/assets/backdrop-poster.jpg"
+           muted loop playsinline preload="none" data-src="/assets/backdrop.mp4"></video>
+    <span class="backdrop-veil"></span>
+  </div>
   <div class="dh-grid">
     <div class="dh-title">
       <div class="eyebrow" data-decode>DIGITAL TEAM — MONACO &amp; WORLDWIDE</div>
