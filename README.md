@@ -20,7 +20,8 @@ assets/
   digital.css / digital.js                  digital-services.html only — dark tokens,
                                             hero film, dot field, parallax
   studio.css / studio.js                    studio.html only — camera hero
-  studio-hero.mp4 / -poster.jpg             studio hero film (~11 MB / 45 KB)
+  studio-hero-v2.mp4 / studio-hero-poster.jpg  studio hero film (~19 MB / 45 KB)
+  logos/                                    51 client logos (WebP, 432 KB)
   showreel.mp4                              the scrub film (~18 MB)
   backdrop.mp4 / backdrop-poster.jpg        digital-services backdrop (~11 MB / 83 KB)
   brand/                                    logo assets, generated (see below)
@@ -87,24 +88,40 @@ python3 tools/build-logo.py "path/to/black-on-white.jpeg"
 
 ## Adding a client logo ("Trusted by")
 
-The banner on the home page currently shows **placeholder names** — `Client One`
-… `Client Ten`. Replacing one with a real logo is a single-line edit inside the
-one `<ul class="marquee-track">`:
+`assets/logos/` holds the 51 client logos, each a transparent WebP normalised to
+200px tall in a single ink colour. They appear **twice on the home page** — the
+band further down, and the small glass island in the hero — so a new client needs
+one `<li>` in each `<ul class="marquee-track">`:
 
 ```html
 <li class="client">
-  <img src="/assets/clients/acme-group.svg" alt="Acme Group"
-       width="160" height="44" loading="lazy" decoding="async">
+  <img src="/assets/logos/acme-group.webp" alt="Acme Group"
+       width="220" height="200" loading="lazy" decoding="async">
 </li>
 ```
 
-- SVG preferred, or transparent PNG at least 92px tall; trim the whitespace so
-  the mark, not the canvas, fills the 46px row.
-- `/assets/clients/*` is served `immutable` for a year — **never overwrite a
-  file**, publish a new name (`acme-group-v2.svg`).
-- Aim for 8–14 items. Logos are greyscaled until hover.
-- Only the first track is authored; `site.js` clones it for the seamless loop,
-  so the list is maintained in one place.
+- Match the existing files: transparent, 200px tall, trimmed, one ink colour.
+  Nothing is desaturated in CSS, so a colour logo will stand out from the rest.
+- Give the real intrinsic `width`/`height`. They are only an aspect ratio for
+  layout — `.client img` sets `height:auto` and a pixel `max-height`, because a
+  percentage `max-height` does not resolve against the grid row and the logo
+  would keep its full 200px height with only a sliver showing.
+- Only the first track of each marquee is authored; `site.js` clones it for the
+  seamless loop, so each list is maintained in one place.
+- Logos sit at 45% opacity and come up to full on hover.
+
+## Liquid glass in the home hero
+
+The hero panes — the spec pill, the CTA, the viewfinder chrome and the trusted-by
+island — get a slow chromatic drift on top of the shared `.glass` recipe: the
+spectral rim turns over 24s and three soft highlights drift inside the pane over
+19s, on offset cycles so the colour never settles into a pattern. It is scoped to
+`.stage`, so the nav and the rest of the site keep the still version, and it
+stops under `prefers-reduced-motion`.
+
+The rim angle is animated through a registered `@property`. The gradient reads it
+as `var(--gl-angle, 120deg)` so that where `@property` is unsupported the rim
+falls back to exactly the static gradient it had before.
 
 ## The page transition
 
@@ -132,7 +149,7 @@ Two things there are load-bearing and easy to undo by accident:
 
 ## Studio — the camera hero
 
-Full-screen, with `assets/studio-hero.mp4` looping behind it. The film's subject
+Full-screen, with `assets/studio-hero-v2.mp4` looping behind it. The film's subject
 sits right-of-centre and its left third is empty, which is why the type is on the
 left and `object-position` is `72% 50%`. Same loading rule as the other hero
 film: no `src` in the markup, attached by `studio.js` only on a wide screen, an
