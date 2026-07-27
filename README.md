@@ -26,7 +26,6 @@ assets/
   backdrop.mp4 / backdrop-poster.jpg        digital-services backdrop (~11 MB / 83 KB)
   brand/                                    logo assets, generated (see below)
   sectors/                                  sector hover previews
-  clients/                                  trusted-by logos (empty until supplied)
 tools/build-logo.py                         regenerates assets/brand/
 tools/sync-partials.py                      keeps the shared header/footer in sync
 ```
