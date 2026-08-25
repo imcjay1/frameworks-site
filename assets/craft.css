@@ -1,4 +1,4 @@
-/* Craft — the hero, the intro and the five stage rows.
+/* Craft — the hero and the five stage rows.
  *
  * Loaded only by craft.html, after site.css. Every colour, radius, easing and
  * type face below is an existing token; nothing new is introduced here.
@@ -38,17 +38,6 @@
   text-transform:uppercase; color:var(--brass-deep); margin-bottom:12px;
 }
 .cf-hero-note p:last-child{font-size:14.5px; line-height:1.62; color:var(--ink-soft)}
-
-/* ---------- Intro ---------- */
-.cf-intro{
-  padding:96px var(--pad-x);
-  text-align:center; border-bottom:1px solid var(--line);
-}
-.cf-intro p{
-  margin:0 auto; max-width:68ch;
-  font-size:16.5px; line-height:1.62; color:var(--ink-soft);
-}
-.cf-intro p + p{margin-top:1.1em}
 
 /* ---------- Stage rows ----------
    Named .cstage, not .stage: site.css already owns .stage for the home page's
@@ -190,7 +179,6 @@
 @media (max-width:768px){
   .cf-hero{min-height:auto; padding:132px var(--pad-x) 48px}
   .cf-hero-note{align-self:flex-start; text-align:left; margin-top:36px}
-  .cf-intro{padding:64px var(--pad-x)}
 
   .m2, .m4, .m5{grid-template-columns:1fr}
   .m2 .cf-fill, .m5 .cf-fill{aspect-ratio:4/5; height:auto}
