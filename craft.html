@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>The Craft — Ultra-High-Res 360° Capture | Frameworks Studios</title>
-<meta name="description" content="How Frameworks Studios captures and finishes a 360° tour: high-end DSLR HDR capture, seamless equirectangular stitching, digital staging and bespoke UI/UX." />
+<title>The Craft — From First Idea to Final Interaction | Frameworks Studios</title>
+<meta name="description" content="How a Frameworks commission is created: the brief, the creative direction, real-world capture and making, refinement against the standard, and launch." />
 <link rel="canonical" href="https://frameworks-studios.com/craft" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="The Craft — Ultra-High-Res 360° Capture | Frameworks Studios" />
-<meta property="og:description" content="How Frameworks Studios captures and finishes a 360° tour: high-end DSLR HDR capture, seamless equirectangular stitching, digital staging and bespoke UI/UX." />
+<meta property="og:title" content="The Craft — From First Idea to Final Interaction | Frameworks Studios" />
+<meta property="og:description" content="How a Frameworks commission is created: the brief, the creative direction, real-world capture and making, refinement against the standard, and launch." />
 <meta property="og:url" content="https://frameworks-studios.com/craft" />
 <meta name="twitter:card" content="summary_large_image" />
 <!-- #region SHARED:head — everything below is identical on every page. The
@@ -21,6 +21,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 <!-- #endregion SHARED:head -->
+<!-- page overrides, after site.css so equal-specificity rules win -->
+<link rel="stylesheet" href="/assets/craft.css">
 </head>
 <body data-page="craft">
 
@@ -62,43 +64,190 @@
 <!-- #endregion SHARED:nav -->
 
 <main>
-<header class="page-head">
-  <div class="eyebrow reveal">The craft</div>
-  <h1 class="reveal">Every frame to the highest technical and aesthetic standard.</h1>
-  <p class="page-lede reveal">Capture, post-production and interface are handled by one studio, so nothing is lost between the shoot and the screen.</p>
+<header class="cf-hero">
+  <div class="cf-hero-media" data-asset-slot="craft-hero">
+    <span class="slot-name">craft-hero · 21:9</span>
+  </div>
+  <div class="cf-hero-copy">
+    <div class="eyebrow" data-decode>THE CRAFT</div>
+    <h1>THE ART OF CREATING PRESENCE.</h1>
+  </div>
+  <div class="cf-hero-note" data-fade="520">
+    <p class="cf-hero-statement">EXTRAORDINARY EXPERIENCES ARE NEVER ACCIDENTAL.</p>
+    <p>They are shaped by vision, refined by judgement and brought to life with precision.</p>
+  </div>
 </header>
 
-<section class="band">
-  <div class="craft-grid">
-    <div>
-      <div class="spec-chips reveal">
-        <span class="glass">DSLR CAPTURE</span>
-        <span class="glass">ULTRA-HIGH-RES · HDR</span>
-        <span class="glass">360° EQUIRECTANGULAR</span>
-        <span class="glass">AI-ASSISTED POST</span>
-        <span class="glass">DIGITAL STAGING</span>
-        <span class="glass">BESPOKE UI/UX</span>
-      </div>
-    </div>
-    <div>
-      <p class="body-copy reveal">Using professional high-end DSLR cameras, we capture ultra-high-resolution, HDR, 360° equirectangular images with exceptional depth of field and perfect exposure.</p>
-      <p class="body-copy reveal">Advanced AI tools work alongside our cutting-edge software, post-production, graphic design and digital staging to deliver immediate visual impact — with tailor-made, graphically designed UI/UX woven seamlessly into every experience.</p>
-    </div>
-  </div>
+<section class="cf-intro" aria-label="Introduction">
+  <p class="reveal">Every commission begins with a clear ambition: to translate the character of a place into an experience that feels distinctive, effortless and true to the brand behind it.</p>
+  <p class="reveal">Our craft lies in the decisions that carry that ambition from the first conversation to the final interaction.</p>
 </section>
 
-<section class="band" style="padding-top:0">
-  <div class="eyebrow reveal">Process</div>
-  <!-- COPY: step descriptions drawn from existing site copy — awaiting client sign-off. -->
-  <div class="sector-list reveal">
-    <div class="sector-row"><span class="sector-deg">01</span><span class="sector-name">Capture</span><span class="sector-note">High-end DSLR, bracketed HDR, on site</span></div>
-    <div class="sector-row"><span class="sector-deg">02</span><span class="sector-name">Stitch</span><span class="sector-note">Seamless 360° equirectangular assembly</span></div>
-    <div class="sector-row"><span class="sector-deg">03</span><span class="sector-name">Retouch</span><span class="sector-note">Colour, exposure and AI-assisted clean-up</span></div>
-    <div class="sector-row"><span class="sector-deg">04</span><span class="sector-name">Stage</span><span class="sector-note">Digital staging and set dressing</span></div>
-    <div class="sector-row"><span class="sector-deg">05</span><span class="sector-name">Interface</span><span class="sector-note">Bespoke UI/UX, aligned to your brand</span></div>
-    <div class="sector-row"><span class="sector-deg">06</span><span class="sector-name">Deliver</span><span class="sector-note">Hosting, Google publishing and analytics</span></div>
-  </div>
-</section>
+<!-- The five stages. Every row is the same two-column split — dark copy panel
+     on the left, media on the right — and it never mirrors: the eye should
+     find the next stage number in the same place every time. -->
+<div class="stages">
+
+  <section class="cstage stage-01">
+    <div class="stage-copy">
+      <span class="stage-num" aria-hidden="true">01</span>
+      <h2 class="stage-title">THE BRIEF</h2>
+      <span class="stage-rule" aria-hidden="true"></span>
+      <p class="stage-lead">Understanding the ambition.</p>
+      <p class="stage-body">We begin by listening.</p>
+      <p class="stage-body">The project, the place, the audience and the commercial purpose are considered alongside the identity, values and aspirations of the brand.</p>
+      <p class="stage-body">This creates a clear foundation for the commission — defining what the experience must communicate, how it should feel and what it ultimately needs to achieve.</p>
+      <p class="stage-close">A CLEAR BRIEF GIVES EVERY DECISION THAT FOLLOWS A PURPOSE.</p>
+    </div>
+    <div class="stage-media">
+      <div class="cf-slot cf-fill" data-asset-slot="craft-01-brief">
+        <span class="slot-name">craft-01-brief · 16:9</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cstage stage-02">
+    <div class="stage-copy">
+      <span class="stage-num" aria-hidden="true">02</span>
+      <h2 class="stage-title">THE DIRECTION</h2>
+      <span class="stage-rule" aria-hidden="true"></span>
+      <p class="stage-lead">Seeing the whole before capturing the first frame.</p>
+      <p class="stage-body">Through on-site discovery, we determine how the experience should unfold.</p>
+      <p class="stage-body">We consider how the place is approached, how its spaces connect and which perspectives, moments and details will leave the strongest impression.</p>
+      <p class="stage-body">From this understanding, we establish the creative direction and map the complete journey.</p>
+      <p class="stage-body">Every viewpoint is chosen.</p>
+      <p class="stage-body">Every transition is planned.</p>
+      <p class="stage-body">Every interaction is intentional.</p>
+      <p class="stage-close">THE FOUNDATION FOR EVERYTHING THAT FOLLOWS.</p>
+    </div>
+    <div class="stage-media m2">
+      <div class="cf-slot cf-fill" data-asset-slot="craft-02-direction">
+        <span class="slot-name">craft-02-direction · 4:5</span>
+      </div>
+      <div class="viewpoints">
+        <ol>
+          <li><span class="vp-num">01</span>ARRIVAL</li>
+          <li><span class="vp-num">02</span>PRINCIPAL VIEW</li>
+          <li><span class="vp-num">03</span>ARCHITECTURAL DETAIL</li>
+          <li><span class="vp-num">04</span>TRANSITION</li>
+          <li><span class="vp-num">05</span>FINAL REVEAL</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="cstage stage-03">
+    <div class="stage-copy">
+      <span class="stage-num" aria-hidden="true">03</span>
+      <h2 class="stage-title">THE MAKING</h2>
+      <span class="stage-rule" aria-hidden="true"></span>
+      <p class="stage-lead">From the real world to a complete digital journey.</p>
+      <p class="stage-body">Real-world capture preserves the architecture, materials, light and character of the place.</p>
+      <p class="stage-body">The captured environment is then shaped through sound, content, interface, design and interaction. Sound creates depth. Content adds meaning. Design establishes clarity. Interaction invites discovery.</p>
+      <p class="stage-body">Transitions feel natural. Navigation remains intuitive. Information appears at the right moment without competing with the environment.</p>
+      <p class="stage-close">THE PLACE LEADS · DESIGN GIVES IT RHYTHM · TECHNOLOGY WORKS QUIETLY BENEATH THE SURFACE.</p>
+    </div>
+    <div class="stage-media m3">
+      <div class="m3-top">
+        <figure class="cf-fig">
+          <div class="cf-slot" data-asset-slot="craft-03-a"><span class="slot-name">craft-03-a · 16:9</span></div>
+          <figcaption class="cf-cap">REAL WORLD</figcaption>
+        </figure>
+        <figure class="cf-fig">
+          <div class="cf-slot" data-asset-slot="craft-03-b"><span class="slot-name">craft-03-b · 16:9</span></div>
+          <figcaption class="cf-cap">CAPTURE</figcaption>
+        </figure>
+        <figure class="cf-fig">
+          <div class="cf-slot" data-asset-slot="craft-03-c"><span class="slot-name">craft-03-c · 16:9</span></div>
+          <figcaption class="cf-cap">DIGITAL JOURNEY</figcaption>
+        </figure>
+      </div>
+      <!-- Five across on a wide screen; a snapping scroller on a phone, where a
+           five-wide grid would leave each cell too small to read. -->
+      <div class="m3-bot">
+        <figure class="cf-fig">
+          <div class="cf-slot cf-43" data-asset-slot="craft-03-1"><span class="slot-name">craft-03-1</span></div>
+          <figcaption class="cf-cap">LIVING LIGHT</figcaption>
+        </figure>
+        <figure class="cf-fig">
+          <div class="cf-slot cf-43" data-asset-slot="craft-03-2"><span class="slot-name">craft-03-2</span></div>
+          <figcaption class="cf-cap">IMMERSIVE SOUND</figcaption>
+        </figure>
+        <figure class="cf-fig">
+          <div class="cf-slot cf-43" data-asset-slot="craft-03-3"><span class="slot-name">craft-03-3</span></div>
+          <figcaption class="cf-cap">EMBEDDED MEDIA</figcaption>
+        </figure>
+        <figure class="cf-fig">
+          <div class="cf-slot cf-43" data-asset-slot="craft-03-4"><span class="slot-name">craft-03-4</span></div>
+          <figcaption class="cf-cap">INTUITIVE INTERACTION</figcaption>
+        </figure>
+        <figure class="cf-fig">
+          <div class="cf-slot cf-43" data-asset-slot="craft-03-5"><span class="slot-name">craft-03-5</span></div>
+          <figcaption class="cf-cap">NATURAL TRANSITIONS</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="cstage stage-04">
+    <div class="stage-copy">
+      <span class="stage-num" aria-hidden="true">04</span>
+      <h2 class="stage-title">THE REFINEMENT</h2>
+      <span class="stage-rule" aria-hidden="true"></span>
+      <p class="stage-lead">Tested against the brief. Refined against the standard.</p>
+      <p class="stage-body">The complete experience is reviewed with the client and examined across devices, screen sizes and viewing conditions.</p>
+      <p class="stage-body">We test the imagery, navigation, transitions, interactions, sound, content and performance — ensuring every element remains aligned with the original vision.</p>
+      <p class="stage-body">Anything unnecessary is removed.</p>
+      <p class="stage-body">Anything distracting is resolved.</p>
+      <p class="stage-body">Anything incomplete is refined.</p>
+      <p class="stage-close">NOTHING MOVES FORWARD UNTIL IT FEELS COMPLETE.</p>
+    </div>
+    <div class="stage-media m4">
+      <div class="cf-slot cf-fill" data-asset-slot="craft-04-review">
+        <span class="slot-name">craft-04-review · 16:10</span>
+      </div>
+      <div class="m4-stack">
+        <div class="cf-compare">
+          <figure class="cf-fig">
+            <div class="cf-slot cf-169" data-asset-slot="craft-04-before"><span class="slot-name">craft-04-before</span></div>
+            <figcaption class="cf-cap">BEFORE</figcaption>
+          </figure>
+          <figure class="cf-fig">
+            <div class="cf-slot cf-169" data-asset-slot="craft-04-after"><span class="slot-name">craft-04-after</span></div>
+            <figcaption class="cf-cap">AFTER</figcaption>
+          </figure>
+        </div>
+        <div class="cf-slot cf-fill cf-grade" data-asset-slot="craft-04-grade">
+          <span class="slot-name">craft-04-grade · 21:9</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cstage stage-05">
+    <div class="stage-copy">
+      <span class="stage-num" aria-hidden="true">05</span>
+      <h2 class="stage-title">THE LAUNCH</h2>
+      <span class="stage-rule" aria-hidden="true"></span>
+      <p class="stage-lead">Delivered with confidence.</p>
+      <p class="stage-body">Once approved, the experience is prepared for launch across the selected platforms, devices and digital environments.</p>
+      <p class="stage-body">Every commission is delivered as a considered brand asset — ready to be shared with audiences, integrated into wider campaigns and supported as it continues to evolve.</p>
+      <p class="stage-body">The work may be complete.</p>
+      <p class="stage-body">Its journey is only beginning.</p>
+    </div>
+    <div class="stage-media m5">
+      <div class="cf-slot cf-fill" data-asset-slot="craft-05-launch">
+        <span class="slot-name">craft-05-launch · 4:5</span>
+      </div>
+      <div class="cf-close-panel">
+        <p class="cf-close-statement">FROM FIRST IDEA TO FINAL INTERACTION.</p>
+        <p class="cf-close-body">Every stage is connected by one creative vision and one uncompromising standard.</p>
+        <a class="btn-ivory" href="/works">Explore the Works</a>
+      </div>
+    </div>
+  </section>
+
+</div>
 </main>
 
 <!-- #region SHARED:cta -->
