@@ -1,34 +1,44 @@
 #!/usr/bin/env python3
-"""Copy the shared header/footer blocks from index.html into every other page.
+"""Render the shared header/footer into every page.
 
 There is no build step here — the six HTML files each hold a full copy of the
 nav and footer so the site is navigable without JavaScript and readable by
-crawlers. index.html is the source of truth; run this after editing any block
-between a `<!-- #region SHARED:x -->` / `<!-- #endregion SHARED:x -->` pair.
+crawlers. Two mechanisms:
 
-  python3 tools/sync-partials.py           # rewrite the other pages
+  1. Static regions. `index.html` is the source of truth for everything between
+     a `<!-- #region SHARED:x -->` / `<!-- #endregion SHARED:x -->` pair; the
+     tool copies those into the other five pages.
+
+  2. Generated runs. Anything driven by a constant in tools/site_config.py is
+     written between `<!-- gen:name -->` / `<!-- /gen:name -->` markers. The nav
+     appears three times per page (desktop island, mobile drawer, footer) and
+     all three are rendered from NAV, so the order and labels have one source.
+
+  python3 tools/sync-partials.py           # rewrite every page
   python3 tools/sync-partials.py --check   # report drift, change nothing (exit 1)
 
-aria-current="page" is the one thing allowed to differ per page; it is stripped
-from the copied block and reapplied from each page's <body data-page="…">.
+aria-current="page" is applied per page from PAGES, to the nav links only — the
+brandmark is a logo link home, not a nav item, and must never carry it.
 """
 
 import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from site_config import NAV                                  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = "index.html"
 PAGES = {                       # file -> (data-page, path the nav should mark current)
     "index.html":            ("home", "/"),
     "craft.html":            ("craft", "/craft"),
-    "sectors.html":          ("sectors", "/sectors"),
+    "works.html":            ("works", "/works"),
     "studio.html":           ("studio", "/studio"),
     "digital-services.html": ("digital-services", "/digital-services"),
     "contact.html":          ("contact", "/contact"),
 }
 REGIONS = ("head", "nav", "cta", "foot")
-
 CURRENT = ' aria-current="page"'
 
 
@@ -38,11 +48,37 @@ def region(text, name):
     return m.group(1) if m else None
 
 
-def mark_current(block, href):
-    block = block.replace(CURRENT, "")
-    # only the first match per block: the nav pill and the drawer link are in
-    # separate blocks, so this stays one attribute per navigation landmark
-    return re.sub(rf'(<a\b[^>]*\bhref="{re.escape(href)}")', rf"\1{CURRENT}", block)
+# ------------------------------------------------------------- generated runs --
+def nav_links(current, indent):
+    """The desktop island and the mobile drawer: one <a> per line."""
+    return "\n".join(
+        f'{indent}<a href="{href}"{CURRENT if href == current else ""}>{label}</a>'
+        for href, label in NAV)
+
+
+def footer_links(current, indent):
+    """The footer: the same six, on one line."""
+    return indent + " ".join(
+        f'<a href="{href}"{CURRENT if href == current else ""}>{label}</a>'
+        for href, label in NAV)
+
+
+GENERATORS = {
+    "nav-island": lambda cur: nav_links(cur, "    "),
+    "nav-drawer": lambda cur: nav_links(cur, "  "),
+    "nav-footer": lambda cur: footer_links(cur, "    "),
+}
+
+
+def fill(text, current):
+    """Replace every gen: run with freshly rendered markup."""
+    for name, build in GENERATORS.items():
+        pattern = rf"(<!-- gen:{name} -->\n).*?(\n\s*<!-- /gen:{name} -->)"
+        if not re.search(pattern, text, re.S):
+            continue
+        body = build(current)
+        text = re.sub(pattern, lambda m: m.group(1) + body + m.group(2), text, flags=re.S)
+    return text
 
 
 def main():
@@ -52,7 +88,7 @@ def main():
     for name in REGIONS:
         b = region(src, name)
         if b is None:
-            sys.exit(f"index.html is missing the SHARED:{name} region")
+            sys.exit(f"{SOURCE} is missing the SHARED:{name} region")
         blocks[name] = b
 
     drift = 0
@@ -64,11 +100,11 @@ def main():
         text = original = path.read_text()
         for name, block in blocks.items():
             if region(text, name) is None:
-                continue                      # e.g. contact.html carries no CTA band
-            wanted = mark_current(block, href)
+                continue                      # e.g. /contact carries no CTA band
             text = re.sub(
                 rf"(<!-- #region SHARED:{name}\b.*?-->\n).*?(\n\s*<!-- #endregion SHARED:{name} -->)",
-                lambda m: m.group(1) + wanted + m.group(2), text, flags=re.S)
+                lambda m: m.group(1) + block + m.group(2), text, flags=re.S)
+        text = fill(text, href)
         if text != original:
             drift += 1
             print(("drift: " if check else "synced: ") + page)

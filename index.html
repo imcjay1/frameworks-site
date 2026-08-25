@@ -27,28 +27,32 @@
 <!-- #region SHARED:nav — canonical copy lives in index.html. After editing it run
      tools/sync-partials.py; the only per-page difference is aria-current="page". -->
 <nav class="nav-wrap" id="nav" aria-label="Primary">
-  <a class="brandmark glass" href="/" aria-current="page" aria-label="Frameworks Studios — home">
+  <a class="brandmark glass" href="/" aria-label="Frameworks Studios — home">
     <img class="mark" src="/assets/brand/mark-ink.png" alt="" width="96" height="96">
     <img class="wordmark" src="/assets/brand/wordmark-ink.png" alt="Frameworks Studios" width="582" height="48">
   </a>
   <div class="island glass">
     <span class="island-mini" aria-hidden="true"><span class="rec-dot"></span><img src="/assets/brand/mark-ink.png" alt="" width="96" height="96"></span>
+    <!-- gen:nav-island -->
     <a href="/" aria-current="page">Home</a>
     <a href="/studio">Studio</a>
     <a href="/craft">Craft</a>
-    <a href="/sectors">Sectors</a>
+    <a href="/works">Works</a>
     <a href="/digital-services">Digital Services</a>
     <a href="/contact">Contact</a>
+    <!-- /gen:nav-island -->
   </div>
   <button class="nav-toggle glass" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><i></i></button>
 </nav>
 <div class="mobile-menu" id="mobile-menu" hidden>
+  <!-- gen:nav-drawer -->
   <a href="/" aria-current="page">Home</a>
   <a href="/studio">Studio</a>
   <a href="/craft">Craft</a>
-  <a href="/sectors">Sectors</a>
+  <a href="/works">Works</a>
   <a href="/digital-services">Digital Services</a>
   <a href="/contact">Contact</a>
+  <!-- /gen:nav-drawer -->
   <div class="mobile-foot">Monaco · South of France · Dubai<br>Saudi Arabia · United Kingdom</div>
 </div>
 <!-- #endregion SHARED:nav -->
@@ -309,16 +313,16 @@
   <a class="more-link reveal" href="/studio">Inside the studio</a>
 </section>
 
-<!-- ============ SECTORS (teaser → /sectors) ============ -->
+<!-- ============ WORKS (teaser → /works) ============ -->
 <section class="band" id="sectors" style="padding-top:40px">
-  <div class="eyebrow reveal">Sectors — a full panorama of luxury</div>
+  <div class="eyebrow reveal">Works — a full panorama of luxury</div>
   <div class="sector-list reveal">
     <div class="sector-row" data-img="/assets/sectors/luxury-real-estate.webp"><span class="sector-deg">000°</span><span class="sector-name">Luxury Real Estate</span><span class="sector-note">Residences that sell before the first viewing</span></div>
     <div class="sector-row" data-img="/assets/sectors/super-yachts.webp"><span class="sector-deg">051°</span><span class="sector-name">Super-Yachts</span><span class="sector-note">Every deck, walkable from any harbour</span></div>
     <div class="sector-row" data-img="/assets/sectors/automotive.webp"><span class="sector-deg">103°</span><span class="sector-name">Automotive</span><span class="sector-note">Showrooms without borders</span></div>
     <div class="sector-row" data-img="/assets/sectors/event-venues.webp"><span class="sector-deg">154°</span><span class="sector-name">Event Venues</span><span class="sector-note">Let planners stand in the room</span></div>
   </div>
-  <a class="more-link reveal" href="/sectors">All seven sectors</a>
+  <a class="more-link reveal" href="/works">See the works</a>
 </section>
 
 <!-- ============ DIGITAL SERVICES (teaser → /digital-services) ============ -->
@@ -344,10 +348,14 @@
 
 <!-- #region SHARED:foot -->
 <footer class="site-foot">
-  <a class="footer-mark" href="/" aria-current="page" aria-label="Frameworks Studios — home">
+  <a class="footer-mark" href="/" aria-label="Frameworks Studios — home">
     <img src="/assets/brand/lockup-ivory.png" alt="Frameworks Studios" width="320" height="320">
   </a>
-  <nav class="footer-nav" aria-label="Footer"><a href="/" aria-current="page">Home</a> <a href="/studio">Studio</a> <a href="/craft">Craft</a> <a href="/sectors">Sectors</a> <a href="/digital-services">Digital Services</a> <a href="/contact">Contact</a></nav>
+  <nav class="footer-nav" aria-label="Footer">
+    <!-- gen:nav-footer -->
+    <a href="/" aria-current="page">Home</a> <a href="/studio">Studio</a> <a href="/craft">Craft</a> <a href="/works">Works</a> <a href="/digital-services">Digital Services</a> <a href="/contact">Contact</a>
+    <!-- /gen:nav-footer -->
+  </nav>
   <div class="footer-bar">
     <span>© 2026 FRAMEWORKS STUDIOS</span>
     <span>MONACO · SOUTH OF FRANCE · DUBAI · SAUDI ARABIA · UNITED KINGDOM</span>

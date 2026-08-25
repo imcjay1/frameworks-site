@@ -1,6 +1,9 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/sectors", "destination": "/works", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/assets/studio-hero-v2.mp4",
