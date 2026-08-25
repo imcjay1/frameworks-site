@@ -13,6 +13,8 @@ want the full frame used.
 
 | Slot | Page | Section | Ratio | What it should show |
 |---|---|---|---|---|
+| `studio-philosophy` | /studio | Mosaic tile 02 — The Philosophy | 3:2 | A close detail shot suggesting optics or light. |
+| `studio-today` | /studio | Mosaic tile 03 — The Studio Today | 3:2 | The team at work around a layout table. |
 
 ## Pending client content
 

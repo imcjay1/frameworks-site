@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>The Studio — Monaco, Saudi Arabia &amp; the UK | Frameworks Studios</title>
-<meta name="description" content="Frameworks Studios: a Monaco-headquartered immersive marketing agency with studios in Monaco, the Kingdom of Saudi Arabia and the United Kingdom, and €400m+ in contributed client sales since 2018." />
+<title>The Studio — Born in Monaco | Frameworks Studios</title>
+<meta name="description" content="Frameworks Studios was founded in Monaco in 2018 on one belief: extraordinary places deserve extraordinary experiences. The studio, the philosophy and the direction." />
 <link rel="canonical" href="https://frameworks-studios.com/studio" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="The Studio — Monaco, Saudi Arabia &amp; the UK | Frameworks Studios" />
-<meta property="og:description" content="Frameworks Studios: a Monaco-headquartered immersive marketing agency with studios in Monaco, the Kingdom of Saudi Arabia and the United Kingdom, and €400m+ in contributed client sales since 2018." />
+<meta property="og:title" content="The Studio — Born in Monaco | Frameworks Studios" />
+<meta property="og:description" content="Frameworks Studios was founded in Monaco in 2018 on one belief: extraordinary places deserve extraordinary experiences. The studio, the philosophy and the direction." />
 <meta property="og:url" content="https://frameworks-studios.com/studio" />
 <meta name="twitter:card" content="summary_large_image" />
 <!-- #region SHARED:head — everything below is identical on every page. The
@@ -64,387 +64,106 @@
 <!-- #endregion SHARED:nav -->
 
 <main>
-<header class="sh">
-  <!-- The hero film loops without pause. No src in the markup: studio.js adds one
-       only on a wide screen, an unmetered connection and with motion allowed;
-       everyone else keeps the poster. -->
-  <div class="sh-film-wrap">
-    <video class="sh-film" poster="/assets/studio-hero-poster.jpg"
-           muted loop playsinline preload="none" data-src="/assets/studio-hero-v2.mp4"></video>
-    <span class="sh-veil"></span>
+<header class="st-hero">
+  <img class="st-hero-img" src="/assets/studio/monaco-terrace.webp"
+       alt="A terrace above Monaco harbour at dusk" width="1122" height="1402" fetchpriority="high">
+  <span class="st-hero-scrim" aria-hidden="true"></span>
+  <div class="st-hero-copy">
+    <div class="eyebrow" data-decode>THE STUDIO</div>
+    <h1>BORN IN MONACO. CREATED AROUND EXPERIENCE.</h1>
   </div>
-  <span class="sh-scan" aria-hidden="true"></span>
-
-  <div class="sh-copy">
-    <div class="eyebrow" data-decode>THE STUDIO — MONACO &amp; WORLDWIDE</div>
-    <h1>
-      <span class="sh-l1">Immersive marketing for</span>
-      <span class="sh-rot" data-rotate='["the world&#39;s most prestigious spaces.","residences that sell before the viewing.","decks you can walk from any harbour.","showrooms without borders."]'>the world&#39;s most prestigious spaces.</span>
-    </h1>
-    <p class="sh-lede" data-fade="520">Full-frame bodies, prime glass and a crew that shoots the stills, the film and the 360° capture on the same visit — then finishes all three under one roof.</p>
-    <div class="sh-actions" data-fade="700">
-      <a class="btn-solid" href="#enquire">Start a project</a>
-      <a class="cta glass" href="#disciplines">What we do</a>
-    </div>
-  </div>
-
-  <!-- Read-outs from the kit this page is about. Decorative, hence aria-hidden. -->
-  <div class="cam-islands" aria-hidden="true">
-    <div class="cam-island cam-rec glass"><span class="rec-dot"></span>REC <b data-timecode>00:00:00:00</b></div>
-    <div class="cam-island cam-iris glass">
-        <svg class="iris" viewBox="0 0 48 48" aria-hidden="true">
-          <circle class="iris-ring" cx="24" cy="24" r="21"/>
-          <g class="iris-blades">
-            <polygon class="iris-hex" points="24,8 37.9,16 37.9,32 24,40 10.1,32 10.1,16"/>
-            <g class="iris-spokes">
-              <line x1="24" y1="8" x2="24" y2="2"/><line x1="37.9" y1="16" x2="43.1" y2="13"/>
-              <line x1="37.9" y1="32" x2="43.1" y2="35"/><line x1="24" y1="40" x2="24" y2="46"/>
-              <line x1="10.1" y1="32" x2="4.9" y2="35"/><line x1="10.1" y1="16" x2="4.9" y2="13"/>
-            </g>
-          </g>
-        </svg>
-      <span><span class="cam-k">Aperture</span><span class="cam-v" data-tick="iris">f/1.4</span></span>
-    </div>
-    <div class="cam-island cam-exp glass">
-      <span><span class="cam-k">ISO</span><span class="cam-v" data-tick="iso">400</span></span>
-      <span><span class="cam-k">Shutter</span><span class="cam-v" data-tick="shutter">1/250</span></span>
-      <span><span class="cam-k">EV</span><span class="cam-v" data-tick="ev">+0.3</span></span>
-    </div>
-  </div>
-  <div class="focus-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-
-  <div class="sh-cue" aria-hidden="true"><i></i>Scroll</div>
 </header>
 
-<section class="band">
-  <div>
-    <div>
-      <p class="body-copy reveal">Frameworks Studios is a premier immersive digital marketing agency specialising in luxury bespoke 360° virtual reality tours and interactive immersive digital brochures. In today's digital-first world, immersive experiences are no longer a luxury — they are essential.</p>
-      <p class="body-copy reveal">We craft visually stunning, fully immersive tours that elevate brand presence, deepen audience engagement and directly accelerate enquiries, bookings and sales. Every experience integrates seamlessly into your existing campaigns, adding depth and interactivity that resonate with today's experience-driven audiences — all fully aligned with your unique brand identity.</p>
-    </div>
-  </div>
-</section>
+<!-- The mosaic. Five numbered tiles: three across, then a third/two-thirds pair.
+     The 1px gaps are the hairline — the grid's own background shows through
+     them, so the rules never double up where two tiles meet. -->
+<section class="mosaic" aria-label="The studio">
 
-<section class="band" id="disciplines" style="padding-top:0">
-  <div class="eyebrow" data-decode>WHAT WE DO</div>
-  <h2 data-split>Everything around the space, <em>under one roof.</em></h2>
-  <p class="body-copy" data-fade="180">The 360° tour is the centrepiece. These are the three disciplines that surround it — shot by the same crews, finished to the same brief, and delivered together rather than chased across three suppliers.</p>
-  <!-- COPY: discipline detail expands the client's capability list — awaiting sign-off. -->
-  <div class="svc-list">
-    <div class="svc" data-fade>
-      <button class="svc-head" type="button" id="disc-01" aria-expanded="false" aria-controls="disc-01-panel">
-        <span class="svc-num">01</span>
-        <span class="svc-title">Photography</span>
-        <span class="svc-tease">Stills, shot flat and finished to brand</span>
-        <span class="svc-plus" aria-hidden="true"></span>
-      </button>
-      <div class="svc-panel" id="disc-01-panel" role="region" aria-labelledby="disc-01">
-        <div><div class="svc-body">
-          <p>Architectural and interior sets, property and lifestyle photography, product and detail work, and aerial stills where the site calls for it. Styling and digital staging where a room needs dressing, then retouching to your brand guidelines rather than to a house look. Delivered as a licensed library, cropped for the channels it is going to live on — not one master you have to cut down yourself.</p>
-          <ul class="svc-tags">
-          <li>Architectural &amp; interiors</li>
-          <li>Property &amp; lifestyle</li>
-          <li>Product &amp; detail</li>
-          <li>Aerial stills</li>
-          <li>Digital staging</li>
-          <li>Licensed libraries</li>
-          </ul>
-        </div></div>
+  <article class="tile tile-01 reveal">
+    <div class="tile-media">
+      <img src="/assets/studio/monaco-terrace.webp" alt="The Monaco coastline seen from the studio"
+           width="1122" height="1402" loading="lazy">
+    </div>
+    <div class="tile-copy">
+      <h2 class="tile-label"><span class="tile-num">01</span>THE STUDIO</h2>
+      <p class="tile-p">Frameworks Studios was founded in Monaco in 2018 with a simple belief:</p>
+      <p class="tile-statement">EXTRAORDINARY PLACES DESERVE EXTRAORDINARY EXPERIENCES.</p>
+      <p class="tile-p">At a time when exceptional spaces were still being presented through traditional photography, brochures and familiar marketing formats, we saw an opportunity to create something more powerful.</p>
+      <p class="tile-p">An experience that could transport people into a place long before arrival.</p>
+      <p class="tile-p">One that could communicate its ambience, character and ambition — creating emotion, inspiring confidence and building a deeper connection between brands and their audiences.</p>
+      <p class="tile-close">THAT BELIEF BECAME FRAMEWORKS.</p>
+    </div>
+  </article>
+
+  <article class="tile tile-02 reveal">
+    <div class="tile-media">
+      <div class="tile-slot" data-asset-slot="studio-philosophy">
+        <span class="slot-name">studio-philosophy · 3:2</span>
       </div>
     </div>
-    <div class="svc" data-fade>
-      <button class="svc-head" type="button" id="disc-02" aria-expanded="false" aria-controls="disc-02-panel">
-        <span class="svc-num">02</span>
-        <span class="svc-title">Videography</span>
-        <span class="svc-tease">Film that carries the space</span>
-        <span class="svc-plus" aria-hidden="true"></span>
-      </button>
-      <div class="svc-panel" id="disc-02-panel" role="region" aria-labelledby="disc-02">
-        <div><div class="svc-body">
-          <p>Brand films, walkthroughs and lifestyle sequences shot alongside the stills so the two share a look. Aerial and event coverage, interviews and testimonial pieces, colour grading and sound finished in-house. Every project is delivered as a master plus the platform cut-downs — vertical, square, captioned — so the campaign has something to run with on day one.</p>
-          <ul class="svc-tags">
-          <li>Brand films</li>
-          <li>Walkthroughs</li>
-          <li>Aerial</li>
-          <li>Event coverage</li>
-          <li>Colour &amp; sound</li>
-          <li>Social cut-downs</li>
-          </ul>
-        </div></div>
+    <div class="tile-copy">
+      <h2 class="tile-label"><span class="tile-num">02</span>THE PHILOSOPHY</h2>
+      <p class="tile-statement">WE ARE NOT DEFINED BY THE TECHNOLOGY WE USE, BUT BY THE EXPERIENCES WE CREATE.</p>
+      <p class="tile-p">Technology has always been part of our craft, but it has never been the purpose.</p>
+      <p class="tile-p">Every project begins with the real world: the architecture, the atmosphere, the light, the detail and the feeling that make a place distinctive.</p>
+      <p class="tile-p">Through real-world capture, visual storytelling, design and technology, we preserve those qualities and transform them into digital experiences that feel intuitive, engaging and true to the place they represent.</p>
+      <p class="tile-p">The technology should never become the experience.</p>
+      <p class="tile-p">It should allow the experience to come forward.</p>
+    </div>
+  </article>
+
+  <article class="tile tile-03 reveal">
+    <div class="tile-media">
+      <div class="tile-slot" data-asset-slot="studio-today">
+        <span class="slot-name">studio-today · 3:2</span>
       </div>
     </div>
-    <div class="svc" data-fade>
-      <button class="svc-head" type="button" id="disc-03" aria-expanded="false" aria-controls="disc-03-panel">
-        <span class="svc-num">03</span>
-        <span class="svc-title">Digital Services</span>
-        <span class="svc-tease">The digital team behind the studio</span>
-        <span class="svc-plus" aria-hidden="true"></span>
-      </button>
-      <div class="svc-panel" id="disc-03-panel" role="region" aria-labelledby="disc-03">
-        <div><div class="svc-body">
-          <p>A dedicated digital team working alongside the capture crews: AI applied where it removes the slow parts, 3D visualisation for spaces that do not exist yet, website design, SEO, brand identity, paid media, analytics and content creation. Eight disciplines to the same brief and the same standard of finish, which is what closes the gap between a beautiful asset and a commercial result.</p>
-          <ul class="svc-tags">
-          <li>AI</li>
-          <li>3D Visualisation</li>
-          <li>Website Design</li>
-          <li>SEO</li>
-          <li>Brand Identity</li>
-          <li>Paid Media</li>
-          <li>Analytics &amp; BI</li>
-          <li>Content Creation</li>
-          </ul>
-          <a class="more-link" href="/digital-services">See all eight disciplines</a>
-        </div></div>
-      </div>
+    <div class="tile-copy">
+      <h2 class="tile-label"><span class="tile-num">03</span>THE STUDIO TODAY</h2>
+      <p class="tile-statement">DIFFERENT DISCIPLINES. ONE CREATIVE VISION.</p>
+      <p class="tile-p">Today, Frameworks brings together a global collective of specialists across real-world capture, immersive media, visual storytelling, audio, graphic design, AI and technology.</p>
+      <p class="tile-p">Each discipline brings a different perspective.</p>
+      <p class="tile-p">Together, they allow us to see the complete experience — from the first captured image to the final interaction.</p>
+      <p class="tile-p">We combine creative instinct with technical intelligence to craft digital journeys that reveal the true essence of remarkable places, moving beyond traditional media to create something audiences can explore, understand and feel.</p>
     </div>
-  </div>
-  <noscript><style>.svc-panel{grid-template-rows:1fr}.svc-body>p,.svc-tags li{opacity:1;transform:none}.svc-tease{display:none}</style></noscript>
-</section>
+  </article>
 
-<section class="band" style="padding-top:0">
-  <div class="eyebrow" data-decode>RESULTS</div>
-  <div class="stats reveal">
-    <div class="stat"><b>€400m+</b><span>Client sales contributed since 2018</span></div>
-    <div class="stat"><b>€6.3m</b><span>Monthly rental agreements facilitated</span></div>
-    <div class="stat"><b>15m+</b><span>Organic views generated to date</span></div>
-    <div class="stat"><b>60+</b><span>Seasoned professionals worldwide</span></div>
-  </div>
-  <p class="google-line reveal">As a <strong>Trusted &amp; Accredited Google Agency</strong>, we amplify digital visibility through seamless Google Street View and Google My Business integrations.</p>
-  <p class="stat-foot reveal">GLOBAL VR MARKET · c. USD 20.8BN (2025) → USD 170BN+ PROJECTED BY 2034 · ~26% CAGR</p>
-</section>
-
-<section class="band presence" id="presence">
-  <div class="eyebrow" data-decode>GLOBAL PRESENCE</div>
-  <div class="office-list reveal">
-    <span class="office">Monaco<small>Headquarters</small></span>
-    <span class="office">Jeddah, Kingdom of Saudi Arabia<small>Studio</small></span>
-    <span class="office">United Kingdom<small>Studio</small></span>
-  </div>
-  <!-- COPY: confirm team size — the About document says 40+ in its short version, 60+ in the long one. -->
-  <p class="body-copy reveal">Our multidisciplinary team of over 60 seasoned professionals combines expertise in 360° photography, VR production, graphic design, brand identity, AI and immersive interactive media — delivering bespoke solutions on a truly global scale.</p>
-</section>
-
-<section class="band convert" id="enquire" style="padding-top:24px">
-  <div class="eyebrow" data-decode>START HERE</div>
-  <h2 data-split>Tell us about the space. <em>We reply within a day.</em></h2>
-
-  <div class="convert-grid">
-    <aside class="convert-aside">
-      <ul class="convert-points">
-        <li data-fade><b>One working day</b><span>Every enquiry gets a considered reply from the team who would do the work — not a sales queue.</span></li>
-        <li data-fade="120"><b>No obligation</b><span>The first conversation is a scoping call. You leave with a clear view of approach, timeline and cost.</span></li>
-        <li data-fade="240"><b>One team, one brief</b><span>Capture, post-production and the digital work all sit under the same roof.</span></li>
-      </ul>
-      <div class="convert-meta" data-fade="340">
-        <span>Monaco · Kingdom of Saudi Arabia · United Kingdom</span>
-      </div>
-    </aside>
-
-    <div class="panel" data-fade="140">
-      <div class="panel-tabs" role="tablist" aria-label="How to get in touch">
-        <button class="tab" type="button" role="tab" id="tab-enquiry" aria-controls="pane-enquiry" aria-selected="true">Send an enquiry</button>
-        <button class="tab" type="button" role="tab" id="tab-call" aria-controls="pane-call" aria-selected="false" tabindex="-1">Book a call</button>
-        <span class="tab-ink" aria-hidden="true"></span>
-      </div>
-
-      <form class="pane" id="pane-enquiry" role="tabpanel" aria-labelledby="tab-enquiry"
-            action="/api/contact" method="POST" novalidate>
-        <input type="hidden" name="mode" value="enquiry">
-        <input type="hidden" name="next" value="/studio?sent=enquiry#enquire">
-        <input type="hidden" name="source" value="Studio">
-
-        <fieldset class="f-chips">
-          <legend>What do you need? <span>Select any that apply</span></legend>
-          <div class="chips">
-            <label class="chip"><input type="checkbox" name="services" value="360° VR Tours"><span>360° VR Tours</span></label>
-            <label class="chip"><input type="checkbox" name="services" value="Photography"><span>Photography</span></label>
-            <label class="chip"><input type="checkbox" name="services" value="Videography"><span>Videography</span></label>
-            <label class="chip"><input type="checkbox" name="services" value="Aerial / Drone"><span>Aerial / Drone</span></label>
-            <label class="chip"><input type="checkbox" name="services" value="Digital Services"><span>Digital Services</span></label>
-            <label class="chip"><input type="checkbox" name="services" value="Brand & Identity"><span>Brand &amp; Identity</span></label>
-          </div>
-        </fieldset>
-
-        <div class="f-row">
-          <p class="f">
-            <label for="s-name">Name <i>*</i></label>
-            <input id="s-name" name="name" type="text" autocomplete="name" required>
-            <span class="err" data-err-for="s-name"></span>
-          </p>
-          <p class="f">
-            <label for="s-email">Email <i>*</i></label>
-            <input id="s-email" name="email" type="email" autocomplete="email" required>
-            <span class="err" data-err-for="s-email"></span>
-          </p>
-        </div>
-
-        <div class="f-row">
-          <p class="f">
-            <label for="s-company">Company</label>
-            <input id="s-company" name="company" type="text" autocomplete="organization">
-          </p>
-          <p class="f">
-            <label for="s-phone">Phone</label>
-            <input id="s-phone" name="phone" type="tel" autocomplete="tel">
-          </p>
-        </div>
-
-        <div class="f-row">
-          <p class="f">
-            <label for="s-location">Where is the space?</label>
-            <input id="s-location" name="location" type="text" placeholder="City or region">
-          </p>
-          <p class="f">
-            <label for="s-timeline">Timeline</label>
-            <select id="s-timeline" name="timeline">
-                <option>As soon as possible</option>
-                <option>Within a month</option>
-                <option>This quarter</option>
-                <option>Just exploring</option>
-            </select>
-          </p>
-        </div>
-
-        <div class="f-row">
-          <p class="f">
-            <label for="s-budget">Budget</label>
-            <select id="s-budget" name="budget">
-                <option>Not sure yet</option>
-                <option>Under €10k</option>
-                <option>€10k – €25k</option>
-                <option>€25k – €50k</option>
-                <option>€50k – €100k</option>
-                <option>€100k+</option>
-            </select>
-          </p>
-          <p class="f">
-            <label for="s-sector">Sector</label>
-            <select id="s-sector" name="sector">
-                <option value="">Select a sector</option>
-                <option>Luxury Real Estate</option>
-                <option>Super-Yachts</option>
-                <option>Automotive</option>
-                <option>Event Venues</option>
-                <option>Stadiums</option>
-                <option>Golf Courses</option>
-                <option>Premium Hospitality</option>
-                <option>Something else</option>
-            </select>
-          </p>
-        </div>
-
-        <p class="f wide">
-          <label for="s-message">Anything else we should know?</label>
-          <textarea id="s-message" name="message" rows="4" placeholder="The space, the audience, what a good outcome looks like."></textarea>
-        </p>
-
-        <p class="hp" aria-hidden="true">
-          <label for="s-site">Leave this empty</label>
-          <input id="s-site" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
-        </p>
-
-        <label class="consent">
-          <input type="checkbox" name="consent" required>
-          <span>I agree to Frameworks Studios storing these details in order to respond. <i>*</i></span>
-        </label>
-        <span class="err" data-err-for="consent"></span>
-
-        <div class="submit-row">
-          <button class="submit" type="submit">
-            <span class="submit-label">Send enquiry</span>
-            <span class="submit-spin" aria-hidden="true"></span>
-          </button>
-          <span class="submit-note">No obligation. We reply within one working day.</span>
-        </div>
-        <p class="form-error" role="alert" hidden></p>
-      </form>
-
-      <form class="pane" id="pane-call" role="tabpanel" aria-labelledby="tab-call" hidden
-            action="/api/contact" method="POST" novalidate>
-        <input type="hidden" name="mode" value="call">
-        <input type="hidden" name="next" value="/studio?sent=call#enquire">
-        <input type="hidden" name="source" value="Studio">
-
-        <div class="cal" data-calendar>
-          <div class="cal-head">
-            <button class="cal-nav" type="button" data-cal="prev" aria-label="Previous month">&lsaquo;</button>
-            <span class="cal-month" data-cal-month aria-live="polite"></span>
-            <button class="cal-nav" type="button" data-cal="next" aria-label="Next month">&rsaquo;</button>
-          </div>
-          <div class="cal-dow" aria-hidden="true"><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span></div>
-          <div class="cal-grid" data-cal-grid role="group" aria-label="Choose a date"></div>
-          <noscript><p class="cal-fallback">Tell us a date and time that suits in the message field and we will confirm by email.</p></noscript>
-        </div>
-
-        <div class="slot-block">
-          <span class="slot-label">Time <i>(CET)</i></span>
-          <div class="slots" data-slots role="group" aria-label="Choose a time">
-            <button class="slot" type="button" data-slot="09:00">09:00</button>
-            <button class="slot" type="button" data-slot="10:00">10:00</button>
-            <button class="slot" type="button" data-slot="11:00">11:00</button>
-            <button class="slot" type="button" data-slot="12:00">12:00</button>
-            <button class="slot" type="button" data-slot="14:00">14:00</button>
-            <button class="slot" type="button" data-slot="15:00">15:00</button>
-            <button class="slot" type="button" data-slot="16:00">16:00</button>
-            <button class="slot" type="button" data-slot="17:00">17:00</button>
-          </div>
-        </div>
-
-        <input type="hidden" name="date" data-cal-value>
-        <input type="hidden" name="time" data-slot-value>
-        <span class="err" data-err-for="slot"></span>
-
-        <div class="f-row">
-          <p class="f">
-            <label for="sc-name">Name <i>*</i></label>
-            <input id="sc-name" name="name" type="text" autocomplete="name" required>
-            <span class="err" data-err-for="sc-name"></span>
-          </p>
-          <p class="f">
-            <label for="sc-email">Email <i>*</i></label>
-            <input id="sc-email" name="email" type="email" autocomplete="email" required>
-            <span class="err" data-err-for="sc-email"></span>
-          </p>
-        </div>
-
-        <p class="f wide">
-          <label for="sc-message">What would you like to cover?</label>
-          <textarea id="sc-message" name="message" rows="3" placeholder="Optional — a line on the project helps us prepare."></textarea>
-        </p>
-
-        <p class="hp" aria-hidden="true">
-          <label for="sc-site">Leave this empty</label>
-          <input id="sc-site" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
-        </p>
-
-        <label class="consent">
-          <input type="checkbox" name="consent" required>
-          <span>I agree to Frameworks Studios storing these details in order to respond. <i>*</i></span>
-        </label>
-        <span class="err" data-err-for="consent"></span>
-
-        <div class="submit-row">
-          <button class="submit" type="submit">
-            <span class="submit-label">Request this time</span>
-            <span class="submit-spin" aria-hidden="true"></span>
-          </button>
-          <span class="submit-note">We confirm by email — nothing is booked until we do.</span>
-        </div>
-        <p class="form-error" role="alert" hidden></p>
-      </form>
-
-      <div class="panel-done" hidden>
-        <svg class="tick" viewBox="0 0 52 52" aria-hidden="true">
-          <circle class="tick-ring" cx="26" cy="26" r="24" fill="none"/>
-          <path class="tick-mark" fill="none" d="M15 27 l8 8 l15 -16"/>
-        </svg>
-        <h3 data-done-title>Thank you.</h3>
-        <p data-done-body></p>
-        <a class="more-link" href="/works">See the sectors we work in</a>
-      </div>
+  <article class="tile tile-04 reveal">
+    <div class="tile-media">
+      <img src="/assets/studio/studio-interior.webp"
+           alt="Material samples and reference prints laid out on a studio table"
+           width="1122" height="1402" loading="lazy">
     </div>
-  </div>
+    <div class="tile-copy">
+      <h2 class="tile-label"><span class="tile-num">04</span>BESPOKE BY NATURE</h2>
+      <p class="tile-p">Every Frameworks commission is shaped by the identity, ambition and character of the brand behind it.</p>
+      <p class="tile-p">We listen, interpret and create from the inside out — developing a visual language, rhythm and journey that could belong to no one else.</p>
+      <p class="tile-p">Nothing is templated. Nothing is imposed.</p>
+      <p class="tile-p">The result is more than an experience of a place. It is an expression of the brand itself.</p>
+    </div>
+  </article>
+
+  <article class="tile tile-05 reveal">
+    <div class="tile-media">
+      <img src="/assets/studio/waterfront-direction.webp"
+           alt="A contemporary waterfront pavilion at golden hour"
+           width="1122" height="1402" loading="lazy">
+    </div>
+    <div class="tile-copy">
+      <h2 class="tile-label"><span class="tile-num">05</span>THE DIRECTION</h2>
+      <p class="tile-statement">THE WAY PEOPLE EXPERIENCE PLACES IS CHANGING.</p>
+      <p class="tile-p">The first encounter with a destination no longer begins at the entrance.</p>
+      <p class="tile-p">It begins on a screen, in a story, through an interaction and often long before a journey is made.</p>
+      <p class="tile-p">As brands and destinations become more ambitious, the experiences surrounding them must evolve too.</p>
+      <p class="tile-p">Frameworks exists to lead that evolution — continuing to expand our craft, embrace new possibilities and create more meaningful ways for people to connect with the world's most remarkable places.</p>
+    </div>
+  </article>
+
 </section>
+
+<div class="st-next">
+  <a class="btn-solid reveal" href="/craft">The Craft</a>
+</div>
 </main>
 
 <!-- #region SHARED:cta -->
@@ -485,6 +204,5 @@
 <!-- #endregion SHARED:foot -->
 
 <script src="/assets/site.js" defer></script>
-<script src="/assets/studio.js" defer></script>
 </body>
 </html>
