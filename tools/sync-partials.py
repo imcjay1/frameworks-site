@@ -26,7 +26,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from site_config import NAV                                  # noqa: E402
+from site_config import (NAV, STUDIOS, STUDIO_LINE,          # noqa: E402
+                         SOCIAL_LINKS, SOCIAL_ICONS)
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = "index.html"
@@ -63,10 +64,32 @@ def footer_links(current, indent):
         for href, label in NAV)
 
 
+def studio_line(sep, upper=False):
+    line = f" {sep} ".join(STUDIO_LINE)
+    return line.upper() if upper else line
+
+
+def social_row(indent):
+    """Icon-only links. aria-label carries the name, so the SVG stays hidden."""
+    out = []
+    for name, url in SOCIAL_LINKS:
+        out.append(
+            f'{indent}<a href="{url}" target="_blank" rel="noopener noreferrer"'
+            f' aria-label="Frameworks Studios on {name}">'
+            f'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"'
+            f' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"'
+            f' focusable="false">{SOCIAL_ICONS[name]}</svg></a>')
+    return "\n".join(out)
+
+
 GENERATORS = {
     "nav-island": lambda cur: nav_links(cur, "    "),
     "nav-drawer": lambda cur: nav_links(cur, "  "),
     "nav-footer": lambda cur: footer_links(cur, "    "),
+    "social":     lambda cur: social_row("    "),
+    "copyright":  lambda cur: "    <span>© 2026 FRAMEWORKS STUDIOS · "
+                              + studio_line("·", upper=True) + "</span>",
+    "studio-line-drawer": lambda cur: "  " + studio_line("·"),
 }
 
 

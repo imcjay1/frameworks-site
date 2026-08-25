@@ -36,6 +36,10 @@ STUDIOS = [
 # The running line — the country only, not the city.
 STUDIO_LINE = ["Monaco", "Kingdom of Saudi Arabia", "United Kingdom"]
 
+# Supplied by client — pending.
+CONTACT_EMAIL = ""
+CONTACT_PHONE = ""
+
 # --------------------------------------------------------------- social ------
 SOCIAL_LINKS = [
     ("Instagram", "https://www.instagram.com/framework.studio_/"),

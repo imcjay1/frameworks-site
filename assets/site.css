@@ -1191,3 +1191,24 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 @media (prefers-reduced-motion: reduce){
   .stage .glass::before, .stage .glass::after{animation:none}
 }
+
+/* ---------- Footer social row ----------
+   Icon-only links between the footer nav and the copyright line. The 44px hit
+   area is the link; the icon inside is 20px, so the target is comfortable
+   without the icons drifting apart. */
+.footer-social{
+  display:flex; gap:24px; margin-top:26px;
+  justify-content:flex-end;
+}
+.footer-social a{
+  display:grid; place-items:center;
+  width:44px; height:44px; margin:-12px;      /* hit area without spacing the row out */
+  color:#B9BCC2;
+  transition:color .3s var(--ease);
+}
+.footer-social a:hover, .footer-social a:focus-visible{color:var(--ivory)}
+.footer-social a:focus-visible{outline:2px solid var(--spectral-gold); outline-offset:2px; border-radius:50%}
+.footer-social svg{display:block}
+@media (max-width:700px){
+  .footer-social{justify-content:center; margin-top:30px}
+}
