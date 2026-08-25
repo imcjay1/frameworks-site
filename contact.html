@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Contact — Start a Project | Frameworks Studios</title>
-<meta name="description" content="Tell Frameworks Studios about your space. Luxury 360° VR tours and immersive digital brochures, from Monaco to the world." />
+<title>Contact — Start Your Journey | Frameworks Studios</title>
+<meta name="description" content="Every extraordinary project begins with a conversation. Tell Frameworks Studios about your vision. Studios in Monaco, the Kingdom of Saudi Arabia and the United Kingdom." />
 <link rel="canonical" href="https://frameworks-studios.com/contact" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Contact — Start a Project | Frameworks Studios" />
-<meta property="og:description" content="Tell Frameworks Studios about your space. Luxury 360° VR tours and immersive digital brochures, from Monaco to the world." />
+<meta property="og:title" content="Contact — Start Your Journey | Frameworks Studios" />
+<meta property="og:description" content="Every extraordinary project begins with a conversation. Tell Frameworks Studios about your vision. Studios in Monaco, the Kingdom of Saudi Arabia and the United Kingdom." />
 <meta property="og:url" content="https://frameworks-studios.com/contact" />
 <meta name="twitter:card" content="summary_large_image" />
 <!-- #region SHARED:head — everything below is identical on every page. The
@@ -21,6 +21,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 <!-- #endregion SHARED:head -->
+<!-- page overrides, after site.css so equal-specificity rules win -->
+<link rel="stylesheet" href="/assets/contact.css">
 </head>
 <body data-page="contact">
 
@@ -62,73 +64,96 @@
 <!-- #endregion SHARED:nav -->
 
 <main>
-<header class="page-head">
-  <div class="eyebrow reveal">Contact</div>
-  <h1 class="reveal">Bring your space <em>to the world.</em></h1>
-  <p class="page-lede reveal">We embrace every client's unique vision, delivering personalised, high-impact immersive marketing designed to save time and maximise results. Tell us about your space.</p>
+<header class="page-head" id="start">
+  <div class="eyebrow reveal" data-decode>CONTACT</div>
+  <h1 class="reveal">START YOUR JOURNEY</h1>
+  <p class="page-lede reveal">Every extraordinary project begins with a conversation. Tell us about your vision, and we'll transform it into an unforgettable experience the world will want to discover.</p>
 </header>
 
-<section class="contact" id="enquiry">
-  <div class="eyebrow reveal">Enquiry</div>
-  <h2 class="reveal">Tell us about <em>the space.</em></h2>
-
+<section class="contact" id="enquiry" aria-label="Project enquiry">
+  <!-- The transport is unchanged: the form posts natively to /api/contact and
+       site.js upgrades it to submit in place, keyed on this id. The field names
+       are the ones the endpoint already accepts, so nothing needed remapping —
+       PROJECT TYPE posts as `sector`, PROJECT LOCATION as `location`. -->
   <form class="form-grid reveal" id="contact-form" action="/api/contact" method="POST">
     <div class="field">
-      <label for="f-name">Name</label>
-      <input id="f-name" name="name" type="text" autocomplete="name" required>
+      <label for="f-name">Name <i aria-hidden="true">*</i></label>
+      <input id="f-name" name="name" type="text" autocomplete="name" placeholder="Your name" required aria-required="true">
     </div>
     <div class="field">
-      <label for="f-company">Company</label>
-      <input id="f-company" name="company" type="text" autocomplete="organization">
+      <label for="f-company">Company / Organisation</label>
+      <input id="f-company" name="company" type="text" autocomplete="organization" placeholder="Company or brand">
     </div>
     <div class="field">
-      <label for="f-email">Email</label>
-      <input id="f-email" name="email" type="email" autocomplete="email" required>
+      <label for="f-email">Email <i aria-hidden="true">*</i></label>
+      <input id="f-email" name="email" type="email" autocomplete="email" placeholder="Email address" required aria-required="true">
     </div>
     <div class="field">
       <label for="f-phone">Phone</label>
-      <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+      <input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder="Telephone number">
     </div>
     <div class="field">
-      <label for="f-sector">Sector</label>
-      <select id="f-sector" name="sector">
-          <option value="">Select a sector</option>
-          <option>Luxury Real Estate</option>
-          <option>Super-Yachts</option>
-          <option>Automotive</option>
-          <option>Event Venues</option>
-          <option>Stadiums</option>
-          <option>Golf Courses</option>
-          <option>Premium Hospitality</option>
-          <option>Something else</option>
+      <label for="f-location">Project location</label>
+      <input id="f-location" name="location" type="text" placeholder="City, region or country">
+    </div>
+    <div class="field">
+      <label for="f-type">Project type <i aria-hidden="true">*</i></label>
+      <select id="f-type" name="sector" required aria-required="true">
+          <option value="">Select one</option>
+          <option>Hospitality or Destination</option>
+          <option>Real Estate or Development</option>
+          <option>Culture or Landmark</option>
+          <option>Sport or Entertainment</option>
+          <option>Automotive or Yachting</option>
+          <option>Brand Experience</option>
+          <option>Healthcare</option>
+          <option>Digital Services</option>
+          <option>Other</option>
       </select>
     </div>
-    <div class="field">
-      <label for="f-location">Where is the space?</label>
-      <input id="f-location" name="location" type="text" placeholder="City or region">
-    </div>
     <div class="field wide">
-      <label for="f-message">About the project</label>
-      <textarea id="f-message" name="message" required placeholder="The space, the audience, and what a good outcome looks like."></textarea>
+      <label for="f-message">Anything else we should know</label>
+      <textarea id="f-message" name="message" placeholder="Tell us about the project"></textarea>
     </div>
     <p class="hp" aria-hidden="true">
       <label for="f-website">Leave this field empty</label>
       <input id="f-website" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
     </p>
     <div class="consent">
-      <input id="f-consent" name="consent" type="checkbox" required>
+      <input id="f-consent" name="consent" type="checkbox" required aria-required="true">
       <label for="f-consent">I agree to Frameworks Studios storing these details in order to respond to my enquiry.</label>
     </div>
     <div class="form-actions">
-      <button class="btn-ivory" type="submit">Send enquiry</button>
-      <p class="form-note">We reply to every enquiry within one working day.</p>
+      <button class="btn-ivory" type="submit">Start your journey</button>
+      <p class="form-note">A CONSIDERED RESPONSE WITHIN ONE WORKING DAY.</p>
     </div>
   </form>
+</section>
 
-  <div class="contact-details">
-    <span>Monaco · Headquarters</span>
-    <span>Jeddah, Kingdom of Saudi Arabia · United Kingdom</span>
+<section class="band">
+  <h2 class="reveal ct-h2">THE FIRST CONVERSATION</h2>
+  <p class="body-copy reveal">We listen first. We will ask the right questions, understand the ambition and give you a clear view of the creative direction, scope and next steps.</p>
+</section>
+
+<section class="band ct-studios" style="padding-top:0">
+  <div class="eyebrow reveal" data-decode>OUR STUDIOS</div>
+  <h2 class="reveal ct-h2">THREE STUDIOS. ONE GLOBAL PERSPECTIVE.</h2>
+  <!-- gen:studio-columns -->
+  <div class="studio-cols reveal">
+    <div class="studio-col"><span class="studio-city">MONACO</span><span class="studio-role">Headquarters</span></div>
+    <div class="studio-col"><span class="studio-city">JEDDAH, KINGDOM OF SAUDI ARABIA</span><span class="studio-role">Studio</span></div>
+    <div class="studio-col"><span class="studio-city">UNITED KINGDOM</span><span class="studio-role">Studio</span></div>
   </div>
+  <!-- /gen:studio-columns -->
+</section>
+
+<!-- gen:direct-contact -->
+
+<!-- /gen:direct-contact -->
+
+<section class="contact ct-close">
+  <h2 class="reveal">THE NEXT EXTRAORDINARY EXPERIENCE BEGINS HERE.</h2>
+  <a class="btn-ivory reveal" href="#start">Start your journey</a>
 </section>
 </main>
 

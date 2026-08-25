@@ -1,0 +1,79 @@
+/* Contact — the six sections.
+ *
+ * Loaded only by contact.html, after site.css. The form itself is the shared
+ * .form-grid component, unchanged; everything here is the surrounding page.
+ */
+
+/* The closing button scrolls back to the hero rather than navigating. Scoped
+   to this stylesheet on purpose: site.css sets scroll-behavior:auto globally
+   because the home page's scroll-scrubbed hero fights a smooth scroll. */
+html{scroll-behavior:smooth}
+#start{scroll-margin-top:120px}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+}
+
+/* The supplied statement lines are set in the display face at the h2 scale
+   already carried by site.css; they only need their tracking opened up a
+   little, because they are set in capitals. */
+.ct-h2{letter-spacing:.004em; max-width:22ch}
+.ct-h2 + .body-copy{margin-top:24px}
+
+/* site.css gives .contact p the band's lede size, and that beats .form-note on
+   specificity — which would set the note under the submit button at 16.5px. */
+.contact .form-note{font-size:12.5px; line-height:1.5; color:#8B8F97; max-width:34ch; margin-top:0}
+
+/* ---------- 04 · Our studios ----------
+   Three equal columns divided by the hairline, stacking below 768px. */
+.studio-cols{
+  display:grid; grid-template-columns:repeat(3, 1fr);
+  margin-top:44px; border-top:1px solid var(--line);
+}
+.studio-col{
+  display:flex; flex-direction:column; gap:10px;
+  padding:32px clamp(18px, 2vw, 34px) 34px;
+  border-left:1px solid var(--line);
+}
+.studio-col:first-child{border-left:0; padding-left:0}
+.studio-city{
+  font-family:"Fragment Mono",monospace; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink); line-height:1.5;
+}
+.studio-role{font-size:14.5px; line-height:1.5; color:var(--ink-soft)}
+
+/* ---------- 05 · Direct contact ----------
+   Rendered only when site_config carries an address or a number; with both
+   empty the whole section is absent from the markup. */
+.direct-cols{
+  display:grid; grid-template-columns:repeat(2, 1fr);
+  margin-top:8px; border-top:1px solid var(--line);
+}
+.direct-col{
+  display:flex; flex-direction:column; gap:10px;
+  padding:32px clamp(18px, 2vw, 34px) 34px;
+  border-left:1px solid var(--line);
+}
+.direct-col:first-child{border-left:0; padding-left:0}
+.direct-label{
+  font-family:"Fragment Mono",monospace; font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-soft);
+}
+.direct-col a{
+  font-size:16.5px; color:var(--ink); text-decoration:none;
+  border-bottom:1px solid var(--line); align-self:flex-start;
+  padding-bottom:2px; transition:border-color .3s var(--ease);
+}
+.direct-col a:hover{border-bottom-color:var(--ink)}
+
+/* ---------- 06 · Closing ---------- */
+.ct-close{text-align:center}
+.ct-close h2{margin:0 auto; max-width:20ch; letter-spacing:.004em}
+
+@media (max-width:768px){
+  .studio-cols, .direct-cols{grid-template-columns:1fr}
+  .studio-col, .direct-col{
+    border-left:0; border-top:1px solid var(--line);
+    padding:26px 0 28px;
+  }
+  .studio-col:first-child, .direct-col:first-child{border-top:0}
+}

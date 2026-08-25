@@ -27,7 +27,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from site_config import (NAV, STUDIOS, STUDIO_LINE,          # noqa: E402
-                         SOCIAL_LINKS, SOCIAL_ICONS)
+                         SOCIAL_LINKS, SOCIAL_ICONS,
+                         CONTACT_EMAIL, CONTACT_PHONE)
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = "index.html"
@@ -82,6 +83,37 @@ def social_row(indent):
     return "\n".join(out)
 
 
+def studio_columns(indent):
+    """The three studios as equal columns — /contact section 04."""
+    out = [indent + '<div class="studio-cols reveal">']
+    for s in STUDIOS:
+        out.append(f'{indent}  <div class="studio-col">'
+                   f'<span class="studio-city">{s["name"].upper()}</span>'
+                   f'<span class="studio-role">{s["role"]}</span></div>')
+    out.append(indent + "</div>")
+    return "\n".join(out)
+
+
+def direct_contact(indent):
+    """Section 05 of /contact. The client has not supplied an address or a
+    number yet, so with both constants empty this renders nothing at all —
+    the section is absent rather than empty, and the page still reads."""
+    if not CONTACT_EMAIL and not CONTACT_PHONE:
+        return ""
+    rows = []
+    if CONTACT_EMAIL:
+        rows.append(f'{indent}    <div class="direct-col"><span class="direct-label">EMAIL</span>'
+                    f'<a href="mailto:{CONTACT_EMAIL}">{CONTACT_EMAIL}</a></div>')
+    if CONTACT_PHONE:
+        tel = "".join(c for c in CONTACT_PHONE if c.isdigit() or c == "+")
+        rows.append(f'{indent}    <div class="direct-col"><span class="direct-label">TELEPHONE</span>'
+                    f'<a href="tel:{tel}">{CONTACT_PHONE}</a></div>')
+    return ("\n".join([f'{indent}<section class="band ct-direct" style="padding-top:0">',
+                       f'{indent}  <div class="eyebrow reveal">DIRECT CONTACT</div>',
+                       f'{indent}  <div class="direct-cols reveal">'] + rows
+                      + [f'{indent}  </div>', f'{indent}</section>']))
+
+
 GENERATORS = {
     "nav-island": lambda cur: nav_links(cur, "    "),
     "nav-drawer": lambda cur: nav_links(cur, "  "),
@@ -90,6 +122,8 @@ GENERATORS = {
     "copyright":  lambda cur: "    <span>© 2026 FRAMEWORKS STUDIOS · "
                               + studio_line("·", upper=True) + "</span>",
     "studio-line-drawer": lambda cur: "  " + studio_line("·"),
+    "studio-columns":     lambda cur: studio_columns("  "),
+    "direct-contact":     lambda cur: direct_contact(""),
 }
 
 

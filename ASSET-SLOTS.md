@@ -39,5 +39,5 @@ empty strings; anything that renders them is written to skip cleanly when empty.
 
 | Constant | File | Status |
 |---|---|---|
-| `CONTACT_EMAIL` | `tools/site_config.py` | Outstanding — the Direct contact section on /contact does not render until this and `CONTACT_PHONE` are populated. |
-| `CONTACT_PHONE` | `tools/site_config.py` | Outstanding — as above. |
+| `CONTACT_EMAIL` | `tools/site_config.py` | Outstanding. Section 05 (Direct contact) of /contact renders only once this or `CONTACT_PHONE` is set; with both empty the section is absent from the markup entirely. Set the value, run `python3 tools/sync-partials.py`, commit the regenerated HTML. |
+| `CONTACT_PHONE` | `tools/site_config.py` | Outstanding — as above. The `tel:` href is derived from the value by stripping everything but digits and a leading `+`. |
