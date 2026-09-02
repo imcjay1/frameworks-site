@@ -37,10 +37,10 @@
 /* the small right-aligned block in the lower right of the hero */
 .cf-hero-note{
   position:relative; z-index:2; align-self:flex-end; text-align:right;
-  max-width:46ch; margin-top:48px;
+  max-width:56ch; margin-top:48px;
 }
 .cf-hero-statement{
-  font-family:"Fragment Mono",monospace; font-size:13.3px; letter-spacing:.16em;
+  font-family:"Fragment Mono",monospace; font-size:13.3px; letter-spacing:.13em;
   text-transform:uppercase; color:var(--brass-deep); margin-bottom:12px;
 }
 .cf-hero-note p:last-child{font-size:16.2px; line-height:1.62}
@@ -51,35 +51,35 @@
    27 / 73, with the hairline doing the separating: one rule between the copy
    panel and the media zone, one between each row. */
 .cstage{
-  display:grid; grid-template-columns:27fr 73fr;
+  display:grid; grid-template-columns:36fr 64fr;
   border-bottom:1px solid var(--line);
 }
 .stage-copy{
   background:var(--ink); color:var(--ivory);
-  padding:clamp(36px, 3.4vw, 56px) clamp(24px, 2.4vw, 38px);
+  padding:clamp(44px, 4vw, 68px) clamp(32px, 3vw, 52px);
   display:flex; flex-direction:column;
 }
 .stage-num{
   display:block; font-family:"Fraunces",serif; font-weight:340;
   font-variation-settings:"opsz" 120;
-  font-size:clamp(46.2px, 6.7vw, 96.6px); line-height:1; letter-spacing:-.015em;
+  font-size:clamp(52px, 7.4vw, 108px); line-height:1; letter-spacing:-.015em;
   color:var(--ivory); opacity:.22; margin-bottom:.18em;
 }
 .stage-title{
   font-family:"Fraunces",serif; font-weight:340; font-variation-settings:"opsz" 110;
-  font-size:clamp(23.5px, 2vw, 32.1px); line-height:1.14; letter-spacing:.002em;
+  font-size:clamp(26px, 2.4vw, 37px); line-height:1.14; letter-spacing:.002em;
   color:var(--ivory);
 }
 .stage-rule{display:block; width:32px; height:1px; background:var(--brass); margin:20px 0}
 /* the lead line — not a heading, so it carries no heading semantics */
-.stage-lead{font-size:17.9px; line-height:1.5; color:var(--ivory); margin-bottom:20px}
-.stage-body{font-size:16.2px; line-height:1.66; color:#B9BCC2}
+.stage-lead{font-size:19.5px; line-height:1.52; color:var(--ivory); margin-bottom:20px}
+.stage-body{font-size:17.4px; line-height:1.7; color:#B9BCC2}
 .stage-body + .stage-body{margin-top:.9em}
 /* the closing statement — h3 scale, full ivory, at the foot of the panel */
 .stage-close{
   margin-top:auto; padding-top:36px;
   font-family:"Fraunces",serif; font-weight:340;
-  font-size:clamp(19.6px, 1.4vw, 23.5px); line-height:1.22; letter-spacing:-.008em;
+  font-size:clamp(21px, 1.6vw, 26px); line-height:1.24; letter-spacing:-.008em;
   color:var(--ivory);
 }
 
@@ -96,7 +96,7 @@
 .cf-cap{
   border-top:1px solid var(--line);
   padding:12px 14px;
-  font-family:"Fragment Mono",monospace; font-size:12px; letter-spacing:.14em;
+  font-family:"Fragment Mono",monospace; font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:var(--ink-soft);
 }
 
@@ -114,7 +114,7 @@
   display:flex; align-items:baseline; gap:16px;
   padding:clamp(14px,1.5vw,20px) 0;
   border-bottom:1px solid rgba(242,238,232,.14);
-  font-family:"Fragment Mono",monospace; font-size:13.3px; letter-spacing:.16em;
+  font-family:"Fragment Mono",monospace; font-size:14.4px; letter-spacing:.15em;
   text-transform:uppercase; color:var(--ivory);
 }
 .viewpoints li:last-child{border-bottom:0}
@@ -147,12 +147,12 @@
 }
 .cf-close-statement{
   font-family:"Fraunces",serif; font-weight:340; font-variation-settings:"opsz" 110;
-  font-size:clamp(24.6px, 2vw, 33.2px); line-height:1.16; letter-spacing:-.008em;
+  font-size:clamp(26px, 2.4vw, 37px); line-height:1.16; letter-spacing:-.008em;
   max-width:18ch;
 }
 .cf-close-body{
   margin-top:18px; max-width:36ch;
-  font-size:16.8px; line-height:1.6; color:#B9BCC2;
+  font-size:17.6px; line-height:1.65; color:#B9BCC2;
 }
 .stage-05 .stage-media{min-height:clamp(380px, 40vw, 640px)}
 
@@ -162,8 +162,12 @@
 @media (max-width:1024px){
   .cstage{grid-template-columns:1fr}
   .stage-copy{padding:clamp(32px,6vw,48px) var(--pad-x)}
-  .stage-num{font-size:clamp(34.2px, 4.4vw, 58.8px)}
+  .stage-num{font-size:clamp(38px, 5vw, 66px)}
   .stage-close{margin-top:32px; padding-top:0}
+  /* full width here, so the measure needs its own cap or lines run to ~95
+     characters — the panel's width was doing that job on the two-column rows */
+  .stage-lead, .stage-body{max-width:64ch}
+  .stage-close{max-width:36ch}
   .stage-media{border-left:0; border-top:1px solid var(--line)}
   .cf-hero-copy{max-width:100%}
 }

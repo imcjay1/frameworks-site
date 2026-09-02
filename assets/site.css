@@ -408,6 +408,29 @@ h2{
 .studio-grid{display:grid; grid-template-columns:5fr 6fr; gap:64px; align-items:start}
 .studio-grid h2{max-width:16ch}
 
+/* The running studio line under the home page's studio copy. Deliberately
+   quieter than .office on /studio — here it is a caption, not a statement. */
+.studio-locus{
+  margin-top:30px; font-family:"Fragment Mono",monospace; font-size:13.3px;
+  letter-spacing:.16em; color:var(--brass-deep); text-transform:uppercase;
+}
+
+/* Pillar statements — the home page's six pillars of excellence. The card
+   itself is the shared glass pane further down this file; only the grid lives
+   here, under its own name because digital.css owns .pillars and is not
+   loaded on the home page. */
+.pillar-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:8px}
+.pillar-grid .pillar{padding:30px 28px 32px}
+.pillar-grid .pillar b{
+  display:block; font-family:"Fraunces",serif; font-weight:340;
+  font-size:clamp(23.5px, 2.4vw, 30px); letter-spacing:-.01em; margin-bottom:10px;
+}
+.pillar-grid .pillar span{font-size:16.2px; line-height:1.6; color:var(--ink-soft)}
+
+/* The works heading sits above the sector list, so the list loses its own
+   top margin against it. */
+#sectors > h2{max-width:22ch; margin-bottom:14px}
+
 /* Sectors — a full panorama of luxury, one heading per bearing */
 .sector-list{margin-top:10px; border-top:1px solid var(--ivory-deep)}
 .sector-row{
@@ -469,6 +492,16 @@ h2{
   transition:transform .25s var(--ease);
 }
 .btn-ivory:hover{transform:translateY(-1px)}
+/* Member of — the bodies the studio belongs to. Absent from the markup
+   entirely until MEMBERSHIPS is populated in tools/site_config.py. */
+.footer-member{display:flex; flex-direction:column; align-items:center; gap:16px; margin-top:8px}
+.footer-member-k{
+  font-family:"Fragment Mono",monospace; font-size:12.6px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--brass);
+}
+.footer-member-marks{display:flex; flex-wrap:wrap; gap:18px 40px; justify-content:center; align-items:center}
+.footer-member-marks img{height:38px; width:auto; opacity:.72; filter:brightness(0) invert(1)}
+
 .footer-bar{
   margin-top:56px; padding-top:26px; border-top:1px solid rgba(242,238,232,.14);
   display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
@@ -641,6 +674,7 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 }
 @media (max-width:960px){
   .studio-grid, .craft-grid{grid-template-columns:1fr; gap:36px}
+  .pillar-grid{grid-template-columns:repeat(2,1fr)}
   .stats{grid-template-columns:repeat(2,1fr)}
   .sector-note{display:none}
   .sector-row{grid-template-columns:84px 1fr}
@@ -656,6 +690,7 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
   .vf-tr{display:none}
   .transport{display:none}
   section.band{padding:88px var(--pad-x)}
+  .pillar-grid{grid-template-columns:1fr; gap:22px}
   .cap{max-width:62vw}
   .cap-line{font-size:clamp(21.8px, 5.8vw, 30px)}
   .tcap{top:58px}

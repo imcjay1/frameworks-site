@@ -28,7 +28,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from site_config import (NAV, STUDIOS, STUDIO_LINE,          # noqa: E402
                          SOCIAL_LINKS, SOCIAL_ICONS,
-                         CONTACT_EMAIL, CONTACT_PHONE)
+                         CONTACT_EMAIL, CONTACT_PHONE, MEMBERSHIPS)
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = "index.html"
@@ -114,6 +114,23 @@ def direct_contact(indent):
                       + [f'{indent}  </div>', f'{indent}</section>']))
 
 
+def member_of(indent):
+    """The memberships row above the footer's social icons. The client has not
+    supplied the marks yet, so with MEMBERSHIPS empty this renders nothing at
+    all — the row is absent rather than an empty heading over blank space."""
+    if not MEMBERSHIPS:
+        return ""
+    logos = "\n".join(
+        f'{indent}    <img src="{path}" alt="{name}" loading="lazy" decoding="async">'
+        for name, path in MEMBERSHIPS)
+    return "\n".join([f'{indent}<div class="footer-member">',
+                      f'{indent}  <span class="footer-member-k">Member of</span>',
+                      f'{indent}  <div class="footer-member-marks">',
+                      logos,
+                      f'{indent}  </div>',
+                      f'{indent}</div>'])
+
+
 def studio_marks(indent):
     """The three-letter chips on /digital-services — from STUDIOS, not typed."""
     return "\n".join(f'{indent}<span class="dh-mark">{st["short"]}</span>' for st in STUDIOS)
@@ -124,9 +141,11 @@ GENERATORS = {
     "nav-drawer": lambda cur: nav_links(cur, "  "),
     "nav-footer": lambda cur: footer_links(cur, "    "),
     "social":     lambda cur: social_row("    "),
+    "member-of":  lambda cur: member_of("  "),
     "copyright":  lambda cur: "    <span>© 2026 FRAMEWORKS STUDIOS · "
                               + studio_line("·", upper=True) + "</span>",
     "studio-line-drawer": lambda cur: "  " + studio_line("·"),
+    "studio-line-home":   lambda cur: "        " + studio_line("·", upper=True),
     "studio-marks": lambda cur: studio_marks("          "),
     "studio-columns":     lambda cur: studio_columns("  "),
     "direct-contact":     lambda cur: direct_contact(""),

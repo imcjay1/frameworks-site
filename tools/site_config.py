@@ -40,6 +40,13 @@ STUDIO_LINE = ["Monaco", "Kingdom of Saudi Arabia", "United Kingdom"]
 CONTACT_EMAIL = ""
 CONTACT_PHONE = ""
 
+# ---------------------------------------------------------------- member of --
+# The bodies the studio belongs to, rendered as a row above the footer's social
+# icons. (display name, logo path) — the logo is a trimmed file in
+# assets/memberships/. Empty until the client supplies the marks; with the list
+# empty the whole row is absent from the markup rather than rendered blank.
+MEMBERSHIPS = []
+
 # --------------------------------------------------------------- social ------
 SOCIAL_LINKS = [
     ("Instagram", "https://www.instagram.com/framework.studio_/"),
