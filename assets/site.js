@@ -189,7 +189,8 @@
     const clone = track.cloneNode(true);
     clone.setAttribute('aria-hidden', 'true');
     m.appendChild(clone);
-    m.style.setProperty('--marq-duration', (track.scrollWidth / 55) + 's');   /* ~55px per second */
+    const speed = Number(m.dataset.marqueeSpeed) || 55;   /* px per second */
+    m.style.setProperty('--marq-duration', (track.scrollWidth / speed) + 's');
     m.classList.add('is-looping');
     if('IntersectionObserver' in window){
       /* paused off-screen, so it isn't competing with the film scrub for frames */
@@ -706,6 +707,290 @@
         }
       });
     });
+  }
+
+  /* ---------- the 360° tour viewer ----------
+     /works lists its sectors as rows; each row opens a full-viewport viewer for
+     that sector's tours, with the tours themselves switched in place.
+
+     The tour list is read out of the page rather than declared here, so the
+     copy has one home — the <ul> under each row, which is also what a visitor
+     without JavaScript is left with. Building the viewer is therefore the last
+     thing that happens: only once it exists is the list marked enhanced and
+     folded away. */
+  const sectorList = document.querySelector('.sector-list[data-tours]');
+  if(sectorList){
+    const sectors = [...sectorList.querySelectorAll('.sector')].map(sec => {
+      const row = sec.querySelector('.sector-row');
+      return {
+        slug:  sec.id,
+        deg:   row.querySelector('.sector-deg').textContent.trim(),
+        name:  row.querySelector('.sector-name').textContent.trim(),
+        row:   row,
+        tours: [...sec.querySelectorAll('.sector-tours a')].map(a => ({
+          title: a.textContent.trim(),
+          note:  a.dataset.note || '',
+          url:   a.href,
+        })),
+      };
+    }).filter(s => s.tours.length);
+
+    if(sectors.length){
+      const SVG = 'http://www.w3.org/2000/svg';
+      const icon = (d, extra) => {
+        const svg = document.createElementNS(SVG, 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('width', '20'); svg.setAttribute('height', '20');
+        svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '1.5'); svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
+        (Array.isArray(d) ? d : [d]).forEach(dd => {
+          const path = document.createElementNS(SVG, 'path');
+          path.setAttribute('d', dd);
+          svg.appendChild(path);
+        });
+        if(extra) svg.setAttribute('width', extra), svg.setAttribute('height', extra);
+        return svg;
+      };
+
+      const el = (tag, cls, parent) => {
+        const node = document.createElement(tag);
+        if(cls) node.className = cls;
+        if(parent) parent.appendChild(node);
+        return node;
+      };
+
+      /* --- the viewer, built once and reused for every sector --- */
+      const view  = el('div', 'tour-viewer');
+      view.hidden = true;
+      view.setAttribute('role', 'dialog');
+      view.setAttribute('aria-modal', 'true');
+      view.setAttribute('aria-labelledby', 'tv-title');
+
+      const head  = el('header', 'tv-head', view);
+      const id    = el('div', 'tv-id', head);
+      const brow  = el('p', 'tv-eyebrow', id);
+      const title = el('h2', 'tv-title', id);
+      title.id = 'tv-title';
+      const note  = el('p', 'tv-note', id);
+
+      const close = el('button', 'tv-close', head);
+      close.type = 'button';
+      close.setAttribute('aria-label', 'Close tour');
+      close.appendChild(icon(['M6 6l12 12', 'M18 6L6 18'], '22'));
+      el('span', '', close).textContent = 'Close';
+
+      const stage = el('div', 'tv-stage', view);
+      stage.id = 'tv-stage';
+      stage.setAttribute('role', 'tabpanel');
+      const frame = document.createElement('iframe');
+      frame.className = 'tv-frame';
+      frame.setAttribute('allowfullscreen', 'true');
+      /* the client's own embed spec for these tours, carried over verbatim */
+      frame.setAttribute('allow', 'fullscreen; accelerometer; gyroscope; magnetometer; ' +
+        'vr; xr; xr-spatial-tracking; autoplay; camera; microphone');
+      frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      stage.appendChild(frame);
+      const wait = el('div', 'tv-wait', stage);
+      el('i', '', wait);
+      el('span', '', wait).textContent = 'Loading the tour';
+      frame.addEventListener('load', () => stage.classList.add('is-ready'));
+
+      /* The switcher is the one control a visitor has to notice, so it is
+         announced rather than left to be discovered: a label, a running count,
+         and buttons sized to be read at a glance. */
+      const rail  = el('nav', 'tv-rail', view);
+      rail.setAttribute('aria-label', 'Tours in this sector');
+      const brief = el('div', 'tv-rail-head', rail);
+      el('span', 'tv-rail-label', brief).textContent = 'More tours in this sector';
+      const count = el('span', 'tv-rail-count', brief);
+      const bar   = el('div', 'tv-rail-nav', rail);
+      const prev  = el('button', 'tv-step', bar);
+      prev.type = 'button'; prev.setAttribute('aria-label', 'Previous tour');
+      prev.appendChild(icon('M15 5l-7 7 7 7', '26'));
+      const chips = el('div', 'tv-chips', bar);
+      chips.setAttribute('role', 'tablist');
+      const next  = el('button', 'tv-step', bar);
+      next.type = 'button'; next.setAttribute('aria-label', 'Next tour');
+      next.appendChild(icon('M9 5l7 7-7 7', '26'));
+      document.body.appendChild(view);
+
+      /* --- state --- */
+      let sector = null, index = 0, opener = null, pushed = false, teardown = 0;
+
+      /* The overlay fades out before it is hidden, so the last step of a close is
+         deferred. Reopening inside that window has to finish the pending close
+         first, or its timer fires afterwards and shuts the viewer the visitor
+         has just opened. */
+      const finish = () => {
+        teardown = 0;
+        view.hidden = true;
+        frame.removeAttribute('src');
+        stage.classList.remove('is-ready');
+      };
+      const settle = () => { if(teardown){ clearTimeout(teardown); finish(); } };
+
+      const show = i => {
+        const tour = sector.tours[i];
+        if(!tour) return;
+        index = i;
+        brow.textContent   = sector.deg + ' · ' + sector.name;
+        title.textContent  = tour.title;
+        note.textContent   = tour.note;
+        note.hidden        = !tour.note;
+        if(frame.src !== tour.url){
+          stage.classList.remove('is-ready');
+          frame.src = tour.url;
+        }
+        [...chips.children].forEach((chip, n) => {
+          const on = n === i;
+          chip.setAttribute('aria-selected', String(on));
+          chip.tabIndex = on ? 0 : -1;
+          if(on) chip.scrollIntoView({block:'nearest', inline:'nearest'});
+        });
+        count.textContent = (i + 1) + ' / ' + sector.tours.length;
+        prev.disabled = i === 0;
+        next.disabled = i === sector.tours.length - 1;
+      };
+
+      const step = by => {
+        const n = index + by;
+        if(n >= 0 && n < sector.tours.length) show(n);
+      };
+
+      const mount = s => {
+        sector = s;
+        chips.textContent = '';
+        s.tours.forEach((tour, i) => {
+          const chip = el('button', 'tv-chip', chips);
+          chip.type = 'button';
+          chip.setAttribute('role', 'tab');
+          chip.setAttribute('aria-controls', 'tv-stage');
+          chip.textContent = tour.title;
+          press(chip, () => show(i));
+        });
+        rail.toggleAttribute('data-single', s.tours.length < 2);
+      };
+
+      const open = (slug, push) => {
+        const s = sectors.find(x => x.slug === slug);
+        if(!s) return false;
+        settle();
+        if(!view.hidden && sector === s) return true;
+        mount(s);
+        if(view.hidden){
+          /* Safari does not focus a button on click, and arriving by hash focuses
+             nothing at all, so fall back to the row itself — closing has to land
+             somewhere on the list either way. */
+          const active = document.activeElement;
+          opener = (active && active !== document.body) ? active : s.row;
+          view.hidden = false;
+          document.body.classList.add('tour-open');
+          view.offsetHeight;            /* flush, so the fade has a frame to start from —
+                                           rAF is throttled in a background tab and would
+                                           leave the overlay transparent but blocking */
+          view.classList.add('is-open');
+          if(push){ history.pushState({fsTour:slug}, '', '#' + slug); pushed = true; }
+        } else if(pushed){
+          /* swapping sectors without leaving the viewer — the entry we own moves
+             with it rather than gaining a second one */
+          history.replaceState({fsTour:slug}, '', '#' + slug);
+        }
+        show(0);
+        close.focus({preventScroll:true});
+        return true;
+      };
+
+      /* Drops the overlay without touching history — the two callers below own
+         that between them, and doing it here as well would fight them. */
+      const dismiss = () => {
+        if(view.hidden) return;
+        view.classList.remove('is-open');
+        document.body.classList.remove('tour-open');
+        clearTimeout(teardown);
+        if(reduced) finish(); else teardown = setTimeout(finish, 420);
+        sector = null;
+        if(opener && document.contains(opener)) opener.focus({preventScroll:true});
+        opener = null;
+      };
+
+      /* Opening pushes a history entry, so Back closes the viewer — what a
+         full-screen overlay owes a phone. Closing does NOT call history.back():
+         that lands on a later turn, by which time the visitor may have opened
+         another sector, and the queued move would then unwind an entry that is
+         still in use. Instead the entry we pushed is overwritten in place. Every
+         history call here is synchronous, so nothing can arrive out of order. */
+      const shut = () => {
+        if(view.hidden || !view.classList.contains('is-open')) return;
+        dismiss();
+        pushed = false;
+        if(location.hash || history.state){
+          history.replaceState(null, '', location.pathname + location.search);
+        }
+      };
+
+      /* Back off our own entry, or Forward onto it again. */
+      addEventListener('popstate', e => {
+        if(e.state && e.state.fsTour){ pushed = true; open(e.state.fsTour, false); }
+        else { pushed = false; dismiss(); }
+      });
+
+      /* Once the visitor has taken hold of the tour, focus is inside a
+         cross-origin iframe, and the browser spends the next click bringing
+         focus back to this document — the button never hears it, so the control
+         appears to need clicking twice. pointerdown lands before that, so the
+         first press is the one that counts. click stays on for the keyboard,
+         which never fires pointerdown; the short latch keeps a mouse press from
+         running the handler twice. */
+      const press = (node, fn) => {
+        let viaPointer = false;
+        node.addEventListener('pointerdown', e => {
+          /* Mouse only. On a touch screen pointerdown is also the first move of
+             a swipe along the chip row, and firing here would change the tour
+             every time someone tried to scroll it — touch keeps the ordinary
+             click, which the browser withholds once a scroll has begun. */
+          if(e.pointerType !== 'mouse' || e.button !== 0) return;
+          viaPointer = true;
+          setTimeout(() => { viaPointer = false; }, 700);
+          fn();
+        });
+        node.addEventListener('click', () => { if(!viaPointer) fn(); });
+      };
+
+      press(close, shut);
+      press(prev, () => step(-1));
+      press(next, () => step(1));
+
+      sectors.forEach(s => s.row.addEventListener('click', () => open(s.slug, true)));
+
+      addEventListener('keydown', e => {
+        if(view.hidden) return;
+        if(e.key === 'Escape'){ e.preventDefault(); shut(); }
+        else if(e.key === 'ArrowRight'){ e.preventDefault(); step(1); }
+        else if(e.key === 'ArrowLeft'){ e.preventDefault(); step(-1); }
+        else if(e.key === 'Tab'){
+          /* the overlay covers the page, so the page must not be tabbable behind it */
+          const stops = [close, ...chips.children, prev, next]
+            .filter(n => !n.disabled && n.offsetParent);
+          if(!stops.length) return;
+          const first = stops[0], last = stops[stops.length - 1];
+          if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+          else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+        }
+      });
+
+      /* Arriving on /works#luxury-real-estate — from the home page's own sector
+         list, or a shared link — opens straight into that sector. The hash has
+         already scrolled the row into place, so closing lands back on it. */
+      const fromHash = () => {
+        const slug = decodeURIComponent(location.hash.slice(1));
+        if(slug) open(slug, false);
+      };
+      fromHash();
+      addEventListener('hashchange', fromHash);
+
+      sectorList.setAttribute('data-enhanced', '');
+    }
   }
 
   /* ---------- section reveals ---------- */

@@ -1,0 +1,184 @@
+/* Works — the 360° tour viewer.
+   Loaded only by works.html. The sector rows themselves live in site.css,
+   because the home page carries the same list.
+
+   The viewer takes the whole viewport, so it has to hold the page's ivory
+   rather than reach for a cinema black: the scrim is ivory over a blur, the
+   chrome is the same eyebrow / Fraunces / Fragment Mono set the page uses, and
+   the active tour is an ink pill — the same token the nav gives the current
+   page. Only the stage itself is dark, and only so the tour's own imagery has
+   an edge to sit against. */
+
+/* Arriving on /works#event-venues jumps to the row; the nav floats over the
+   page, so the row needs to clear it. */
+.sector{scroll-margin-top:120px}
+
+.tour-viewer{
+  position:fixed; inset:0; z-index:120;
+  display:grid; grid-template-rows:auto 1fr auto;
+  opacity:0; transition:opacity .42s var(--ease);
+}
+.tour-viewer[hidden]{display:none}
+.tour-viewer.is-open{opacity:1}
+/* the ivory wash that puts the page behind glass */
+.tour-viewer::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:rgba(242,238,232,.94);
+  -webkit-backdrop-filter:blur(26px) saturate(1.2);
+  backdrop-filter:blur(26px) saturate(1.2);
+}
+body.tour-open{overflow:hidden}
+/* the custom cursor is drawn in difference blend against the page; over the
+   viewer it lands on ivory and disappears, so give the pointer back */
+body.tour-open.cursor-on .cursor{opacity:0}
+body.tour-open.cursor-on,
+body.tour-open.cursor-on a,
+body.tour-open.cursor-on button{cursor:auto}
+
+/* ---------- head: which sector, which tour, and the way out ---------- */
+.tv-head{
+  display:grid; grid-template-columns:1fr auto; gap:28px; align-items:start;
+  padding:26px var(--pad-x) 20px;
+}
+.tv-id{min-width:0}
+.tv-eyebrow{
+  display:flex; align-items:center; gap:12px;
+  font-family:"Fragment Mono",monospace; font-size:12.6px; letter-spacing:.16em;
+  color:var(--brass-deep); text-transform:uppercase; margin-bottom:12px;
+}
+.tv-eyebrow::after{content:""; height:1px; flex:0 0 44px; background:var(--brass); opacity:.5}
+.tv-title{
+  font-family:"Fraunces",serif; font-weight:340; font-variation-settings:"opsz" 110;
+  font-size:clamp(25.7px, 3.2vw, 40px); line-height:1.1; letter-spacing:-.012em;
+}
+.tv-note{margin-top:8px; font-size:16.2px; line-height:1.55; color:var(--ink-soft); max-width:58ch}
+
+/* The way out has to be the most obvious thing on the screen, so it is filled
+   rather than outlined and carries its own word. */
+.tv-close{
+  flex:0 0 auto; display:flex; align-items:center; gap:10px; cursor:pointer;
+  padding:14px 24px 14px 20px; border-radius:var(--radius-pill); border:0;
+  font-family:"Archivo",system-ui,sans-serif;
+  font-size:16.2px; font-weight:600; letter-spacing:.01em;
+  color:var(--ivory); background:var(--ink);
+  box-shadow:0 12px 26px -12px rgba(22,24,28,.65);
+  transition:background .3s var(--ease), box-shadow .3s var(--ease), transform .2s var(--ease);
+}
+.tv-close svg{stroke-width:2}
+.tv-close:hover{background:#000; box-shadow:0 16px 32px -12px rgba(22,24,28,.75); transform:translateY(-1px)}
+.tv-close:active{transform:translateY(0)}
+.tv-close:focus-visible{outline:2px solid var(--brass-deep); outline-offset:3px}
+
+/* ---------- stage ---------- */
+.tv-stage{
+  position:relative; margin:0 var(--pad-x); border-radius:18px; overflow:hidden;
+  background:var(--ink);
+  box-shadow:0 40px 80px -34px rgba(22,24,28,.45), 0 4px 14px rgba(22,24,28,.10);
+  border:1px solid rgba(255,255,255,.5);
+}
+.tv-frame{position:absolute; inset:0; width:100%; height:100%; border:0; display:block}
+
+/* Shown until the tour reports back. The tours are heavy scenes on a third-party
+   host, so an empty black rectangle would read as a failure. */
+.tv-wait{
+  position:absolute; inset:0; display:grid; place-content:center; gap:14px; justify-items:center;
+  font-family:"Fragment Mono",monospace; font-size:12.6px; letter-spacing:.2em;
+  color:rgba(242,238,232,.72); text-transform:uppercase;
+  background:var(--ink); transition:opacity .5s var(--ease);
+}
+.tv-stage.is-ready .tv-wait{opacity:0; pointer-events:none}
+.tv-wait i{
+  width:34px; height:34px; border-radius:50%;
+  border:1.5px solid rgba(242,238,232,.22); border-top-color:var(--brass);
+  animation:tv-spin 1s linear infinite;
+}
+@keyframes tv-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){ .tv-wait i{animation-duration:2.4s} }
+
+/* ---------- rail: step through the sector's tours ----------
+   A visitor who does not notice this has lost most of the sector, so it is
+   given a lit panel of its own, a label saying what it is, and a running count
+   — not a row of quiet text that reads as a caption. */
+.tv-rail{
+  margin:18px var(--pad-x) 24px;
+  padding:18px 22px 20px; border-radius:18px;
+  background:rgba(255,255,255,.62); border:1px solid var(--ivory-deep);
+  box-shadow:0 14px 34px -22px rgba(22,24,28,.32);
+}
+.tv-rail-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+  margin-bottom:14px;
+}
+.tv-rail-label{
+  font-family:"Fragment Mono",monospace; font-size:13.3px; letter-spacing:.16em;
+  color:var(--brass-deep); text-transform:uppercase;
+}
+.tv-rail-count{
+  font-family:"Fragment Mono",monospace; font-size:13.3px; letter-spacing:.1em;
+  color:var(--ink-soft); white-space:nowrap;
+}
+.tv-rail-nav{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:14px; align-items:center}
+
+.tv-step{
+  width:56px; height:56px; flex:0 0 auto; border-radius:50%;
+  display:grid; place-items:center; cursor:pointer;
+  color:var(--ivory); background:var(--ink); border:0;
+  box-shadow:0 10px 22px -12px rgba(22,24,28,.6);
+  transition:background .3s var(--ease), opacity .3s var(--ease), transform .2s var(--ease);
+}
+.tv-step svg{stroke-width:2}
+.tv-step:hover:not(:disabled){background:#000; transform:translateY(-1px)}
+.tv-step:disabled{
+  opacity:1; cursor:default;
+  color:var(--ink-soft); background:none; border:1.5px solid var(--ivory-deep); box-shadow:none;
+}
+.tv-step:focus-visible{outline:2px solid var(--brass-deep); outline-offset:3px}
+
+.tv-chips{
+  display:flex; gap:10px; overflow-x:auto; scroll-behavior:smooth;
+  padding:5px; margin:-5px;                     /* room for the focus ring */
+  scrollbar-width:none;
+}
+.tv-chips::-webkit-scrollbar{display:none}
+.tv-chip{
+  flex:0 0 auto; cursor:pointer; white-space:nowrap;
+  padding:15px 26px; border-radius:var(--radius-pill);
+  font-size:16.2px; font-weight:600; letter-spacing:.01em;
+  color:var(--ink); background:var(--ivory); border:1.5px solid var(--ivory-deep);
+  transition:color .25s var(--ease), background .25s var(--ease),
+             border-color .25s var(--ease), transform .2s var(--ease);
+}
+.tv-chip:hover{border-color:var(--brass); transform:translateY(-1px)}
+.tv-chip[aria-selected="true"]{
+  background:var(--ink); border-color:var(--ink); color:var(--ivory);
+  box-shadow:0 10px 22px -10px rgba(22,24,28,.6);
+}
+.tv-chip:focus-visible{outline:2px solid var(--brass-deep); outline-offset:2px}
+/* A sector with one tour has nothing to step through. */
+.tv-rail[data-single]{display:none}
+
+@media (max-width:960px){
+  .tv-head{padding:20px var(--pad-x) 16px; gap:16px}
+  /* the bearing and the sector name have to hold one line beside the close
+     button, so the rule goes and the tracking comes in */
+  .tv-eyebrow{font-size:11.4px; letter-spacing:.1em; margin-bottom:9px}
+  .tv-eyebrow::after{display:none}
+  .tv-note{display:none}
+  .tv-stage{margin:0 12px; border-radius:14px}
+  .tv-rail{
+    margin:14px 12px calc(16px + env(safe-area-inset-bottom));
+    padding:14px 14px 16px; border-radius:14px;
+  }
+  .tv-rail-head{margin-bottom:11px}
+  .tv-rail-label{font-size:11.4px; letter-spacing:.12em}
+  .tv-rail-count{font-size:11.4px}
+  /* the arrows cost a chip's worth of width; a thumb swipes the row instead */
+  .tv-step{display:none}
+  .tv-rail-nav{grid-template-columns:1fr}
+  .tv-chip{padding:13px 20px; font-size:15.1px}
+}
+@media (max-width:560px){
+  /* the word would push the pill under the title — the filled mark carries it */
+  .tv-close{padding:0; width:50px; height:50px; justify-content:center; border-radius:50%}
+  .tv-close span{display:none}
+}

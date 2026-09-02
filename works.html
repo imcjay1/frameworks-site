@@ -21,6 +21,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
 <!-- #endregion SHARED:head -->
+<!-- page overrides, after site.css so equal-specificity rules win -->
+<link rel="stylesheet" href="/assets/works.css">
 </head>
 <body data-page="works">
 
@@ -69,17 +71,140 @@
 </header>
 
 <section class="band">
-  <div class="sector-list reveal">
-    <div class="sector-row" data-img="/assets/sectors/luxury-real-estate.webp"><span class="sector-deg">000°</span><span class="sector-name">Luxury Real Estate</span><span class="sector-note">Residences that sell before the first viewing</span></div>
-    <div class="sector-row" data-img="/assets/sectors/super-yachts.webp"><span class="sector-deg">051°</span><span class="sector-name">Super-Yachts</span><span class="sector-note">Every deck, walkable from any harbour</span></div>
-    <div class="sector-row" data-img="/assets/sectors/automotive.webp"><span class="sector-deg">103°</span><span class="sector-name">Automotive</span><span class="sector-note">Showrooms without borders</span></div>
-    <div class="sector-row" data-img="/assets/sectors/event-venues.webp"><span class="sector-deg">154°</span><span class="sector-name">Event Venues</span><span class="sector-note">Let planners stand in the room</span></div>
-    <div class="sector-row" data-img="/assets/sectors/stadiums.webp"><span class="sector-deg">206°</span><span class="sector-name">Stadiums</span><span class="sector-note">Hospitality boxes, seen from the seat</span></div>
-    <div class="sector-row" data-img="/assets/sectors/golf-courses.webp"><span class="sector-deg">257°</span><span class="sector-name">Golf Courses</span><span class="sector-note">The course, hole by hole</span></div>
-    <div class="sector-row" data-img="/assets/sectors/premium-hospitality.webp"><span class="sector-deg">309°</span><span class="sector-name">Premium Hospitality</span><span class="sector-note">Hotels, resorts & leisure destinations</span></div>
+  <!-- Each sector opens the tour viewer, which is built in site.js from the
+       lists below. Without JavaScript the lists stay on the page and every tour
+       is a plain link, so nothing here depends on the overlay existing. -->
+  <div class="sector-list reveal" data-tours>
+    <section class="sector" id="luxury-real-estate">
+      <button class="sector-row has-cue" type="button" data-sector="luxury-real-estate"
+              data-img="/assets/sectors/luxury-real-estate.webp" aria-haspopup="dialog">
+        <span class="sector-deg">000°</span>
+        <span class="sector-name">Luxury Real Estate</span>
+        <span class="sector-note">Residences that sell before the first viewing</span>
+        <span class="sector-cue"><span class="sector-count">7 tours</span><i aria-hidden="true"></i></span>
+      </button>
+      <ul class="sector-tours">
+        <li><a href="https://www.frameworksstudios.com/ChateauPerigord/" target="_blank" rel="noopener noreferrer"
+               data-note="A Monte-Carlo residence, walked from the entrance hall outward.">Château Périgord, Monaco</a></li>
+        <li><a href="https://www.frameworksstudios.com/SavillsVillaDilectaCapdAntibes/" target="_blank" rel="noopener noreferrer"
+               data-note="A Cap d’Antibes villa and its grounds, captured for Savills.">Villa Dilecta, Cap d’Antibes</a></li>
+        <li><a href="https://www.frameworksstudios.com/Hersilia-Monte-Carlo(BalkinMonaco)/" target="_blank" rel="noopener noreferrer"
+               data-note="A Monaco apartment, shown for Balkin Monaco.">Hersilia, Monte-Carlo</a></li>
+        <li><a href="https://www.frameworksstudios.com/LeTitienPenthouseMonaco/" target="_blank" rel="noopener noreferrer"
+               data-note="The top floor and its terrace, from every corner.">Le Titien Penthouse, Monaco</a></li>
+        <li><a href="https://frameworksstudios.com/OffMarketMonteCarlo/" target="_blank" rel="noopener noreferrer"
+               data-note="A private listing, shown only to those invited to see it.">Off-Market, Monte-Carlo</a></li>
+        <li><a href="https://www.frameworksstudios.com/LuxuryApartment/" target="_blank" rel="noopener noreferrer"
+               data-note="A furnished city apartment, room by room.">Luxury Apartment</a></li>
+        <li><a href="https://www.frameworksstudios.com/LuxuryVilla/" target="_blank" rel="noopener noreferrer"
+               data-note="A villa and its terraces, pool to roofline.">Luxury Villa</a></li>
+      </ul>
+    </section>
+    <section class="sector" id="super-yachts">
+      <button class="sector-row has-cue" type="button" data-sector="super-yachts"
+              data-img="/assets/sectors/super-yachts.webp" aria-haspopup="dialog">
+        <span class="sector-deg">051°</span>
+        <span class="sector-name">Super-Yachts</span>
+        <span class="sector-note">Every deck, walkable from any harbour</span>
+        <span class="sector-cue"><span class="sector-count">2 tours</span><i aria-hidden="true"></i></span>
+      </button>
+      <ul class="sector-tours">
+        <li><a href="https://frameworksstudios.com/YachtExodus(SYM)/" target="_blank" rel="noopener noreferrer"
+               data-note="Every deck aboard, for Super Yachts Monaco.">Exodus</a></li>
+        <li><a href="https://frameworksstudios.com/LittleZoe(SYM)/" target="_blank" rel="noopener noreferrer"
+               data-note="Bridge to swim platform, at her berth.">Little Zoe</a></li>
+      </ul>
+    </section>
+    <section class="sector" id="automotive">
+      <button class="sector-row has-cue" type="button" data-sector="automotive"
+              data-img="/assets/sectors/automotive.webp" aria-haspopup="dialog">
+        <span class="sector-deg">103°</span>
+        <span class="sector-name">Automotive</span>
+        <span class="sector-note">Showrooms without borders</span>
+        <span class="sector-cue"><span class="sector-count">2 tours</span><i aria-hidden="true"></i></span>
+      </button>
+      <ul class="sector-tours">
+        <li><a href="https://www.frameworksstudios.com/BentleyBacalar/" target="_blank" rel="noopener noreferrer"
+               data-note="The coachbuilt roadster, walked around and sat in.">Bentley Bacalar</a></li>
+        <li><a href="https://www.frameworksstudios.com/BentleyEXP100GT/" target="_blank" rel="noopener noreferrer"
+               data-note="Bentley’s concept grand tourer, placed in a room you can stand in.">Bentley EXP 100 GT</a></li>
+      </ul>
+    </section>
+    <section class="sector" id="event-venues">
+      <button class="sector-row has-cue" type="button" data-sector="event-venues"
+              data-img="/assets/sectors/event-venues.webp" aria-haspopup="dialog">
+        <span class="sector-deg">154°</span>
+        <span class="sector-name">Event Venues</span>
+        <span class="sector-note">Let planners stand in the room</span>
+        <span class="sector-cue"><span class="sector-count">4 tours</span><i aria-hidden="true"></i></span>
+      </button>
+      <ul class="sector-tours">
+        <li><a href="https://www.frameworksstudios.com/ChateaudelaCroixGardesDecoFlamme/" target="_blank" rel="noopener noreferrer"
+               data-note="The Cannes château, dressed by Déco Flamme.">Château de la Croix des Gardes</a></li>
+        <li><a href="https://www.frameworksstudios.com/MCWGrandHotelduCapFerrat/" target="_blank" rel="noopener noreferrer"
+               data-note="The peninsula’s rooms and terraces, seen before booking.">Grand-Hôtel du Cap-Ferrat</a></li>
+        <li><a href="https://www.frameworksstudios.com/MCWSalleDesEtoiles/" target="_blank" rel="noopener noreferrer"
+               data-note="Monte-Carlo’s great room, under its opening roof.">Salle des Étoiles</a></li>
+        <li><a href="https://www.frameworksstudios.com/MCWVillaRothschild/" target="_blank" rel="noopener noreferrer"
+               data-note="Gardens and salons, laid out for a reception.">Villa Rothschild</a></li>
+      </ul>
+    </section>
+    <section class="sector" id="stadiums">
+      <button class="sector-row has-cue" type="button" data-sector="stadiums"
+              data-img="/assets/sectors/stadiums.webp" aria-haspopup="dialog">
+        <span class="sector-deg">206°</span>
+        <span class="sector-name">Stadiums</span>
+        <span class="sector-note">Bowls, boxes and training academies</span>
+        <span class="sector-cue"><span class="sector-count">2 tours</span><i aria-hidden="true"></i></span>
+      </button>
+      <ul class="sector-tours">
+        <li><a href="https://frameworksstudios.com/Stadium/" target="_blank" rel="noopener noreferrer"
+               data-note="The bowl and its hospitality boxes, seen from the seat.">Stadium</a></li>
+        <li><a href="https://frameworksstudios.com/MahdSportsAcademy/" target="_blank" rel="noopener noreferrer"
+               data-note="Saudi Arabia’s national sports academy, end to end.">Mahd Sports Academy</a></li>
+      </ul>
+    </section>
+    <section class="sector" id="golf-courses">
+      <button class="sector-row has-cue" type="button" data-sector="golf-courses"
+              data-img="/assets/sectors/golf-courses.webp" aria-haspopup="dialog">
+        <span class="sector-deg">257°</span>
+        <span class="sector-name">Golf Courses</span>
+        <span class="sector-note">The course, hole by hole</span>
+        <span class="sector-cue"><span class="sector-count">1 tour</span><i aria-hidden="true"></i></span>
+      </button>
+      <ul class="sector-tours">
+        <li><a href="https://www.frameworksstudios.com/RiyadhGolfClubDemo/" target="_blank" rel="noopener noreferrer"
+               data-note="The course walked hole by hole.">Riyadh Golf Club</a></li>
+      </ul>
+    </section>
+    <section class="sector" id="premium-hospitality">
+      <button class="sector-row has-cue" type="button" data-sector="premium-hospitality"
+              data-img="/assets/sectors/premium-hospitality.webp" aria-haspopup="dialog">
+        <span class="sector-deg">309°</span>
+        <span class="sector-name">Premium Hospitality</span>
+        <span class="sector-note">Hotels, clubs, dining &amp; destinations</span>
+        <span class="sector-cue"><span class="sector-count">8 tours</span><i aria-hidden="true"></i></span>
+      </button>
+      <ul class="sector-tours">
+        <li><a href="https://www.frameworksstudios.com/BelmondVillaSanMichele(Tuscany)/" target="_blank" rel="noopener noreferrer"
+               data-note="The Tuscan hillside hotel, room to room.">Belmond Villa San Michele, Tuscany</a></li>
+        <li><a href="https://www.frameworksstudios.com/JolieVilleResortLuxorEygpt/" target="_blank" rel="noopener noreferrer"
+               data-note="The Nile resort and its grounds.">Jolie Ville Resort, Luxor</a></li>
+        <li><a href="https://www.frameworksstudios.com/IneosClubHouse/" target="_blank" rel="noopener noreferrer"
+               data-note="The members’ club house, front door to lounge.">INEOS Club House</a></li>
+        <li><a href="https://www.frameworksstudios.com/PalmBeachCannes(FrameworksStudios)/" target="_blank" rel="noopener noreferrer"
+               data-note="The Croisette beach club, terrace and sea.">Palm Beach, Cannes</a></li>
+        <li><a href="https://www.frameworksstudios.com/DukeMonteCarlo-CocktailBar/" target="_blank" rel="noopener noreferrer"
+               data-note="A cocktail bar, shown after dark.">Duke, Monte-Carlo</a></li>
+        <li><a href="https://www.frameworksstudios.com/QuietCoffeeRiyadh/" target="_blank" rel="noopener noreferrer"
+               data-note="A Riyadh coffee house, counter to corner seat.">Quiet Coffee, Riyadh</a></li>
+        <li><a href="https://www.frameworksstudios.com/Restaurant-MonteCarlo/" target="_blank" rel="noopener noreferrer"
+               data-note="A dining room set for service.">Restaurant, Monte-Carlo</a></li>
+        <li><a href="https://frameworksstudios.com/MonteCarloTourism/" target="_blank" rel="noopener noreferrer"
+               data-note="The principality itself, quarter by quarter.">Monte-Carlo Tourism</a></li>
+      </ul>
+    </section>
   </div>
-  <!-- COPY: per-sector detail blocks (case studies, deliverables, typical timelines)
-       go here once the client supplies them. -->
 </section>
 </main>
 

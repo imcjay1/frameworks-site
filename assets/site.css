@@ -61,7 +61,7 @@ body{
 .nav-wrap{
   position:fixed; top:24px; left:0; right:0; z-index:50;
   display:flex; justify-content:center; align-items:center; gap:14px;
-  padding:0 20px;
+  padding:0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left));
   transition:top .4s var(--ease);
 }
 /* The supplied artwork sets the wordmark inside the ring, where it is unreadable
@@ -69,24 +69,25 @@ body{
    both cut from that same artwork by tools/build-logo.py, never retypeset. */
 .brandmark{
   display:flex; align-items:center; gap:12px;
-  padding:11px 21px; border-radius:var(--radius-pill);
+  padding:14px 26px; border-radius:var(--radius-pill);
   color:var(--ink); text-decoration:none;
+  flex:0 1 auto; min-width:0;      /* on a phone the lockup yields, the toggle does not */
   transition:padding .4s var(--ease), gap .4s var(--ease);
 }
-.brandmark .mark{height:39px; transition:height .4s var(--ease)}
-.brandmark .wordmark{height:15px; transition:height .4s var(--ease)}
+.brandmark .mark{height:48px; transition:height .4s var(--ease)}
+.brandmark .wordmark{height:19px; transition:height .4s var(--ease)}
 .brandmark img{width:auto; display:block}
 .island{
   display:flex; align-items:center; gap:2px;
   border-radius:var(--radius-pill);
-  padding:6px;
+  padding:8px;
   transition:padding .4s var(--ease);
 }
 .island a{
-  font-size:16.2px; font-weight:500; letter-spacing:.01em;
+  font-size:19px; font-weight:500; letter-spacing:.01em;
   color:var(--ink-soft); text-decoration:none;
-  padding:11px 20px; border-radius:var(--radius-pill);
-  max-width:200px; overflow:hidden;   /* fits "Digital Services" — see the collapse below */
+  padding:14px 24px; border-radius:var(--radius-pill);
+  max-width:240px; overflow:hidden;   /* fits "Digital Services" — see the collapse below */
   transition:color .25s var(--ease), background .25s var(--ease),
              padding .55s var(--ease-io), font-size .55s var(--ease-io),
              max-width .55s var(--ease-io), opacity .35s var(--ease-io);
@@ -101,7 +102,7 @@ body{
   pointer-events:none;
 }
 .island-mini .rec-dot{flex:0 0 auto}
-.island-mini img{height:19px; width:auto; display:block}
+.island-mini img{height:24px; width:auto; display:block}
 .island a:hover{color:var(--ink)}
 .island a:focus-visible, .cta:focus-visible, .btn-solid:focus-visible,
 .brandmark:focus-visible, .nav-toggle:focus-visible, .more-link:focus-visible{
@@ -115,8 +116,8 @@ body{
 }
 .cta{
   border-radius:var(--radius-pill);
-  padding:15px 24px;
-  font-size:16.2px; font-weight:600; color:var(--ink);
+  padding:18px 28px;
+  font-size:19px; font-weight:600; color:var(--ink);
   text-decoration:none; white-space:nowrap;
   transition:transform .25s var(--ease), padding .4s var(--ease), font-size .4s var(--ease);
 }
@@ -133,12 +134,12 @@ body{
              inset 0 1px 0 rgba(255,255,255,0.95);
 }
 .nav-wrap.scrolled .glass::before{opacity:.9}
-.nav-wrap.scrolled .island{padding:2px}
-.nav-wrap.scrolled .island a{padding:6px 12px; font-size:13.9px}
-.nav-wrap.scrolled .cta{padding:9px 15px; font-size:13.9px}
-.nav-wrap.scrolled .brandmark{padding:7px 15px; gap:10px}
-.nav-wrap.scrolled .brandmark .mark{height:30px}
-.nav-wrap.scrolled .brandmark .wordmark{height:11.5px}
+.nav-wrap.scrolled .island{padding:4px}
+.nav-wrap.scrolled .island a{padding:9px 16px; font-size:16.4px}
+.nav-wrap.scrolled .cta{padding:12px 19px; font-size:16.4px}
+.nav-wrap.scrolled .brandmark{padding:9px 18px; gap:10px}
+.nav-wrap.scrolled .brandmark .mark{height:37px}
+.nav-wrap.scrolled .brandmark .wordmark{height:14.5px}
 
 /* Collapsed: the island shortens to a tiny ring pill; hovering (or tabbing into
    it) eases it back open. Hover-capable devices only. */
@@ -147,7 +148,7 @@ body{
     max-width:0; padding:5px 0; opacity:0;
   }
   .nav-wrap.scrolled .island:not(:hover):not(:focus-within) .island-mini{
-    max-width:66px; opacity:1; padding:6px 15px;
+    max-width:80px; opacity:1; padding:7px 17px;
   }
 }
 
@@ -171,7 +172,7 @@ body{
 /* ---------- Mobile menu ---------- */
 .nav-toggle{
   display:none; align-items:center; justify-content:center;
-  width:50px; height:50px; padding:0; border:0; cursor:pointer;
+  width:58px; height:58px; flex:0 0 auto; padding:0; border:0; cursor:pointer;
   border-radius:var(--radius-pill); color:var(--ink);
   transition:width .4s var(--ease), height .4s var(--ease);
 }
@@ -188,14 +189,15 @@ body{
 .nav-toggle[aria-expanded="true"] i{background:transparent}
 .nav-toggle[aria-expanded="true"] i::before{transform:rotate(45deg)}
 .nav-toggle[aria-expanded="true"] i::after{transform:rotate(-45deg)}
-.nav-wrap.scrolled .nav-toggle{width:38px; height:38px}
+.nav-wrap.scrolled .nav-toggle{width:46px; height:46px}
 
 .mobile-menu{
   position:fixed; inset:0; z-index:45;
+  height:100%;
   background:linear-gradient(180deg, rgba(242,238,232,.97), rgba(231,225,216,.99));
   -webkit-backdrop-filter:blur(22px); backdrop-filter:blur(22px);
-  padding:118px var(--pad-x) 48px;
-  overflow-y:auto; overscroll-behavior:contain;
+  padding:118px var(--pad-x) calc(48px + env(safe-area-inset-bottom));
+  overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   display:flex; flex-direction:column; gap:6px;
 }
 .mobile-menu[hidden]{display:none}
@@ -219,6 +221,9 @@ body.menu-open{overflow:hidden}
   position:sticky; top:0; height:100vh; overflow:hidden;
   display:flex; align-items:flex-end;
 }
+/* svh, not vh: on a phone 100vh is the tall viewport behind the URL bar, so the
+   foot of the hero — the buttons and the trusted-by island — sat under it. */
+@supports (height:100svh){ .stage{height:100svh} }
 .stage{background:var(--ivory)}
 .stage video, .stage .poster{
   position:absolute; inset:0; width:100%; height:100%;
@@ -236,16 +241,16 @@ body.menu-open{overflow:hidden}
 /* ---------- HOME ONLY · hero copy (h1 / .hero-sub / .btn-solid are shared) ---------- */
 .hero-copy{
   position:relative; z-index:5;
-  padding:0 var(--pad-x) 9vh;
-  max-width:min(760px, 100%); min-width:0;   /* it is a flex item: let it shrink on phones */
+  padding:0 var(--pad-x) 10vh;
+  max-width:min(880px, 100%); min-width:0;   /* it is a flex item: let it shrink on phones */
   will-change:opacity, transform;
 }
 .spec-eyebrow{
   display:inline-flex; align-items:center; gap:10px;
-  font-family:"Fragment Mono",monospace; font-size:13.3px; letter-spacing:.14em;
+  font-family:"Fragment Mono",monospace; font-size:14.4px; letter-spacing:.14em;
   color:var(--ink-soft);
-  padding:8px 14px; border-radius:var(--radius-pill);
-  margin-bottom:22px;
+  padding:9px 16px; border-radius:var(--radius-pill);
+  margin-bottom:24px;
 }
 .rec-dot{width:7px;height:7px;border-radius:50%;background:var(--carmine);
   animation:rec 1.6s ease-in-out infinite}
@@ -257,12 +262,14 @@ h1{
   font-size:clamp(46.2px, 6.7vw, 96.6px);
   line-height:1.02; letter-spacing:-0.015em;
 }
+/* the home hero carries the largest type on the site */
+.hero-copy h1{font-size:clamp(50px, min(8.2vw, 12.4vh), 122px); line-height:1.0}
 h1 em, h2 em{font-style:italic; font-weight:300}
 .hero-sub{
-  margin-top:20px; max-width:48ch;
-  font-size:18px; line-height:1.55; color:var(--ink-soft); font-weight:400;
+  margin-top:24px; max-width:48ch;
+  font-size:21px; line-height:1.5; color:var(--ink-soft); font-weight:400;
 }
-.hero-actions{display:flex; gap:14px; margin-top:30px; flex-wrap:wrap}
+.hero-actions{display:flex; gap:14px; margin-top:34px; flex-wrap:wrap}
 .btn-solid{
   background:var(--ink); color:var(--ivory);
   border-radius:var(--radius-pill); padding:15px 26px;
@@ -431,19 +438,61 @@ h2{
    top margin against it. */
 #sectors > h2{max-width:22ch; margin-bottom:14px}
 
-/* Sectors — a full panorama of luxury, one heading per bearing */
+/* The proof figures close the studio section rather than opening one of their
+   own, so they need clear air above them — the original Results band sat
+   straight under an eyebrow and needed none. */
+#studio .stats{margin-top:64px}
+
+/* Sectors — a full panorama of luxury, one heading per bearing.
+   Every row is interactive: on the home page an anchor into /works, on /works a
+   button that opens the tour viewer. Both are reset to the same grid here so
+   the two lists stay identical to look at. */
 .sector-list{margin-top:10px; border-top:1px solid var(--ivory-deep)}
 .sector-row{
   display:grid; grid-template-columns:110px 1fr auto; gap:24px; align-items:baseline;
   padding:26px 8px; border-bottom:1px solid var(--ivory-deep);
   transition:background .3s var(--ease), padding-left .3s var(--ease);
+  width:100%; text-align:left; text-decoration:none;
+  font:inherit; color:inherit; background:none; border-left:0; border-right:0; border-top:0;
+  cursor:pointer; -webkit-appearance:none; appearance:none;
 }
 .sector-row:hover{background:rgba(231,225,216,.55); padding-left:16px}
+.sector-row:focus-visible{outline:2px solid var(--brass-deep); outline-offset:-2px}
 .sector-deg{font-family:"Fragment Mono",monospace; font-size:13.9px; letter-spacing:.1em; color:var(--ink-soft);
   transition:color .3s}
 .sector-row:hover .sector-deg{color:var(--brass-deep)}
 .sector-name{font-family:"Fraunces",serif; font-weight:400; font-size:clamp(23.5px, 2.8vw, 34.2px); letter-spacing:-.01em}
 .sector-note{font-size:15.1px; color:var(--ink-soft); text-align:right; max-width:34ch}
+
+/* /works rows carry a fourth cell — the tour count and an arrow that steps out
+   on hover. The column is fixed so the counts line up down the list. */
+.sector-row.has-cue{grid-template-columns:110px 1fr auto 116px}
+.sector-cue{
+  display:flex; align-items:baseline; justify-content:flex-end; gap:10px;
+  font-family:"Fragment Mono",monospace; font-size:13.2px; letter-spacing:.1em;
+  color:var(--ink-soft); text-transform:uppercase; white-space:nowrap;
+  transition:color .3s var(--ease);
+}
+.sector-row:hover .sector-cue{color:var(--brass-deep)}
+/* the arrow: a rule with a head, drawn rather than typed so it keeps its weight */
+.sector-cue i{
+  position:relative; display:inline-block; width:20px; height:1.5px; flex:0 0 auto;
+  background:currentColor; transform:translateX(0); transition:transform .3s var(--ease);
+}
+.sector-cue i::after{
+  content:""; position:absolute; right:0; top:50%; width:7px; height:7px;
+  border-top:1.5px solid currentColor; border-right:1.5px solid currentColor;
+  transform:translateY(-50%) rotate(45deg); transform-origin:100% 50%;
+}
+.sector-row:hover .sector-cue i{transform:translateX(6px)}
+
+/* The per-sector tour lists are the no-JavaScript fallback. Once site.js has
+   built the viewer it marks the list enhanced and these fold away. */
+.sector-tours{list-style:none; padding:4px 8px 26px 134px; border-bottom:1px solid var(--ivory-deep)}
+.sector-tours li + li{margin-top:8px}
+.sector-tours a{font-size:16.2px; color:var(--ink-soft); text-decoration:none; border-bottom:1px solid var(--ivory-deep)}
+.sector-tours a:hover{color:var(--ink); border-bottom-color:var(--brass)}
+.sector-list[data-enhanced] .sector-tours{display:none}
 
 /* Craft */
 .craft-grid{display:grid; grid-template-columns:6fr 5fr; gap:64px; align-items:start}
@@ -570,7 +619,7 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 .client:hover .client-name{color:var(--ink); opacity:1}
 
 /* ---------- Interior page furniture ---------- */
-.page-head{padding:186px var(--pad-x) 0}
+.page-head{padding:200px var(--pad-x) 0}
 /* smaller than the home hero: interior headings sit above copy, not a film */
 .page-head h1{max-width:17ch; font-size:clamp(42px, 5.7vw, 79.8px)}
 .page-head .body-copy{margin-top:26px}
@@ -666,11 +715,12 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 .reveal{opacity:0; transform:translateY(14px); transition:opacity .7s var(--ease), transform .7s var(--ease)}
 .reveal.in{opacity:1; transform:none}
 
-@media (max-width:1080px){
+@media (max-width:1180px){
   /* the six labels stop fitting beside the lockup before the layout does */
-  .island a{padding:8px 12px; font-size:15.1px}
-  .nav-wrap.scrolled .island a{padding:6px 10px; font-size:14.5px}
-  .brandmark .wordmark{height:12px}
+  .island a{padding:10px 14px; font-size:17px}
+  .nav-wrap.scrolled .island a{padding:8px 12px; font-size:15.6px}
+  .brandmark .mark{height:42px}
+  .brandmark .wordmark{height:16px}
 }
 @media (max-width:960px){
   .studio-grid, .craft-grid{grid-template-columns:1fr; gap:36px}
@@ -678,6 +728,9 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
   .stats{grid-template-columns:repeat(2,1fr)}
   .sector-note{display:none}
   .sector-row{grid-template-columns:84px 1fr}
+  .sector-row.has-cue{grid-template-columns:84px 1fr auto}
+  .sector-cue i{display:none}
+  .sector-tours{padding-left:84px}
 }
 @media (max-width:900px){
   /* Below this the inline links become the drawer. Every item stays reachable —
@@ -688,6 +741,8 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 }
 @media (max-width:820px){
   .vf-tr{display:none}
+  .hero-copy{padding-bottom:10vh}
+  .hero-sub{font-size:19px}
   .transport{display:none}
   section.band{padding:88px var(--pad-x)}
   .pillar-grid{grid-template-columns:1fr; gap:22px}
@@ -698,7 +753,7 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 }
 @media (max-width:700px){
   .form-grid{grid-template-columns:1fr}
-  .page-head{padding-top:150px}
+  .page-head{padding-top:162px}
   .footer-bar{font-size:11.4px}
 }
 @media (prefers-reduced-motion: reduce){
@@ -1246,4 +1301,180 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 .footer-social svg{display:block}
 @media (max-width:700px){
   .footer-social{justify-content:center; margin-top:30px}
+}
+
+
+/* =========================================================================
+   Phone and tablet
+   -------------------------------------------------------------------------
+   Everything below this line only narrows or restacks what is already
+   defined above — no new components, no new tokens. The breakpoints already
+   in use are kept (1180 / 960 / 900 / 820 / 700 / 640); this section adds
+   400px, where the nav lockup takes its last step down; 600px, where the
+   sector rows and the bands restack; and orientation, because the pinned
+   showreel is letterboxed in portrait and the hero copy landed on top of it.
+   ========================================================================= */
+
+/* ---------- Nav lockup on a phone ----------
+   The brandmark is 344px wide at its authored size. On a 375px screen that
+   left the toggle no room and flex pushed it off the right edge entirely —
+   the drawer was unreachable. It steps down twice on the way to 360px. */
+@media (max-width:700px){
+  .nav-wrap{top:16px; gap:10px}
+  .nav-wrap.scrolled{top:8px}
+  .brandmark{padding:11px 18px; gap:10px}
+  .brandmark .mark{height:38px}
+  .brandmark .wordmark{height:15px}
+  .nav-wrap.scrolled .brandmark{padding:9px 15px; gap:9px}
+  .nav-wrap.scrolled .brandmark .mark{height:33px}
+  .nav-wrap.scrolled .brandmark .wordmark{height:13px}
+  .nav-toggle{width:52px; height:52px}
+  .nav-wrap.scrolled .nav-toggle{width:46px; height:46px}
+  .mobile-menu{padding-top:100px}
+}
+@media (max-width:400px){
+  .brandmark{padding:10px 14px; gap:8px}
+  .brandmark .mark{height:34px}
+  .brandmark .wordmark{height:13.5px}
+  .nav-toggle{width:48px; height:48px}
+  .nav-toggle i, .nav-toggle i::before, .nav-toggle i::after{width:16px}
+}
+
+/* ---------- HOME ONLY · the pinned showreel in portrait ----------
+   The film is object-fit:contain, so on a portrait screen it collapses to a
+   band across the middle of the viewport and the hero copy — which is bottom
+   aligned — was set straight over the subject's face. Lifting the film into
+   the upper third clears a full-width plate underneath it for the copy and
+   for the scroll captions, without cropping a single frame. */
+/* Any portrait viewport, phone through iPad Pro: lift the film, move the
+   captions onto the plate it leaves behind. */
+@media (max-aspect-ratio:1/1){
+  .stage video, .stage .poster{object-position:center 20%}
+
+  .cap{
+    top:auto !important; bottom:14vh;
+    left:var(--pad-x); right:var(--pad-x);
+    max-width:none; text-align:left;
+  }
+  .cap-r{text-align:left}
+  .cap-r .cap-kicker{flex-direction:row}
+  .tcap{top:auto; bottom:16vh; max-width:calc(100vw - 2 * var(--pad-x))}
+}
+@media (max-aspect-ratio:1/1) and (max-width:900px){
+  /* the track is measured in viewport heights, so a phone was scrolling ~14
+     screens of film before reaching the first section. Same pan, less thumb. */
+  .scrub-track{height:700vh}
+
+  .hero-copy{padding-bottom:calc(4vh + env(safe-area-inset-bottom))}
+  .hero-copy h1{font-size:clamp(38px, 10.4vw, 62px); line-height:1.04}
+  .spec-eyebrow{font-size:12.2px; letter-spacing:.1em; padding:7px 13px; margin-bottom:16px}
+  .hero-sub{margin-top:16px; font-size:17.4px; line-height:1.45}
+  .hero-actions{margin-top:22px; gap:10px}
+  .btn-solid, .hero-actions .cta{padding:14px 22px; font-size:16.2px}
+
+  .cap-line{font-size:clamp(24px, 6.6vw, 34px)}
+  .t-main{white-space:normal; letter-spacing:.18em}
+}
+
+/* The viewfinder readouts are pinned bottom-right, which in portrait is exactly
+   where the stacked hero copy and its trusted-by island now sit — the two were
+   printed over each other. The film's own pan readout is a flourish; the client
+   marks are the proof. In portrait the flourish goes. */
+@media (max-aspect-ratio:1/1) and (max-width:900px){
+  .vf-bl{display:none}
+  .spec-eyebrow{font-size:11.6px; letter-spacing:.08em; line-height:1.5}
+}
+/* Landscape on a phone. There is no ivory plate to move the copy onto — the
+   film fills the frame — so the copy earns its own, the same soft wash the
+   /studio and /craft heroes already use, and everything optional steps out. */
+@media (max-height:620px) and (min-aspect-ratio:1/1) and (max-width:1024px){
+  .vf-bl, .hero-trust, .spec-eyebrow{display:none}
+  .hero-copy{padding-bottom:6vh}
+  .hero-copy::before{
+    content:""; position:absolute; z-index:-1; pointer-events:none;
+    top:-40vh; bottom:-12vh; left:0; right:-16vw;
+    background:linear-gradient(90deg,
+      var(--ivory) 0%, rgba(242,238,232,.94) 44%, rgba(242,238,232,0) 100%);
+  }
+  .hero-copy h1{font-size:clamp(32px, 5.6vw, 46px)}
+  .hero-sub{margin-top:12px; font-size:16px; max-width:38ch}
+  .hero-actions{margin-top:18px; gap:10px}
+  .btn-solid, .hero-actions .cta{padding:12px 20px; font-size:15.4px}
+}
+
+/* ---------- Sector rows ----------
+   110px / name / count reads as three columns of air on a phone, and the
+   sector names hyphenated across three lines. Below 600px the bearing and the
+   tour count share one small line and the name gets the full width. */
+@media (max-width:600px){
+  .sector-row, .sector-row.has-cue{
+    grid-template-columns:1fr auto;
+    grid-template-areas:"deg cue" "name name";
+    gap:6px 16px; align-items:center; padding:20px 4px;
+  }
+  .sector-deg{grid-area:deg}
+  .sector-cue{grid-area:cue; justify-content:flex-end}
+  .sector-name{grid-area:name; font-size:clamp(25px, 7.4vw, 31px); line-height:1.12}
+  .sector-row:hover{padding-left:4px}
+  .sector-tours{padding-left:4px}
+}
+
+/* ---------- Bands, headings and forms ---------- */
+@media (max-width:600px){
+  section.band{padding:68px var(--pad-x)}
+  section.band.trusted{padding-top:56px; padding-bottom:56px}
+  .contact{padding:84px var(--pad-x)}
+  .page-head{padding-top:140px}
+  .page-head + .contact{margin-top:72px}
+  .page-head h1{font-size:clamp(36px, 10.4vw, 56px)}
+  h2{font-size:clamp(30px, 8.6vw, 44px)}
+  .page-lede, .body-copy{font-size:17.2px}
+  .eyebrow{margin-bottom:24px; font-size:12.2px; letter-spacing:.13em}
+  .eyebrow::after{flex:0 1 56px}          /* the rule yields rather than pushing the label */
+  .stats{grid-template-columns:1fr 1fr; gap:24px}
+  .office-list{gap:12px 28px}
+  .teaser-head{gap:14px}
+
+  /* one field per row, and the actions read as one block */
+  .form-grid{gap:18px}
+  .form-actions{flex-direction:column; align-items:stretch; gap:14px}
+  .form-actions .btn-ivory{width:100%; text-align:center}
+  .form-note, .submit-note{max-width:none}
+  .contact-details{gap:14px 28px; margin-top:36px}
+
+  .footer-nav{gap:10px 22px}
+  .footer-bar{flex-direction:column; gap:8px}
+  .footer-member-marks img{height:30px}
+}
+
+/* iOS zooms the page in when a focused field is set below 16px. Every field on
+   the site is 17.4px already; this keeps that true if a scale is ever nudged. */
+@media (max-width:820px){
+  .f input, .f select, .f textarea,
+  .field input, .field select, .field textarea{font-size:max(16px, 17.4px)}
+}
+
+/* ---------- Touch targets ----------
+   Anything a thumb has to hit gets 44px of height. Applied on coarse pointers
+   only, so the desktop rhythm of the inline links is untouched. */
+@media (pointer:coarse){
+  .more-link, .footer-nav a, .contact-details a, .direct-col a, .dh-contact{
+    min-height:44px; display:inline-flex; align-items:center;
+  }
+  .tab{padding-top:22px; padding-bottom:20px}
+  .consent input{width:22px; height:22px; margin-top:0}
+  .mobile-menu a{padding:14px 0}
+  .cal-day{padding:14px 0}
+  .cal-nav{width:44px; height:44px}
+  /* no hover lift on a touch device — it sticks after the tap */
+  .pillar:hover, .method-step:hover, .svc:hover,
+  .chip:hover span, .slot:hover, .cal-day:hover:not(:disabled){transform:none; translate:none}
+  .sector-row:hover{padding-left:8px; background:none}
+}
+
+/* The page never scrolls sideways: a wide child clips rather than adding a
+   horizontal scrollbar. clip, not hidden — hidden on the root would kill the
+   position:sticky the home page's pinned hero depends on. */
+@supports (overflow:clip){
+  body{overflow-x:clip}
 }
