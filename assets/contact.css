@@ -4,11 +4,15 @@
  * .form-grid component, unchanged; everything here is the surrounding page.
  */
 
-/* The closing button scrolls back to the hero rather than navigating. Scoped
-   to this stylesheet on purpose: site.css sets scroll-behavior:auto globally
-   because the home page's scroll-scrubbed hero fights a smooth scroll. */
-html{scroll-behavior:smooth}
+/* The closing button scrolls back to the hero rather than navigating.
+   On a fine pointer site.js already glides "#…" links through its own eased
+   scroller, and it drives that by calling scrollTo() every frame — so
+   scroll-behavior:smooth there animates each of those frame-sized steps and
+   the whole page crawls. It is only set where that scroller is off. */
 #start{scroll-margin-top:120px}
+@media (hover:none), (pointer:coarse){
+  html{scroll-behavior:smooth}
+}
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
 }
