@@ -114,6 +114,11 @@ def direct_contact(indent):
                       + [f'{indent}  </div>', f'{indent}</section>']))
 
 
+def studio_marks(indent):
+    """The three-letter chips on /digital-services — from STUDIOS, not typed."""
+    return "\n".join(f'{indent}<span class="dh-mark">{st["short"]}</span>' for st in STUDIOS)
+
+
 GENERATORS = {
     "nav-island": lambda cur: nav_links(cur, "    "),
     "nav-drawer": lambda cur: nav_links(cur, "  "),
@@ -122,6 +127,7 @@ GENERATORS = {
     "copyright":  lambda cur: "    <span>© 2026 FRAMEWORKS STUDIOS · "
                               + studio_line("·", upper=True) + "</span>",
     "studio-line-drawer": lambda cur: "  " + studio_line("·"),
+    "studio-marks": lambda cur: studio_marks("          "),
     "studio-columns":     lambda cur: studio_columns("  "),
     "direct-contact":     lambda cur: direct_contact(""),
 }

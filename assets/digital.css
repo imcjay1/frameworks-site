@@ -198,13 +198,13 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .dh-l1{
   font-family:"Archivo",system-ui,sans-serif; font-weight:500;
   font-variation-settings:"wdth" 100;
-  font-size:clamp(44px,7.4vw,124px); line-height:.94; letter-spacing:-.045em;
+  font-size:clamp(46.2px, 7.8vw, 130.2px); line-height:.94; letter-spacing:-.045em;
   color:#FFF;
 }
 .dh-l2{
   font-family:"Fraunces",serif; font-style:italic; font-weight:300;
   font-variation-settings:"opsz" 144;
-  font-size:clamp(52px,9.6vw,164px); line-height:.92; letter-spacing:-.02em;
+  font-size:clamp(54.6px, 10.1vw, 172.2px); line-height:.92; letter-spacing:-.02em;
   margin-top:-.06em; margin-left:.04em;
   background:linear-gradient(96deg,#FFFFFF 8%,#D7DBE1 38%,#9BA1AA 62%,#EDEFF2 88%);
   -webkit-background-clip:text; background-clip:text; color:transparent;
@@ -213,7 +213,7 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 
 /* Statement */
 .dh-lede{
-  max-width:44ch; font-size:clamp(17px,1.55vw,23px); line-height:1.42;
+  max-width:44ch; font-size:clamp(18.5px, 1.7vw, 24.6px); line-height:1.42;
   letter-spacing:-.01em; color:#FFF; font-weight:400;
 }
 .dh-lede .dh-c{color:#FFF; margin-right:.15em}
@@ -221,7 +221,7 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .dh-rule{height:1px; background:var(--line); margin:38px 0 26px}
 .dh-row{display:flex; align-items:center; justify-content:space-between; gap:20px}
 .dh-contact{
-  font-size:16px; color:#FFF; text-decoration:none; letter-spacing:-.01em;
+  font-size:17.9px; color:#FFF; text-decoration:none; letter-spacing:-.01em;
   position:relative; padding-bottom:3px;
 }
 .dh-contact::after{
@@ -233,7 +233,7 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .dh-marks{display:flex; gap:9px}
 .dh-mark{
   display:grid; place-items:center; width:38px; height:38px; border-radius:50%;
-  font-family:"Fragment Mono",monospace; font-size:9.5px; letter-spacing:.08em;
+  font-family:"Fragment Mono",monospace; font-size:11.4px; letter-spacing:.08em;
   color:#C3C8CF;
   background:rgba(255,255,255,.055);
   border:1px solid rgba(255,255,255,.10);
@@ -244,20 +244,20 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 
 /* We do */
 .dh-label{
-  display:block; font-size:15px; color:#FFF; padding-bottom:14px;
+  display:block; font-size:16.8px; color:#FFF; padding-bottom:14px;
   border-bottom:1px solid var(--line); margin-bottom:18px; max-width:340px;
 }
-.dh-do-list{display:grid; gap:9px; font-size:15.5px; color:#A8AEB7}
+.dh-do-list{display:grid; gap:9px; font-size:17.4px; color:#A8AEB7}
 .dh-do-list span{letter-spacing:-.005em}
 .dh-do-list i{font-style:normal; color:#5C626B; padding:0 6px}
 
 /* Featured */
 .dh-feat-head{
   display:flex; justify-content:space-between; align-items:baseline;
-  font-size:15px; color:#FFF; padding-bottom:14px;
+  font-size:16.8px; color:#FFF; padding-bottom:14px;
   border-bottom:1px solid var(--line); margin-bottom:16px;
 }
-.dh-feat-head span:last-child{color:#7C828B; font-family:"Fragment Mono",monospace; font-size:12px}
+.dh-feat-head span:last-child{color:#7C828B; font-family:"Fragment Mono",monospace; font-size:13.9px}
 .dh-feat-card{
   display:block; padding:20px 22px 18px; border-radius:18px; text-decoration:none;
   background:linear-gradient(140deg, rgba(255,255,255,.10), rgba(255,255,255,.025));
@@ -267,12 +267,12 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 }
 .dh-feat-card:hover{translate:0 -4px; box-shadow:0 34px 70px -34px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,.3)}
 .dh-feat-line{
-  display:block; font-family:"Fraunces",serif; font-weight:340; font-size:19px;
+  display:block; font-family:"Fraunces",serif; font-weight:340; font-size:20.7px;
   line-height:1.25; letter-spacing:-.01em; color:#F2F3F5;
 }
 .dh-feat-go{
   display:inline-flex; align-items:center; gap:8px; margin-top:14px;
-  font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+  font-family:"Fragment Mono",monospace; font-size:12.6px; letter-spacing:.14em;
   text-transform:uppercase; color:#9BA1AA;
 }
 .dh-feat-go::after{content:"→"; transition:transform .35s var(--ease)}
@@ -282,7 +282,7 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .scroll-cue{
   position:absolute; left:50%; translate:-50% 0; bottom:34px;
   display:flex; align-items:center; gap:12px;
-  font-family:"Fragment Mono",monospace; font-size:10.5px; letter-spacing:.18em;
+  font-family:"Fragment Mono",monospace; font-size:12.6px; letter-spacing:.18em;
   text-transform:uppercase; color:#767C85;
 }
 .scroll-cue i{
@@ -301,7 +301,7 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .dark-band{padding:120px var(--pad-x); border-top:1px solid var(--line-soft)}
 .dark-band h2{max-width:18ch}
 .two-col{display:grid; grid-template-columns:5fr 6fr; gap:64px; align-items:start; margin-top:40px}
-.two-col p{color:#AAB0B9; font-size:16.5px; line-height:1.68}
+.two-col p{color:#AAB0B9; font-size:18px; line-height:1.68}
 .two-col p + p{margin-top:1.1em}
 .pillars{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:64px}
 .pillar{padding:30px 28px 32px}
@@ -314,10 +314,10 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .pillar:hover{animation:none}
 @keyframes float{0%,100%{translate:0 0}50%{translate:0 -7px}}
 .pillar b{
-  display:block; font-family:"Fraunces",serif; font-weight:340; font-size:clamp(22px,2.2vw,28px);
+  display:block; font-family:"Fraunces",serif; font-weight:340; font-size:clamp(23.5px, 2.4vw, 30px);
   letter-spacing:-.01em; margin-bottom:10px;
 }
-.pillar span{font-size:14.5px; line-height:1.6; color:var(--ink-soft)}
+.pillar span{font-size:16.2px; line-height:1.6; color:var(--ink-soft)}
 
 /* ---------- Capability ticker ---------- */
 .ticker{padding:74px 0; border-top:1px solid var(--line-soft)}
@@ -325,7 +325,7 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
 .ticker .client{height:auto}
 .cap-word{
   font-family:"Fraunces",serif; font-weight:300; font-variation-settings:"opsz" 120;
-  font-size:clamp(28px,4.4vw,58px); letter-spacing:-.02em; white-space:nowrap;
+  font-size:clamp(30px, 4.6vw, 60.9px); letter-spacing:-.02em; white-space:nowrap;
   color:transparent; -webkit-text-stroke:1px rgba(244,241,236,.34);
   transition:color .45s var(--ease), -webkit-text-stroke-color .45s var(--ease);
 }
@@ -338,14 +338,14 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   display:grid; grid-template-columns:1fr; gap:12px; align-content:start;
 }
 .method-step b{
-  font-family:"Fragment Mono",monospace; font-size:11px; letter-spacing:.16em;
+  font-family:"Fragment Mono",monospace; font-size:13.2px; letter-spacing:.16em;
   color:var(--spectral-gold); text-transform:uppercase;
 }
 .method-step h3{
-  font-family:"Fraunces",serif; font-weight:340; font-size:clamp(21px,2.1vw,27px);
+  font-family:"Fraunces",serif; font-weight:340; font-size:clamp(22.5px, 2.2vw, 28.9px);
   letter-spacing:-.01em;
 }
-.method-step p{font-size:14.5px; line-height:1.62; color:var(--ink-soft)}
+.method-step p{font-size:16.2px; line-height:1.62; color:var(--ink-soft)}
 @media (min-width:900px){ .method{grid-template-columns:repeat(4,1fr)} }
 
 @media (max-width:900px){
@@ -367,8 +367,8 @@ body[data-theme="dark"] .site-foot{position:relative; z-index:1}
   }
   .dh-title{align-self:start}
   .dh-feat{justify-self:stretch; width:100%}
-  .dh-l1{font-size:clamp(38px,11vw,72px)}
-  .dh-l2{font-size:clamp(44px,14vw,92px)}
+  .dh-l1{font-size:clamp(39.9px, 11.6vw, 75.6px)}
+  .dh-l2{font-size:clamp(46.2px, 14.7vw, 96.6px)}
   .scroll-cue{display:none}
 }
 
