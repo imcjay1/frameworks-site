@@ -12,6 +12,10 @@ a soft radial scrim and given a blurred shadow. Neither is heavy enough to read
 as a plate; at the 360px the preview card renders at, the mark simply sits on
 the image.
 
+A base file whose name starts with an underscore is a spare — a photograph kept
+for a sector that ended up using a different frame. It is skipped, so parking one
+never leaves an orphan image in the deployed folder.
+
 Usage:  python3 tools/build-sector-thumbs.py [path-to-360-icon.png]
 Requires Pillow. Reads assets/sectors/base/*.webp, writes assets/sectors/*.webp.
 """
@@ -93,7 +97,7 @@ def badge(photo, mark, dark):
 def main():
     if not ICON.exists():
         sys.exit("360° mark not found: %s" % ICON)
-    sources = sorted(BASE.glob("*.webp"))
+    sources = [p for p in sorted(BASE.glob("*.webp")) if not p.name.startswith("_")]
     if not sources:
         sys.exit("no base photographs in %s" % BASE)
 
