@@ -1,0 +1,3 @@
+# Internal working documents. They stay in git so the record is versioned, but
+# they are not part of the site and were being served as plain text.
+docs/

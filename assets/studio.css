@@ -50,7 +50,7 @@
   position:relative; isolation:isolate;
   background:var(--ivory);
   display:flex; flex-direction:column;
-  min-height:clamp(820px, 100vh, 940px);
+  min-height:clamp(1040px, 128vh, 1320px);
 }
 /* On a wide screen the media fills the tile and the copy rides over it. */
 .tile-media{position:absolute; inset:0; z-index:0; overflow:hidden}
@@ -63,8 +63,8 @@
    430px, so nothing pushes the band past its reserved height. */
 .tile-copy{
   position:relative; z-index:2; margin-top:auto;
-  min-height:456px;
-  display:flex; flex-direction:column; justify-content:flex-end;
+  min-height:72%;
+  display:flex; flex-direction:column; justify-content:flex-start;
   padding:34px clamp(24px, 2.6vw, 40px) clamp(28px, 3vw, 44px);
   /* Flat behind the copy itself and a fixed fade above it. Measured in pixels,
      not percentages — a percentage fade would put the label line at a different
@@ -138,6 +138,13 @@
 /* ---------- Responsive ----------
    Row 2 stops being a pair below 1024px; below 768px every tile is a
    full-width block with its image above the copy — never text over image. */
+/* Between 1025 and 1200 the three columns are narrow enough that tile 02's copy
+   wraps past the band and lifts its label out of line with the other two. The
+   band takes a larger share of the tile over that range only. */
+@media (min-width:1025px) and (max-width:1200px){
+  .tile-copy{min-height:82%}
+}
+
 @media (max-width:1024px){
   /* A third of 1024px leaves the copy band wrapping to twice its height, which
      is what broke the row's alignment — so every tile runs full width here. */
