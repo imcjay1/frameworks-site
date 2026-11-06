@@ -132,9 +132,9 @@ re-flow to a different layout? This is a design call, not a code one.
 | **5.4** | **"Wrong sector names"** — rename all nine (see the open question below) | `works.html` `.sector-name` × 9, plus `id`s, the `/works#…` anchors on `index.html`, and `assets/sectors/*.webp` filenames |
 | ~~5.5~~ | ✅ **done** — King Abdullah Sports City, badged via `tools/build-sector-thumbs.py`. Source is only 1024×713, so it is upscaled ~26% to the 1200×900 slot; a larger original would be better if Martyn has one. | `assets/sectors/sports.webp` + `base/sports.webp` |
 | ~~5.6~~ | ✅ **done** — added as the 4th Sports tour, count updated to "4 tours". ❓ It is the only tour with no `data-note`; the others all carry one line. Martyn needs to supply it. | `works.html` |
-| **5.7** | **New sector: "GOOGLE MY BUSINESS & GOOGLE STREET VIEW"** with three Street View embeds — Prime Estate Monaco, Quiet Coffee Riyadh, Balkin Estates Monaco. Thumbnail supplied in Drive (`Screenshot 2026-09-02 at 23.26.41.png`, 6.7 MB — needs resizing to the 1200×900 webp the other sector thumbs use). | `works.html` + new `assets/sectors/google-street-view.webp` |
+| ~~5.7~~ | ✅ **done** — added as the tenth sector at 324°. The tour viewer already iframes a tour's `href`, so the three Street View embeds needed no script change and remain plain links without JS. Adding a tenth sector renumbered every bearing from 40° to 36° steps. The supplied thumbnail was a raw capture with the Google info card, mini-map and zoom controls on it, so it is cropped to the clean centre (the Prime Estate shopfront) and badged through the usual tool — **that crop is ours, not the client's**. | `works.html`, `assets/sectors/google-street-view.webp` |
 | **5.8** | **New Photograph section.** Drive folder holds six sub-folders: Yacht, Penthouse, Venues, Apartment, Villa, Locations. | new section in `works.html`, new `assets/photography/` |
-| **5.9** | **New Video section** — four Vimeo embeds: Villa Lola (805149434), Villa Bayview (805115453), Little Zoe (816077202), Le Palais Heracles (805172489) | new section in `works.html` |
+| ~~5.9~~ | ✅ **done** — a Video band between the sector list and the contact CTA. Two up, one up below 860px, players lazy. The client gave a section name and four titles and no heading copy, so the band carries his labels and nothing of ours; it wants a heading when he supplies one. | `works.html`, `assets/works.css` |
 
 ### Sector names — the open question
 
@@ -198,6 +198,13 @@ against an authored 30. Enlarging the logos for 3.12 would have made it worse, n
 better, so the measurement is now kept in step by a `ResizeObserver` on the track.
 At 24 px/s the band is now about **three times slower** than what Martyn saw.
 
+**7.3 — two points of the client's copy are published as written.** His caption
+reads "Villa Bayview, Villefrance-sur-Mer" — the town is Villefranche-sur-Mer.
+It is rendered verbatim rather than silently corrected, so the typo is live and
+needs a word from him. Separately, "Little Zoe - Super Yachts Monaco" took the
+house spaced-em-dash rule, while the Vimeo player's own title is "Little Zoe -
+Yacht".
+
 **7.2 — `tools/build-sector-thumbs.py` rebuilds all nine thumbnails.** Running it
 for Sports also re-encoded `super-yachts.webp` from its (already-updated) base at
 the tool's quality 82, so that file dropped 212 KB → 187 KB. Same photograph, same
@@ -213,6 +220,6 @@ badge — encoding only.
 3. ~~**5.3, 5.5, 5.6**~~ — done.
 4. **4.3, 4.4** — Studio label alignment and full verbatim copy (pending 4.5/4.6).
 5. **5.4** — sector renames, once 5.10–5.12 are answered. Touches /works, /index and asset filenames.
-6. **5.7, 5.9** — GMB/Street View sector and Video section; both have all their content.
+6. ~~**5.7, 5.9**~~ — done.
 7. **5.8** — Photograph section, once the brief exists.
 8. **2.2** — type/overflow pass across all six pages at the four breakpoints.
