@@ -28,7 +28,11 @@
 <meta name="twitter:image" content="https://frameworksstudio.vercel.app/assets/brand/og-thumb.png?v=4" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<!-- Fragment Mono is the only remaining webfont: display and body are self-hosted
+     in /assets/fonts and declared in site.css. -->
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<link rel="preload" href="/assets/fonts/posterama-1933-light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/avenir-roman.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
 <!-- #endregion SHARED:head -->
 </head>
@@ -101,28 +105,34 @@
          same way or the scrub will stutter — see README. -->
     <video id="scrub" src="/assets/showreel.mp4" muted playsinline preload="auto"></video>
 
-    <!-- Scroll captions — each rises in during its window, then recedes into the distance.
-         data-start / data-end are scroll-progress fractions (0 -> 1) of the full two-part pan.
-         The sequence ends on technology, landing the scrub at the Craft section. -->
-    <div class="cap cap-l" data-start="0.065" data-end="0.23" style="top:24%">
+    <!-- Scroll captions — the six pillars of excellence, in the client's approved
+         order. Each rises in during its window, then recedes into the distance.
+         data-start / data-end are scroll-progress fractions (0 -> 1) of the full
+         two-part pan; the last one clears 0.635, where the CAPTURE / CRAFT /
+         EXPERIENCE teardown captions take over. -->
+    <div class="cap cap-l" data-start="0.065" data-end="0.220" style="top:24%">
       <span class="cap-kicker">Real-world capture</span>
-      <p class="cap-line">Every extraordinary place has <em>something worth experiencing.</em></p>
+      <p class="cap-line">Extraordinary places captured <em>with remarkable fidelity.</em></p>
     </div>
-    <div class="cap cap-r" data-start="0.16" data-end="0.33" style="top:42%">
-      <span class="cap-kicker">Its architecture</span>
-      <p class="cap-line">The lines a place <em>was drawn along.</em></p>
+    <div class="cap cap-r" data-start="0.145" data-end="0.300" style="top:42%">
+      <span class="cap-kicker">The craft</span>
+      <p class="cap-line">Where creativity, technology and storytelling converge to reveal <em>the true essence of every experience.</em></p>
     </div>
-    <div class="cap cap-l" data-start="0.27" data-end="0.43" style="top:30%">
-      <span class="cap-kicker">Its atmosphere</span>
-      <p class="cap-line">The way a room <em>holds the light.</em></p>
+    <div class="cap cap-l" data-start="0.225" data-end="0.380" style="top:28%">
+      <span class="cap-kicker">Invisible by design</span>
+      <p class="cap-line">Powerful innovation, seamlessly integrated to create <em>effortless experiences.</em></p>
     </div>
-    <div class="cap cap-r" data-start="0.37" data-end="0.53" style="top:46%">
-      <span class="cap-kicker">Its character</span>
-      <p class="cap-line">Everything that makes it <em>unlike anywhere else.</em></p>
+    <div class="cap cap-r" data-start="0.305" data-end="0.460" style="top:44%">
+      <span class="cap-kicker">The detail</span>
+      <p class="cap-line">Every detail is intentional, considered and <em>refined with precision.</em></p>
     </div>
-    <div class="cap cap-l" data-start="0.46" data-end="0.62" style="top:34%">
-      <span class="cap-kicker">Its detail</span>
-      <p class="cap-line">Then brought to life <em>as an experience.</em></p>
+    <div class="cap cap-l" data-start="0.385" data-end="0.540" style="top:30%">
+      <span class="cap-kicker">The reach</span>
+      <p class="cap-line">Connecting remarkable brands and extraordinary places with audiences across the world, <em>beyond physical boundaries.</em></p>
+    </div>
+    <div class="cap cap-r" data-start="0.465" data-end="0.620" style="top:42%">
+      <span class="cap-kicker">The result</span>
+      <p class="cap-line">Experiences that inspire emotion, foster meaningful connections and <em>leave lasting impressions.</em></p>
     </div>
     <!-- Teardown + rebuild captions — top-centre, retro glitch + character scramble -->
     <div class="tcap" data-start="0.635" data-end="0.735">
@@ -163,64 +173,6 @@
         <a class="btn-solid" href="/contact">Start your journey</a>
         <a class="cta glass" href="/studio">Explore the studio</a>
       </div>
-      <div class="hero-trust glass hero-fade" style="animation-delay:.94s">
-        <span class="hero-trust-k">Trusted by</span>
-        <div class="marquee" data-marquee data-marquee-speed="22">
-          <ul class="marquee-track">
-        <li class="client"><img src="/assets/logos/balkin-monaco-knight-frank.webp" alt="Balkin Monaco · Knight Frank" width="220" height="200" loading="eager" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/barbour.webp" alt="Barbour" width="470" height="200" loading="eager" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/barnes-monaco.webp" alt="BARNES Monaco" width="182" height="200" loading="eager" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/belmond-castello-di-casole.webp" alt="Belmond Castello di Casole" width="318" height="200" loading="eager" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/belmond-villa-san-michele.webp" alt="Belmond Villa San Michele" width="557" height="200" loading="eager" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/bentley.webp" alt="Bentley" width="330" height="200" loading="eager" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/chartwell.webp" alt="Chartwell" width="471" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/culturespaces.webp" alt="Culturespaces" width="533" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/dbox.webp" alt="DBOX" width="485" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/deco-flamme.webp" alt="Déco Flamme" width="572" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/design-centre.webp" alt="Design Centre" width="402" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/euronews.webp" alt="Euronews" width="281" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/eye-spy-360.webp" alt="Eye Spy 360" width="298" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/f1-experiences.webp" alt="F1 Experiences" width="301" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/fbm-media.webp" alt="FBM Media" width="366" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/fraser-yachts.webp" alt="Fraser Yachts" width="308" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/gala-organisation.webp" alt="Gala Organisation" width="299" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/getty-images-istock.webp" alt="Getty Images &amp; iStock" width="338" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/grand-hotel-du-cap-ferrat.webp" alt="Grand-Hôtel du Cap-Ferrat" width="185" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/groupe-marzocco.webp" alt="Groupe Marzocco" width="434" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/hotel-cap-estel.webp" alt="Hôtel Cap Estel" width="345" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/hotel-de-paris-monte-carlo.webp" alt="Hôtel de Paris Monte-Carlo" width="437" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/ineos-club-house.webp" alt="INEOS Club House" width="395" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/influencer-awards-monaco.webp" alt="Influencer Awards Monaco" width="316" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/jimmyz-monte-carlo.webp" alt="Jimmy’z Monte-Carlo" width="473" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/jolie-ville-luxor.webp" alt="Jolie Ville Luxor" width="337" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/le-casino-monte-carlo.webp" alt="Le Casino de Monte-Carlo" width="292" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/lvmh.webp" alt="LVMH" width="381" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/marks-real-estate.webp" alt="Marks Real Estate" width="497" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/maverick-frame-studio.webp" alt="Maverick Frame Studio" width="182" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/mclaren-property.webp" alt="McLaren Property" width="399" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/monaco-projects.webp" alt="Monaco Projects" width="438" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/monte-carlo-sbm.webp" alt="Monte-Carlo SBM" width="499" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/monte-carlo-weddings.webp" alt="Monte-Carlo Weddings" width="411" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/national-trust.webp" alt="National Trust" width="132" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/palm-beach-cannes.webp" alt="Palm Beach Cannes" width="210" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/prime-estate.webp" alt="Prime Estate" width="456" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/proto.webp" alt="Proto" width="349" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/rangers-fc.webp" alt="Rangers FC" width="182" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/relevance.webp" alt="Relevance" width="290" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/riviera-radio.webp" alt="Riviera Radio" width="315" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/saatchi-and-saatchi.webp" alt="Saatchi &amp; Saatchi" width="522" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/samsung-the-wall.webp" alt="Samsung The Wall" width="362" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/savills.webp" alt="Savills" width="375" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/sothebys-international-realty.webp" alt="Sotheby’s International Realty" width="424" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/spark-design-academy.webp" alt="Spark Design Academy" width="415" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/sunderland-afc.webp" alt="Sunderland AFC" width="201" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/sunseeker-monaco.webp" alt="Sunseeker Monaco" width="244" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/superyachts-monaco.webp" alt="Superyachts Monaco" width="313" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/villa-ephrussi-de-rothschild.webp" alt="Villa Ephrussi de Rothschild" width="424" height="200" loading="lazy" decoding="async"></li>
-        <li class="client"><img src="/assets/logos/yacht-club-de-monaco.webp" alt="Yacht Club de Monaco" width="392" height="200" loading="lazy" decoding="async"></li>
-          </ul>
-        </div>
-      </div>
     </div>
   </section>
 </div>
@@ -239,30 +191,13 @@
   </div>
 </section>
 
-<!-- ============ PILLAR STATEMENTS ============
-     Six pillars of excellence, in the client's approved order. They reuse the
-     glass card from site.css that /digital-services also uses; the grid is
-     .pillar-grid here because digital.css owns .pillars and is not loaded on
-     this page. -->
-<section class="band" id="pillars" aria-labelledby="pillars-h" style="padding-top:0">
-  <div class="eyebrow reveal" id="pillars-h">The pillars</div>
-  <div class="pillar-grid">
-    <div class="pillar reveal"><b>Real-World Capture</b><span>Extraordinary places captured with remarkable fidelity.</span></div>
-    <div class="pillar reveal"><b>The Craft</b><span>Where creativity, technology and storytelling converge to reveal the true essence of every experience.</span></div>
-    <div class="pillar reveal"><b>Invisible by Design</b><span>Powerful innovation, seamlessly integrated to create effortless experiences.</span></div>
-    <div class="pillar reveal"><b>The Detail</b><span>Every detail is intentional, considered and refined with precision.</span></div>
-    <div class="pillar reveal"><b>The Reach</b><span>Connecting remarkable brands and extraordinary places with audiences across the world, beyond physical boundaries.</span></div>
-    <div class="pillar reveal"><b>The Result</b><span>Experiences that inspire emotion, foster meaningful connections and leave lasting impressions.</span></div>
-  </div>
-</section>
 
-<!-- ============ TRUSTED BY ============ -->
 <section class="band trusted" aria-labelledby="trusted-h">
   <div class="eyebrow reveal" id="trusted-h">Trusted by</div>
   <!-- One authored track; site.js clones it for the seamless loop. To add a
        client, drop a trimmed logo into assets/logos/ and add one <li> here and
        in the hero island below. See README. -->
-  <div class="marquee" data-marquee>
+  <div class="marquee" data-marquee data-marquee-speed="24">
     <ul class="marquee-track">
       <li class="client"><img src="/assets/logos/balkin-monaco-knight-frank.webp" alt="Balkin Monaco · Knight Frank" width="220" height="200" loading="lazy" decoding="async"></li>
       <li class="client"><img src="/assets/logos/barbour.webp" alt="Barbour" width="470" height="200" loading="lazy" decoding="async"></li>
@@ -337,14 +272,8 @@
       </p>
     </div>
   </div>
-  <div class="stats reveal">
-    <div class="stat"><b>€400m+</b><span>Client sales contributed since 2018</span></div>
-    <div class="stat"><b>€6.3m</b><span>Monthly rental agreements facilitated</span></div>
-    <div class="stat"><b>15m+</b><span>Organic views generated to date</span></div>
-    <div class="stat"><b>60+</b><span>Seasoned professionals worldwide</span></div>
-  </div>
   <p class="google-line reveal">As a <strong>Trusted &amp; Accredited Google Agency</strong>, we amplify digital visibility through seamless Google Street View and Google My Business integrations.</p>
-  <a class="more-link reveal" href="/studio">the Studio</a>
+  <a class="btn-glass glass reveal" href="/studio">Explore the Studio</a>
 </section>
 
 <!-- ============ CRAFT (teaser → /craft) ============ -->
@@ -364,7 +293,7 @@
     </div>
     <div>
       <p class="body-copy reveal">From real-world capture to immersive design, every element is considered, crafted and refined to transform extraordinary places into experiences worth exploring.</p>
-      <a class="more-link reveal" href="/craft">the Craft</a>
+      <a class="btn-glass glass reveal" href="/craft">Explore the Craft</a>
     </div>
   </div>
 </section>
@@ -373,14 +302,14 @@
 <section class="band" id="sectors" style="padding-top:40px">
   <div class="eyebrow reveal">Works by Frameworks</div>
   <h2 class="reveal">Every extraordinary project tells a story. <em>We help the world experience it.</em></h2>
+  <!-- A taster only — three sectors, then the way through to all nine. The
+       hover preview is the same component /works uses, off the same asset. -->
   <div class="sector-list reveal">
-    <a class="sector-row" href="/works#event-venues" data-img="/assets/sectors/event-venues.webp"><span class="sector-deg">000°</span><span class="sector-name">Event Venues</span><span class="sector-note">Let planners stand in the room</span></a>
-    <a class="sector-row" href="/works#luxury-real-estate" data-img="/assets/sectors/luxury-real-estate.webp"><span class="sector-deg">072°</span><span class="sector-name">Luxury Real Estate</span><span class="sector-note">Residences that sell before the first viewing</span></a>
-    <a class="sector-row" href="/works#hotels-resorts" data-img="/assets/sectors/hotels-resorts.webp"><span class="sector-deg">144°</span><span class="sector-name">Hotels &amp; Resorts</span><span class="sector-note">Arrival, in full, from anywhere</span></a>
-    <a class="sector-row" href="/works#super-yachts" data-img="/assets/sectors/super-yachts.webp"><span class="sector-deg">216°</span><span class="sector-name">Super Yachts</span><span class="sector-note">Every deck, walkable from any harbour</span></a>
-    <a class="sector-row" href="/works#automobiles" data-img="/assets/sectors/automobiles.webp"><span class="sector-deg">288°</span><span class="sector-name">Automobiles</span><span class="sector-note">Showrooms without borders</span></a>
+    <a class="sector-row" href="/works#event-venues" data-img="/assets/sectors/event-venues.webp"><span class="sector-deg">000°</span><span class="sector-name">Event Venues</span></a>
+    <a class="sector-row" href="/works#luxury-real-estate" data-img="/assets/sectors/luxury-real-estate.webp"><span class="sector-deg">120°</span><span class="sector-name">Luxury Real Estate</span></a>
+    <a class="sector-row" href="/works#hotels-resorts" data-img="/assets/sectors/hotels-resorts.webp"><span class="sector-deg">240°</span><span class="sector-name">Hotels &amp; Resorts</span></a>
   </div>
-  <a class="more-link reveal" href="/works">the Works</a>
+  <a class="btn-glass glass reveal" href="/works">Explore the Works</a>
 </section>
 
 <!-- ============ DIGITAL SERVICES (teaser → /digital-services) ============ -->
@@ -390,7 +319,7 @@
     <h2 class="reveal">Beyond <em>the capture.</em></h2>
     <div>
       <p class="body-copy reveal">Where we create the digital ecosystem around the experience — from the identity, the interfaces, and interaction to campaigns, content and intelligent technology.</p>
-      <a class="more-link reveal" href="/digital-services">Digital Services</a>
+      <a class="btn-glass glass reveal" href="/digital-services">Explore Digital Services</a>
     </div>
   </div>
 </section>

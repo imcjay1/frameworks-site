@@ -40,7 +40,7 @@
   max-width:56ch; margin-top:48px;
 }
 .cf-hero-statement{
-  font-family:"Fragment Mono",monospace; font-size:13.3px; letter-spacing:.13em;
+  font-family:var(--font-mono); font-size:13.3px; letter-spacing:.13em;
   text-transform:uppercase; color:var(--brass-deep); margin-bottom:12px;
 }
 .cf-hero-note p:last-child{font-size:16.2px; line-height:1.62}
@@ -60,14 +60,13 @@
   display:flex; flex-direction:column;
 }
 .stage-num{
-  display:block; font-family:"Fraunces",serif; font-weight:340;
-  font-variation-settings:"opsz" 120;
-  font-size:clamp(52px, 7.4vw, 108px); line-height:1; letter-spacing:-.015em;
+  display:block; font-family:var(--font-display); font-weight:340;
+  font-size:clamp(52px, 7.4vw, 108px); line-height:1; letter-spacing:var(--track-xl);
   color:var(--ivory); opacity:.22; margin-bottom:.18em;
 }
 .stage-title{
-  font-family:"Fraunces",serif; font-weight:340; font-variation-settings:"opsz" 110;
-  font-size:clamp(26px, 2.4vw, 37px); line-height:1.14; letter-spacing:.002em;
+  font-family:var(--font-display); font-weight:340;
+  font-size:clamp(26px, 2.4vw, 37px); line-height:1.14; letter-spacing:var(--track-lg);
   color:var(--ivory);
 }
 .stage-rule{display:block; width:32px; height:1px; background:var(--brass); margin:20px 0}
@@ -78,8 +77,8 @@
 /* the closing statement — h3 scale, full ivory, at the foot of the panel */
 .stage-close{
   margin-top:auto; padding-top:36px;
-  font-family:"Fraunces",serif; font-weight:340;
-  font-size:clamp(21px, 1.6vw, 26px); line-height:1.24; letter-spacing:-.008em;
+  font-family:var(--font-display); font-weight:340;
+  font-size:clamp(21px, 1.6vw, 26px); line-height:1.24; letter-spacing:var(--track-md);
   color:var(--ivory);
 }
 
@@ -96,7 +95,7 @@
 .cf-cap{
   border-top:1px solid var(--line);
   padding:12px 14px;
-  font-family:"Fragment Mono",monospace; font-size:13px; letter-spacing:.14em;
+  font-family:var(--font-mono); font-size:13px; letter-spacing:.14em;
   text-transform:uppercase; color:var(--ink-soft);
 }
 
@@ -114,7 +113,7 @@
   display:flex; align-items:baseline; gap:16px;
   padding:clamp(14px,1.5vw,20px) 0;
   border-bottom:1px solid rgba(242,238,232,.14);
-  font-family:"Fragment Mono",monospace; font-size:14.4px; letter-spacing:.15em;
+  font-family:var(--font-mono); font-size:14.4px; letter-spacing:.15em;
   text-transform:uppercase; color:var(--ivory);
 }
 .viewpoints li:last-child{border-bottom:0}
@@ -165,8 +164,8 @@
   text-align:center; padding:clamp(40px,4vw,72px) clamp(24px,3vw,48px);
 }
 .cf-close-statement{
-  font-family:"Fraunces",serif; font-weight:340; font-variation-settings:"opsz" 110;
-  font-size:clamp(26px, 2.4vw, 37px); line-height:1.16; letter-spacing:-.008em;
+  font-family:var(--font-display); font-weight:340;
+  font-size:clamp(26px, 2.4vw, 37px); line-height:1.16; letter-spacing:var(--track-lg);
   max-width:18ch;
 }
 .cf-close-body{

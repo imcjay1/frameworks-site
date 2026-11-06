@@ -40,7 +40,7 @@
 }
 .studio-col:first-child{border-left:0; padding-left:0}
 .studio-city{
-  font-family:"Fragment Mono",monospace; font-size:13.9px; letter-spacing:.14em;
+  font-family:var(--font-mono); font-size:13.9px; letter-spacing:.14em;
   text-transform:uppercase; color:var(--ink); line-height:1.5;
 }
 .studio-role{font-size:16.2px; line-height:1.5; color:var(--ink-soft)}
@@ -59,7 +59,7 @@
 }
 .direct-col:first-child{border-left:0; padding-left:0}
 .direct-label{
-  font-family:"Fragment Mono",monospace; font-size:13.2px; letter-spacing:.14em;
+  font-family:var(--font-mono); font-size:13.2px; letter-spacing:.14em;
   text-transform:uppercase; color:var(--ink-soft);
 }
 .direct-col a{

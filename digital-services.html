@@ -30,7 +30,11 @@
 <meta name="twitter:image" content="https://frameworksstudio.vercel.app/assets/brand/og-thumb.png?v=4" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<!-- Fragment Mono is the only remaining webfont: display and body are self-hosted
+     in /assets/fonts and declared in site.css. -->
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<link rel="preload" href="/assets/fonts/posterama-1933-light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/avenir-roman.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
 <!-- #endregion SHARED:head -->
 <!-- page overrides, after site.css so equal-specificity rules win -->

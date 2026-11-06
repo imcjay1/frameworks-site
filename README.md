@@ -6,7 +6,7 @@ No build step: the HTML, CSS and JS ship as written.
 ## Structure
 
 ```
-index.html               /                  scroll-scrubbed showreel hero, trusted-by, teasers
+index.html               /                  scrub hero + the six pillars, trusted-by, teasers
 craft.html               /craft
 sectors.html             /sectors
 studio.html              /studio            studio copy + results + global presence
@@ -88,9 +88,9 @@ python3 tools/build-logo.py "path/to/black-on-white.jpeg"
 ## Adding a client logo ("Trusted by")
 
 `assets/logos/` holds the 51 client logos, each a transparent WebP normalised to
-200px tall in a single ink colour. They appear **twice on the home page** — the
-band further down, and the small glass island in the hero — so a new client needs
-one `<li>` in each `<ul class="marquee-track">`:
+200px tall in a single ink colour. They appear in the **Trusted by** band on the
+home page — one place now that the hero island has gone — so a new client needs
+one `<li>` in its `<ul class="marquee-track">`:
 
 ```html
 <li class="client">
@@ -107,12 +107,14 @@ one `<li>` in each `<ul class="marquee-track">`:
   would keep its full 200px height with only a sliver showing.
 - Only the first track of each marquee is authored; `site.js` clones it for the
   seamless loop, so each list is maintained in one place.
-- Logos sit at 45% opacity and come up to full on hover.
+- Logos sit at 45% opacity and come up to full on hover, capped at 60px tall.
+- The run speed is `data-marquee-speed` on the `.marquee` (px per second, 30
+  here); `site.js` turns it into the animation duration off the track's width.
 
 ## Liquid glass in the home hero
 
-The hero panes — the spec pill, the CTA, the viewfinder chrome and the trusted-by
-island — get a slow chromatic drift on top of the shared `.glass` recipe: the
+The hero panes — the spec pill, the CTA and the viewfinder chrome — get a slow
+chromatic drift on top of the shared `.glass` recipe: the
 spectral rim turns over 24s and three soft highlights drift inside the pane over
 19s, on offset cycles so the colour never settles into a pattern. It is scoped to
 `.stage`, so the nav and the rest of the site keep the still version, and it
@@ -304,6 +306,9 @@ only name and email are required, everything else qualifies the lead.
 
 - `.scrub-track{height:1380vh}` — total scroll length of the film.
 - `.cap` / `.tcap` elements — `data-start` / `data-end` are scroll fractions (0–1).
+  The six `.cap`s carry the pillar statements; they run 0.065 → 0.620 and must
+  stay clear of the first `.tcap` at 0.635. `home.js` shrinks the per-word
+  stagger on a long line so its last word still lands inside the window.
 - Smooth scroll feel: the `0.07` lerp in `site.js`.
 - Scrub lerp `0.18`; seek threshold `0.042` — matched to the 12fps source.
 - `assets/showreel.mp4` is encoded 1080p / 12fps / all-intra for smooth

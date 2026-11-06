@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Frameworks — display face preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#16181C; --ivory:#F2EEE8; --brass:#8A6D3F}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--ink); color:var(--ivory); font:14px/1.4 "Fragment Mono",monospace;
+       height:100vh; display:flex; flex-direction:column}
+  header{display:flex; gap:26px; align-items:center; flex-wrap:wrap;
+         padding:12px 18px; border-bottom:1px solid rgba(242,238,232,.16)}
+  .grp{display:flex; gap:7px; align-items:center}
+  .lbl{font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:#8B8F97}
+  button{font:inherit; font-size:12px; letter-spacing:.08em; color:var(--ivory); cursor:pointer;
+         background:transparent; border:1px solid rgba(242,238,232,.28);
+         padding:7px 13px; border-radius:999px; transition:.18s}
+  button:hover{border-color:rgba(242,238,232,.6)}
+  button[aria-pressed="true"]{background:var(--ivory); color:var(--ink); border-color:var(--ivory)}
+  .note{margin-left:auto; font-size:10.5px; color:#8B8F97; letter-spacing:.06em}
+  iframe{flex:1; width:100%; border:0; background:var(--ivory)}
+</style></head><body>
+
+<header>
+  <div class="grp"><span class="lbl">Display</span>
+    <button data-font='"Posterama 1933",serif' aria-pressed="true">Posterama 1933 Light</button>
+    <button data-font='"Julius Sans One",serif' aria-pressed="false">Julius Sans One</button>
+  </div>
+  <div class="grp"><span class="lbl">Page</span>
+    <button data-page="/index.html" aria-pressed="true">Home</button>
+    <button data-page="/studio.html" aria-pressed="false">Studio</button>
+    <button data-page="/craft.html" aria-pressed="false">Craft</button>
+    <button data-page="/works.html" aria-pressed="false">Works</button>
+    <button data-page="/digital-services.html" aria-pressed="false">Digital</button>
+    <button data-page="/contact.html" aria-pressed="false">Contact</button>
+  </div>
+  <div class="note">Preview only — the live setting is --font-display in assets/site.css. Delete this file when the choice is made.</div>
+</header>
+
+<iframe id="stage" src="/index.html"></iframe>
+
+<script>
+  const stage = document.getElementById('stage');
+  let font = '"Posterama 1933",serif';
+
+  const paint = () => {
+    const d = stage.contentDocument;
+    if (d && d.documentElement) d.documentElement.style.setProperty('--font-display', font);
+  };
+  stage.addEventListener('load', paint);
+
+  const group = (sel, fn) => document.querySelectorAll(sel).forEach(b => b.onclick = () => {
+    b.parentElement.querySelectorAll('button').forEach(o => o.setAttribute('aria-pressed', o === b));
+    fn(b);
+  });
+
+  group('[data-font]', b => { font = b.dataset.font; paint(); });
+  group('[data-page]', b => { stage.src = b.dataset.page; });
+</script>
+</body></html>

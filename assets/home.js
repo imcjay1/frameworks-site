@@ -36,10 +36,14 @@
     [...el.childNodes].forEach(process);
     return [...el.querySelectorAll('.wi')];
   }
-  const caps = [...document.querySelectorAll('.cap')].map(el => ({
-    el, a:+el.dataset.start, b:+el.dataset.end,
-    words: splitWords(el.querySelector('.cap-line'))
-  }));
+  const caps = [...document.querySelectorAll('.cap')].map(el => {
+    const words = splitWords(el.querySelector('.cap-line'));
+    /* Each word is held back a little longer than the one before it. The step is
+       capped so a short line keeps its leisurely rhythm, and shrunk on a long one
+       so the last word still lands inside the window rather than never arriving. */
+    return { el, a:+el.dataset.start, b:+el.dataset.end, words,
+             step: Math.min(0.06, 0.64 / Math.max(1, words.length - 1)) };
+  });
   const GLYPHS = '0123456789#$%&/<>[]*+=?!';
   let fc = 0;                                     /* frame counter for scramble throttling */
   const tcaps = [...document.querySelectorAll('.tcap')].map(el => {
@@ -103,7 +107,7 @@
         c.el.style.filter = 'blur(' + (outT * 7) + 'px)';
         const rt = Math.min(1, t / 0.20);           /* words fully in by 20% of window */
         c.words.forEach((w,i) => {
-          const wIn = sm(i * 0.06, i * 0.06 + 0.36, rt);
+          const wIn = sm(i * c.step, i * c.step + 0.36, rt);
           w.style.transform = 'translateY(' + ((1 - wIn) * 115) + '%)';
         });
       });

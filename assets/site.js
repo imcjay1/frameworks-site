@@ -189,8 +189,19 @@
     const clone = track.cloneNode(true);
     clone.setAttribute('aria-hidden', 'true');
     m.appendChild(clone);
+
+    /* The logos are lazy, so the track goes on widening for as long as they
+       arrive. Reading the width once sized the loop against a fraction of the
+       final track and the band ran at roughly three times the authored speed;
+       the observer keeps the duration in step as the row fills out, and across
+       a viewport resize. */
     const speed = Number(m.dataset.marqueeSpeed) || 55;   /* px per second */
-    m.style.setProperty('--marq-duration', (track.scrollWidth / speed) + 's');
+    const setDuration = () => {
+      if(track.scrollWidth) m.style.setProperty('--marq-duration', (track.scrollWidth / speed) + 's');
+    };
+    setDuration();
+    if('ResizeObserver' in window) new ResizeObserver(setDuration).observe(track);
+
     m.classList.add('is-looping');
     if('IntersectionObserver' in window){
       /* paused off-screen, so it isn't competing with the film scrub for frames */

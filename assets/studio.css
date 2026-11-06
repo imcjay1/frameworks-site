@@ -80,7 +80,7 @@
 
 .tile-label{
   display:flex; align-items:baseline; gap:14px; margin-bottom:22px;
-  font-family:"Fragment Mono",monospace; font-weight:400;
+  font-family:var(--font-mono); font-weight:400;
   font-size:13.3px; letter-spacing:.16em; line-height:1.2;
   text-transform:uppercase; color:var(--ink-soft);
 }
@@ -91,16 +91,16 @@
 
 /* the tile's statement line — display face, existing h2 scale */
 .tile-statement{
-  font-family:"Fraunces",serif; font-weight:340; font-variation-settings:"opsz" 110;
-  font-size:clamp(24.6px, 2vw, 33.2px); line-height:1.16; letter-spacing:-.008em;
+  font-family:var(--font-display); font-weight:340;
+  font-size:clamp(24.6px, 2vw, 33.2px); line-height:1.16; letter-spacing:var(--track-md);
   color:var(--ink); max-width:22ch;
   margin:.5em 0 .7em;
 }
 .tile-p + .tile-statement{margin-top:.8em}
 /* the closing statement — same face, h3 scale, full ink */
 .tile-close{
-  font-family:"Fraunces",serif; font-weight:340;
-  font-size:clamp(21.8px, 1.7vw, 27.8px); line-height:1.2; letter-spacing:-.01em;
+  font-family:var(--font-display); font-weight:340;
+  font-size:clamp(21.8px, 1.7vw, 27.8px); line-height:1.2; letter-spacing:var(--track-md);
   color:var(--ink); margin-top:1em;
 }
 .tile-05 .tile-statement, .tile-05 .tile-p{max-width:44ch}

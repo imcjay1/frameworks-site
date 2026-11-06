@@ -28,7 +28,11 @@
 <meta name="twitter:image" content="https://frameworksstudio.vercel.app/assets/brand/og-thumb.png?v=4" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Archivo:wdth,wght@62..125,300;62..125,400;62..125,500;62..125,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<!-- Fragment Mono is the only remaining webfont: display and body are self-hosted
+     in /assets/fonts and declared in site.css. -->
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+<link rel="preload" href="/assets/fonts/posterama-1933-light.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/avenir-roman.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
 <!-- #endregion SHARED:head -->
 <!-- page overrides, after site.css so equal-specificity rules win -->
@@ -77,7 +81,6 @@
 <header class="page-head">
   <div class="eyebrow reveal">Sectors</div>
   <h1 class="reveal">A full panorama <em>of luxury.</em></h1>
-  <p class="page-lede reveal">Nine bearings, one discipline: making a space feel walked-through before anyone has travelled to it.</p>
 </header>
 
 <section class="band">
@@ -93,7 +96,6 @@
               data-img="/assets/sectors/luxury-real-estate.webp" aria-haspopup="dialog">
         <span class="sector-deg">000°</span>
         <span class="sector-name">Luxury Real Estate</span>
-        <span class="sector-note">Residences that sell before the first viewing</span>
         <span class="sector-cue"><span class="sector-count">7 tours</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
@@ -118,7 +120,6 @@
               data-img="/assets/sectors/super-yachts.webp" aria-haspopup="dialog">
         <span class="sector-deg">040°</span>
         <span class="sector-name">Super Yachts</span>
-        <span class="sector-note">Every deck, walkable from any harbour</span>
         <span class="sector-cue"><span class="sector-count">2 tours</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
@@ -133,7 +134,6 @@
               data-img="/assets/sectors/automobiles.webp" aria-haspopup="dialog">
         <span class="sector-deg">080°</span>
         <span class="sector-name">Automobiles</span>
-        <span class="sector-note">Showrooms without borders</span>
         <span class="sector-cue"><span class="sector-count">2 tours</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
@@ -148,7 +148,6 @@
               data-img="/assets/sectors/event-venues.webp" aria-haspopup="dialog">
         <span class="sector-deg">120°</span>
         <span class="sector-name">Event Venues</span>
-        <span class="sector-note">Let planners stand in the room</span>
         <span class="sector-cue"><span class="sector-count">4 tours</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
@@ -167,7 +166,6 @@
               data-img="/assets/sectors/members-clubs.webp" aria-haspopup="dialog">
         <span class="sector-deg">160°</span>
         <span class="sector-name">Exclusive Members Clubs</span>
-        <span class="sector-note">Club houses, seen before joining</span>
         <span class="sector-cue"><span class="sector-count">2 tours</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
@@ -182,7 +180,6 @@
               data-img="/assets/sectors/hotels-resorts.webp" aria-haspopup="dialog">
         <span class="sector-deg">200°</span>
         <span class="sector-name">Hotels &amp; Resorts</span>
-        <span class="sector-note">Arrival, in full, from anywhere</span>
         <span class="sector-cue"><span class="sector-count">2 tours</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
@@ -197,7 +194,6 @@
               data-img="/assets/sectors/bars-restaurants.webp" aria-haspopup="dialog">
         <span class="sector-deg">240°</span>
         <span class="sector-name">Bars, Cafés &amp; Restaurants</span>
-        <span class="sector-note">The table, chosen before booking</span>
         <span class="sector-cue"><span class="sector-count">3 tours</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
@@ -214,8 +210,7 @@
               data-img="/assets/sectors/sports.webp" aria-haspopup="dialog">
         <span class="sector-deg">280°</span>
         <span class="sector-name">Sports</span>
-        <span class="sector-note">Stadiums, golf courses and academies</span>
-        <span class="sector-cue"><span class="sector-count">3 tours</span><i aria-hidden="true"></i></span>
+        <span class="sector-cue"><span class="sector-count">4 tours</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
         <li><a href="https://frameworksstudios.com/Stadium/" target="_blank" rel="noopener noreferrer"
@@ -224,6 +219,7 @@
                data-note="The course walked hole by hole.">Riyadh Golf Club</a></li>
         <li><a href="https://frameworksstudios.com/MahdSportsAcademy/" target="_blank" rel="noopener noreferrer"
                data-note="Saudi Arabia’s national sports academy, end to end.">Mahd Sports Academy</a></li>
+        <li><a href="https://www.frameworksstudios.com/PikupPadelGateshead/" target="_blank" rel="noopener noreferrer">Pikup Padel — Gateshead</a></li>
       </ul>
     </section>
     <section class="sector" id="heritage-tourism">
@@ -231,7 +227,6 @@
               data-img="/assets/sectors/heritage-tourism.webp" aria-haspopup="dialog">
         <span class="sector-deg">320°</span>
         <span class="sector-name">Heritage &amp; Tourism</span>
-        <span class="sector-note">Landmarks, walked before the journey</span>
         <span class="sector-cue"><span class="sector-count">1 tour</span><i aria-hidden="true"></i></span>
       </button>
       <ul class="sector-tours">
