@@ -6,20 +6,27 @@ screenshots, 3 font archives, 6 Google Drive links and 2 Pages documents.
 Everything below was read from the emails, the annotated screenshots, the Drive
 folders and the two Pages docs (`02 Landing Page.pages`, `03. the STUDIO.pages`).
 
+> **Status, 6 Nov 2026.** Every point from the five emails is built and live
+> except the photograph section (5.8). Seven smaller points still need Martyn's
+> word; they are collected in §8 at the foot of this file. They were deliberately
+> left out of the client-facing `amendments-13-sep.html`, which shows completed
+> work only — so this file is the only record of them.
+
 **Status key:** ✅ already done in the uncommitted work on `Frameworks-Site` ·
 🔲 outstanding · ❓ needs a decision from Martyn or Cameron.
 
 ---
 
-## 0. Where the work actually lives — read this first
+## 0. Where things stand
 
-The main checkout `/Users/cam77/Documents/FRAMEWORK/frameworks-site` is on branch
-`Frameworks-Site` with **~300 lines of uncommitted changes across 17 files**, plus an
-untracked `assets/fonts/` directory holding the new Posterama / Julius / Avenir
-web fonts. That uncommitted work already implements most of emails 01, 02 and 04.
+All of this work is committed on `Frameworks-Site` and deployed. The last four
+commits are `c53face`, `2a2f468`, `2b45339` and `4be01bb`. Live at
+`https://frameworksstudio.vercel.app` — note that the custom domain
+`frameworksstudios.com` is a different site, the one hosting the 360 tours
+themselves.
 
-This worktree (`claude/ceo-site-amendments-review-a4fefb`) sits at commit `4801b5c`
-and has **none** of it. Any edit made here would duplicate or conflict with it.
+`docs/` is excluded from the deployment by `.vercelignore`, so this file is no
+longer served publicly; it was, between `c53face` and `4be01bb`.
 
 ---
 
@@ -83,8 +90,8 @@ what is on the page now. No copy changes fall out of it.
 |---|---|---|---|
 | 4.1 | Hero headline → new header font | `studio.html` h1 | ✅ via token |
 | 4.2 | Tile statement lines → new header font; tile paragraphs → Avenir; "01 THE STUDIO" eyebrow keeps its current font | `assets/studio.css` | ✅ via tokens |
-| **4.3** | **"01, 02, 03 etc should be in a line"** — the three tile labels in row 1 currently sit at three different heights because each tile's copy block is bottom-aligned to a different length. They must align on one horizontal baseline across the row. | `assets/studio.css` — give `.tile-label` a fixed row position (grid row / `align-self`) rather than letting it float above variable-length copy | 🔲 **outstanding** |
-| **4.4** | **"add in FULL text from Google Drive page"** — all five tiles currently carry an abridged précis. Replace with the verbatim copy from `03. the STUDIO.pages` (reproduced in `docs/PENDING-REBUILDS.md` TASK 4, which matches the Drive doc word for word). | `studio.html` tiles 01–05 | 🔲 **outstanding** |
+| ~~4.3~~ | ✅ **done** — the copy band was bottom-anchored and grew upward by the length of each tile's copy (measured 405 / 443 / 435). It now takes a fixed share of the tile with the label at its top; equal-height tiles give an equal share an equal start. Verified aligned to the pixel at 1060, 1120, 1200, 1280, 1366 and 1440; below 1025 the mosaic is already one tile per row. | `assets/studio.css` |
+| ~~4.4~~ | ✅ **done** — all five tiles carry the verbatim Drive text; nine paragraphs became twenty-one. Tile 04 lost the statement line “NOTHING TEMPLATED. NOTHING IMPOSED.”, which the Drive document carries as body copy rather than a heading. Hero set to CREATED, per that document. | `studio.html` |
 
 Example of the gap, tile 01 — current:
 
@@ -129,7 +136,7 @@ re-flow to a different layout? This is a design call, not a code one.
 | # | Amendment | Where |
 |---|---|---|
 | ~~5.3~~ | ✅ **done** — intro lede deleted | `works.html` |
-| **5.4** | **"Wrong sector names"** — rename all nine (see the open question below) | `works.html` `.sector-name` × 9, plus `id`s, the `/works#…` anchors on `index.html`, and `assets/sectors/*.webp` filenames |
+| ~~5.4~~ | ✅ **done** — renamed to his list; Luxury Real Estate kept, making ten sectors (see 5.10). Only the visible names changed: ids, `data-sector`, thumbnail filenames and the `/works#…` anchors keep their slugs, so no inbound link breaks. “ACADEMY’S” set as Academies, “COURES” as Courses. Casing was moot — `.sector-name` sets no `text-transform`; Posterama is a unicase face. | `works.html` |
 | ~~5.5~~ | ✅ **done** — King Abdullah Sports City, badged via `tools/build-sector-thumbs.py`. Source is only 1024×713, so it is upscaled ~26% to the 1200×900 slot; a larger original would be better if Martyn has one. | `assets/sectors/sports.webp` + `base/sports.webp` |
 | ~~5.6~~ | ✅ **done** — added as the 4th Sports tour, count updated to "4 tours". ❓ It is the only tour with no `data-note`; the others all carry one line. Martyn needs to supply it. | `works.html` |
 | ~~5.7~~ | ✅ **done** — added as the tenth sector at 324°. The tour viewer already iframes a tour's `href`, so the three Street View embeds needed no script change and remain plain links without JS. Adding a tenth sector renumbered every bearing from 40° to 36° steps. The supplied thumbnail was a raw capture with the Google info card, mini-map and zoom controls on it, so it is cropped to the clean centre (the Prime Estate shopfront) and badged through the usual tool — **that crop is ours, not the client's**. | `works.html`, `assets/sectors/google-street-view.webp` |
@@ -223,3 +230,30 @@ badge — encoding only.
 6. ~~**5.7, 5.9**~~ — done.
 7. **5.8** — Photograph section, once the brief exists.
 8. **2.2** — type/overflow pass across all six pages at the four breakpoints.
+
+---
+
+# 8. Open points awaiting Martyn
+
+Left out of the client-facing document at Cameron's instruction, recorded here so
+they are not lost.
+
+1. **Studio hero against the home page.** `/studio` reads “BORN IN MONACO.
+   CREATED AROUND EXPERIENCE”, following his Drive document. `index.html:264`
+   still reads “Born in Monaco. *Built around experience.*” Both are live and
+   they disagree.
+2. **Home taster against the Works names.** The home page reads Event Venues and
+   Hotels & Resorts, the wording his landing-page email specified; Works now
+   reads Chateaus & Event Venues and Luxury Hotels & Resorts.
+3. **Two corrections to his sector list** — Academies for “ACADEMY’S”, Courses
+   for “COURES”. Made, not yet confirmed by him.
+4. **The Video band has no heading.** He supplied a section name and four film
+   titles and no heading copy.
+5. **Header font.** He sent two to try and asked which suited the site best.
+   Posterama 1933 Light is live; Julius Sans One is installed and is a one-line
+   swap.
+6. **Pikup Padel has no `data-note`** — the only tour without the one-line
+   description every other one carries.
+7. **The photograph section (5.8).** No brief, and the Drive folder holds about
+   45 camera originals of 10–45MB, one of 230MB, which need to come down by some
+   route other than the Drive connector.
