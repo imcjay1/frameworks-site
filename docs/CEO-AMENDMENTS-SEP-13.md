@@ -198,12 +198,12 @@ against an authored 30. Enlarging the logos for 3.12 would have made it worse, n
 better, so the measurement is now kept in step by a `ResizeObserver` on the track.
 At 24 px/s the band is now about **three times slower** than what Martyn saw.
 
-**7.3 — two points of the client's copy are published as written.** His caption
-reads "Villa Bayview, Villefrance-sur-Mer" — the town is Villefranche-sur-Mer.
-It is rendered verbatim rather than silently corrected, so the typo is live and
-needs a word from him. Separately, "Little Zoe - Super Yachts Monaco" took the
-house spaced-em-dash rule, while the Vimeo player's own title is "Little Zoe -
-Yacht".
+**7.3 — two points of the client's copy differ from his email.** His caption read
+"Villa Bayview, Villefrance-sur-Mer"; the town is Villefranche-sur-Mer, and the
+spelling was corrected on Cameron's instruction — the one place the page departs
+from his wording, so worth mentioning when the amendments are signed off.
+Separately, "Little Zoe - Super Yachts Monaco" took the house spaced-em-dash
+rule, while the Vimeo player's own title is "Little Zoe - Yacht".
 
 **7.2 — `tools/build-sector-thumbs.py` rebuilds all nine thumbnails.** Running it
 for Sports also re-encoded `super-yachts.webp` from its (already-updated) base at
