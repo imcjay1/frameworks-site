@@ -312,7 +312,7 @@ h1{
   line-height:1.02; letter-spacing:var(--track-xl);
 }
 /* the home hero carries the largest type on the site */
-.hero-copy h1{font-size:clamp(50px, min(8.2vw, 12.4vh), 122px); line-height:1.0}
+.hero-copy h1{font-size:clamp(42px, min(5.9vw, 8.8vh), 92px); line-height:1.04}
 /* Neither display face carries an italic, and a browser-synthesised oblique on a
    geometric deco face shears the round forms badly. The em keeps its job — the
    lyrical half of the line — through the brass accent instead of a slant. */
