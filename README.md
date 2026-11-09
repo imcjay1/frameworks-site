@@ -352,6 +352,20 @@ both configurations are kept in the repo.
 
 ### cPanel (live)
 
+**`public_html` is not only this site.** Around sixty delivered client virtual
+tours sit beside it as top-level directories — `/MahdSportsAcademy/`,
+`/BentleyBacalar/`, `/LuxuryVilla/` and the rest — and the Works page links
+straight to them. They are roughly 48GB, they are built around `index.htm`, they
+load `manifest.json`, and some are embedded in clients' own pages. Nothing in a
+deployment may touch them, and a global Apache rule can break them silently:
+`.htaccess` carries the list of traps at the top. Deploy copies named files only;
+it never cleans the document root.
+
+The WordPress site that used to live here was retired on 9 November 2026. Its
+files are in `~/wp-retired-2026-11-09/` and its database,
+`frameworksstudio_wp_wjlfz`, is untouched, so it can be put back by reversing
+the move.
+
 Deployment runs through cPanel's Git Version Control, which clones this
 repository on the server and executes `.cpanel.yml`. That file copies only the
 six pages, `assets/`, `.htaccess` and `api/contact.php` into

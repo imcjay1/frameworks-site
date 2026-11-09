@@ -1,80 +1,69 @@
 # Frameworks Studios — Apache configuration for cPanel hosting.
 #
 # This is the Apache counterpart to vercel.json, which is kept so the project
-# can still be deployed to Vercel. Anything changed in one belongs in the other:
-#   cleanUrls      -> the .html rewrite/redirect pair below
-#   trailingSlash  -> the trailing-slash redirect
-#   redirects      -> /sectors -> /works
-#   headers        -> the Cache-Control block
+# can still be deployed to Vercel. Anything changed in one belongs in the other.
 #
-# /api/contact is served by api/contact.php here; on Vercel it is api/contact.js.
+# READ THIS BEFORE ADDING A GLOBAL RULE.
+# public_html is not only this site. Roughly sixty client virtual tours live
+# alongside it as top-level directories — /MahdSportsAcademy/, /BentleyBacalar/,
+# /LuxuryVilla/ and so on — and the Works page links straight to them. They are
+# the studio's delivered work, some of it embedded in clients' own pages.
+# So every rule below is scoped to the six site pages or to /assets, and the
+# things that would quietly break a tour are deliberately absent:
+#
+#   * DirectoryIndex keeps index.htm, which is what the tours are built around.
+#   * No blanket deny on .json — the tours load manifest.json and friends.
+#   * No X-Frame-Options — clients embed these tours in their own sites.
+#   * No long cache lives outside /assets, so a retouched tour appears at once.
 
-Options -MultiViews -Indexes
-DirectoryIndex index.html
+Options -MultiViews
+
+# index.htm first-class: the tours are built around it, this site uses .html.
+DirectoryIndex index.html index.htm index.php
 
 <IfModule mod_rewrite.c>
 RewriteEngine On
 
-# ---------------------------------------------------------- canonical host --
-# One address for the site: https, with www. Everything else redirects once.
+# ------------------------------------------------------------ canonical host --
+# One address for everything, tours included: https, with www.
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://www.frameworksstudios.com%{REQUEST_URI} [R=301,L]
 
 RewriteCond %{HTTP_HOST} !^www\.frameworksstudios\.com$ [NC]
 RewriteRule ^ https://www.frameworksstudios.com%{REQUEST_URI} [R=301,L]
 
-# ------------------------------------------------------------- the form API --
-# Must come before the clean-URL rules, which would otherwise look for
-# api/contact.html and 404.
+# -------------------------------------------------------------- the form API --
 RewriteRule ^api/contact/?$ api/contact.php [L]
 
-# ------------------------------------------------------- the old /sectors URL --
+# -------------------------------------------------------- the old /sectors URL --
 RewriteRule ^sectors/?$ /works [R=301,L]
 
-# ------------------------------------------------------------- clean URLs ----
-# 1. Requests that arrive with .html or a trailing slash are redirected to the
-#    canonical extensionless form, so a page is only ever served at one address.
+# ------------------------------------------------- clean URLs, six pages only --
+# The THE_REQUEST guard matches only what the browser actually asked for, so
+# the internal rewrite at the bottom cannot feed these rules and loop.
 RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
-RewriteRule ^ / [R=301,L]
+RewriteRule ^index\.html$ / [R=301,L]
 
-RewriteCond %{THE_REQUEST} \s/+([^?\s]+)\.html[\s?] [NC]
+RewriteCond %{THE_REQUEST} \s/+(studio|craft|works|digital-services|contact)\.html[\s?] [NC]
 RewriteRule ^ /%1 [R=301,L]
 
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.+?)/$ /$1 [R=301,L]
+RewriteRule ^(studio|craft|works|digital-services|contact)/$ /$1 [R=301,L]
 
-# 2. Having redirected, serve the .html file behind the clean URL.
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{DOCUMENT_ROOT}/$1.html -f
-RewriteRule ^(.+?)/?$ /$1.html [L]
+RewriteRule ^(studio|craft|works|digital-services|contact)$ /$1.html [L]
 </IfModule>
 
-# ------------------------------------------------------------------ caching --
+# ------------------------------------------------------------------- headers --
+# Scoped to this site's pages by filename. The tours serve index.htm, so they
+# never match. Cache lives for /assets are set in assets/.htaccess.
 <IfModule mod_headers.c>
-  # Fonts, images and video are versioned by filename (or by a ?v= query on the
-  # favicons) and never change in place.
-  <FilesMatch "\.(woff2?|ttf|otf|eot|mp4|webm|jpe?g|png|gif|webp|avif|svg|ico)$">
-    Header set Cache-Control "public, max-age=31536000, immutable"
-  </FilesMatch>
-
-  # Stylesheets and scripts are not fingerprinted, so they must revalidate or an
-  # edit would take a year to reach anyone.
-  <FilesMatch "\.(css|js)$">
-    Header set Cache-Control "public, max-age=3600, must-revalidate"
-  </FilesMatch>
-
-  # Pages always revalidate; they are small and they change.
-  <FilesMatch "\.html$">
+  <FilesMatch "^(index|studio|craft|works|digital-services|contact)\.html$">
     Header set Cache-Control "public, max-age=0, must-revalidate"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
   </FilesMatch>
-
-  Header always set X-Content-Type-Options "nosniff"
-  Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  Header always set X-Frame-Options "SAMEORIGIN"
 </IfModule>
 
-# -------------------------------------------------------------- compression --
+# --------------------------------------------------------------- compression --
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
     application/javascript application/json image/svg+xml
@@ -88,11 +77,19 @@ RewriteRule ^(.+?)/?$ /$1.html [L]
   AddType image/webp .webp
 </IfModule>
 
-# ------------------------------------------------- things that are not the site --
-# The repo carries working documents and build scripts. They are deployed with
-# everything else but must never be served.
-<FilesMatch "\.(py|pyc|md|json|yml|yaml|sh|log)$">
-  Require all denied
-</FilesMatch>
+# ---------------------------------------------- inherited from the old config --
+# Kept verbatim from the WordPress-era .htaccess: an abusive address the account
+# owner blocked, and cPanel's own PHP handler, which api/contact.php needs.
+<Files 403.shtml>
+order allow,deny
+allow from all
+</Files>
 
-RedirectMatch 404 ^/(docs|tools|\.git|\.claude)(/|$)
+deny from 52.169.70.224
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
