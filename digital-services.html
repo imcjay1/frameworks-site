@@ -3,11 +3,11 @@
 <head>
 <title>Digital Services — VR Tours, Brochures &amp; Google Integration | Frameworks Studios</title>
 <meta name="description" content="Immersive 360° tours, interactive digital brochures, Google Street View and Business Profile integration, brand identity, AI-assisted post-production and bespoke UI/UX." />
-<link rel="canonical" href="https://frameworks-studios.com/digital-services" />
+<link rel="canonical" href="https://www.frameworksstudios.com/digital-services" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Digital Services — VR Tours, Brochures &amp; Google Integration | Frameworks Studios" />
 <meta property="og:description" content="Immersive 360° tours, interactive digital brochures, Google Street View and Business Profile integration, brand identity, AI-assisted post-production and bespoke UI/UX." />
-<meta property="og:url" content="https://frameworks-studios.com/digital-services" />
+<meta property="og:url" content="https://www.frameworksstudios.com/digital-services" />
 <meta name="twitter:card" content="summary" />
 <!-- this page is dark; the first theme-color wins, so it precedes the shared one -->
 <meta name="theme-color" content="#08090B" />
@@ -21,13 +21,13 @@
 <link rel="icon" href="/assets/brand/favicon-48.png?v=4" type="image/png" sizes="48x48" />
 <link rel="icon" href="/assets/brand/icon-192.png?v=4" type="image/png" sizes="192x192" />
 <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png?v=4" />
-<meta property="og:image" content="https://frameworksstudio.vercel.app/assets/brand/og-thumb.png?v=4" />
+<meta property="og:image" content="https://www.frameworksstudios.com/assets/brand/og-thumb.png?v=4" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="240" />
 <meta property="og:image:height" content="240" />
 <meta property="og:image:alt" content="Frameworks Studios" />
 <meta property="og:site_name" content="Frameworks Studios" />
-<meta name="twitter:image" content="https://frameworksstudio.vercel.app/assets/brand/og-thumb.png?v=4" />
+<meta name="twitter:image" content="https://www.frameworksstudios.com/assets/brand/og-thumb.png?v=4" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Fragment Mono is the only remaining webfont: display and body are self-hosted
@@ -36,6 +36,16 @@
 <link rel="preload" href="/assets/fonts/posterama-1933-light.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/avenir-roman.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/site.css">
+<!-- Google Analytics (GA4). Lives in SHARED:head so every page is measured;
+     edit here and run tools/sync-partials.py to propagate. -->
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-W3KDPFNMYQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-W3KDPFNMYQ');
+</script>
 <!-- #endregion SHARED:head -->
 <!-- page overrides, after site.css so equal-specificity rules win -->
 <link rel="stylesheet" href="/assets/digital.css">

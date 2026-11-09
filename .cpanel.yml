@@ -1,0 +1,17 @@
+---
+# cPanel Git Version Control deployment.
+#
+# cPanel clones this repository into ~/repositories/frameworks-site and runs
+# these tasks on "Update from Remote" + "Deploy HEAD Commit". Only the files
+# that make up the site are copied; docs/, tools/, vercel.json and the git
+# metadata stay in the repository and never reach the document root.
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/frameworksstudio/public_html
+    - /bin/mkdir -p $DEPLOYPATH/api
+    - /bin/cp -a index.html studio.html craft.html works.html digital-services.html contact.html $DEPLOYPATH/
+    - /bin/cp -a .htaccess $DEPLOYPATH/.htaccess
+    - /bin/cp -a api/contact.php $DEPLOYPATH/api/contact.php
+    - /bin/rm -rf $DEPLOYPATH/assets
+    - /bin/cp -a assets $DEPLOYPATH/assets
+    - /bin/chmod -R 755 $DEPLOYPATH/assets

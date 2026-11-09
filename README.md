@@ -346,23 +346,54 @@ There is no test suite; this is the test plan.
 
 ## Deploy
 
-Static, no build step. `npx vercel` from this folder, or import the repo in the
-Vercel dashboard (Framework preset: Other, no build command, output `./`).
-`api/contact.js` is picked up automatically.
+Static, no build step. The site is hosted on cPanel at
+**https://www.frameworksstudios.com**; it can still be deployed to Vercel, and
+both configurations are kept in the repo.
+
+### cPanel (live)
+
+Deployment runs through cPanel's Git Version Control, which clones this
+repository on the server and executes `.cpanel.yml`. That file copies only the
+six pages, `assets/`, `.htaccess` and `api/contact.php` into
+`/home/frameworksstudio/public_html` — `docs/`, `tools/` and the git metadata
+never reach the document root.
+
+To publish a change: push to the branch cPanel tracks, then in cPanel →
+Git Version Control → Manage → **Update from Remote**, then **Deploy HEAD
+Commit**.
+
+`.htaccess` is the Apache counterpart to `vercel.json` and must be kept in step
+with it — clean URLs, no trailing slash, the `/sectors` → `/works` redirect, the
+canonical https+www host, and the cache lives. `api/contact.php` is likewise the
+counterpart to `api/contact.js`; a change to the form fields belongs in both.
+
+Mail is sent by the server's own transport from `no-reply@frameworksstudios.com`
+to `cameron@frameworksstudios.com`. There is no API key to configure. Keep the
+From address on this domain or SPF and DKIM will not cover it.
+
+### Vercel (alternate)
+
+`npx vercel` from this folder, or import the repo in the Vercel dashboard
+(Framework preset: Other, no build command, output `./`). `api/contact.js` is
+picked up automatically and needs `RESEND_API_KEY` set.
+
+## Analytics
+
+Google Analytics 4, property `G-W3KDPFNMYQ`. The tag lives in the `SHARED:head`
+region of `index.html`, so it is on all six pages — edit it there and run
+`tools/sync-partials.py` rather than touching the other five.
 
 ## Outstanding
 
-- **The canonical domain is a guess.** Every page carries
-  `<link rel="canonical">` and `og:url` pointing at `https://frameworks-studios.com`.
-  Replace it with the real domain before launch:
-  `grep -rl frameworks-studios.com *.html`
 - **Client logos and names** for the Trusted by banner — placeholders in place.
 - **Digital Services copy** — the six-service list is scaffolded from vocabulary
   already used elsewhere on the site and needs the client's own descriptions.
 - **Per-sector detail** on `/sectors` — space reserved, copy pending.
 - **Team size** — the About document says 40+ in its short version and 60+ in the
   long one; `/studio` currently says 60+.
-- **Contact email + Resend key** — see above.
+- **No 404 page.** Apache serves its own default for an unknown URL. A
+  branded `404.html` plus `ErrorDocument 404 /404.html` in `.htaccess` is the
+  obvious next step.
 - The sector hover images are AI-generated placeholders; replace with real
   Frameworks portfolio photography when available (drop new files into
   `assets/sectors/` and update the `data-img` attributes on the `.sector-row`s).
