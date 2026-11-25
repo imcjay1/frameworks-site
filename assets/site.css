@@ -595,26 +595,33 @@ h2{
 
 /* ---------- Trusted by — auto-rotating client banner ---------- */
 section.band.trusted{padding-top:84px; padding-bottom:84px}
+/* The band is a real horizontal scroll container rather than a transformed
+   track, so a thumb, a trackpad or a drag can run through the logos at any
+   time. site.js drives the very same scrollLeft for the idle drift and stands
+   off the moment the visitor takes hold. With JS off it is still a row you can
+   swipe — nothing is stranded past the right edge. */
 .marquee{
-  --marq-gap:72px; --marq-duration:40s;
+  --marq-gap:72px;
   display:flex; gap:var(--marq-gap);
-  width:100%; overflow:hidden; margin-top:6px;
+  width:100%; margin-top:6px;
+  overflow-x:auto; overflow-y:hidden;
+  overscroll-behavior-x:contain;          /* a flick must not trigger back-navigation */
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;                   /* the moving logos are their own affordance */
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
           mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
 }
+.marquee::-webkit-scrollbar{display:none}
 .marquee-track{
   display:flex; align-items:center; flex:0 0 auto;
   gap:var(--marq-gap); padding-right:var(--marq-gap);   /* makes the loop seam match the gap */
   list-style:none;
 }
-.marquee.is-looping .marquee-track{
-  animation:marq var(--marq-duration) linear infinite;
-  animation-play-state:paused;                          /* idles until scrolled into view */
-}
-.marquee.is-looping.in-view .marquee-track{animation-play-state:running}
-.marquee.is-looping:hover .marquee-track,
-.marquee.is-looping:focus-within .marquee-track{animation-play-state:paused}
-@keyframes marq{to{transform:translateX(-100%)}}
+/* grab affordance only once the loop is live — a short row stays a plain row */
+.marquee.is-looping{cursor:grab}
+.marquee.is-dragging{cursor:grabbing; user-select:none; -webkit-user-select:none}
+.marquee.is-dragging img, .marquee.is-dragging .client-name{pointer-events:none}
+.marquee:focus-visible{outline:2px solid var(--brass-deep); outline-offset:6px; border-radius:10px}
 .client{flex:0 0 auto; height:74px; display:grid; place-items:center}
 /* The supplied logos are already a single ink colour on transparent, so there is
    nothing to desaturate — they simply lift out of the page on hover.
@@ -794,9 +801,8 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 @media (prefers-reduced-motion: reduce){
   .cap{display:none}
   .tcap{display:none}
-  /* the banner becomes a row you can swipe through yourself */
-  .marquee{overflow-x:auto; -webkit-mask-image:none; mask-image:none}
-  .marquee.is-looping .marquee-track{animation:none}
+  /* the banner stops drifting and is a row you swipe through yourself */
+  .marquee{-webkit-mask-image:none; mask-image:none}
   .marquee-track[aria-hidden="true"]{display:none}
   .more-link::after, .btn-ivory, .cta, .btn-solid, .btn-glass, .btn-glass::after{transition:none}
   .hw span{transform:none; animation:none}
@@ -1364,16 +1370,48 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
 /* Any portrait viewport, phone through iPad Pro: lift the film, move the
    captions onto the plate it leaves behind. */
 @media (max-aspect-ratio:1/1){
-  .stage video, .stage .poster{object-position:center 20%}
+  .stage video, .stage .poster{object-position:center 16%}
 
+  /* The captions live on the ivory plate the lifted film leaves behind.
+     home.js measures where the film actually ends — it is object-fit:contain,
+     so the plate is a different depth on a phone and on an iPad — and
+     publishes it on .stage as --plate-top / --plate-h. The fallbacks are what
+     a 16:9 film leaves on a phone, so the band still reads if the measurement
+     never arrives.
+
+     Consecutive captions overlap in time by design: on a wide screen they are
+     staggered left and right at different heights and read as two columns. In
+     portrait they were all forced into one bottom-anchored box and printed on
+     top of each other, two and three lines deep. They keep their pairing here
+     instead — the left-hand captions take the upper row of the plate, the
+     right-hand ones the lower — and no two captions sharing a row are ever on
+     screen at the same time.
+
+     The tops are !important because the authored top lives in a style
+     attribute on each caption. */
   .cap{
-    top:auto !important; bottom:14vh;
+    bottom:auto;
     left:var(--pad-x); right:var(--pad-x);
     max-width:none; text-align:left;
   }
-  .cap-r{text-align:left}
+  .cap-l{top:calc(var(--plate-top, 42vh) + var(--plate-h, 58vh) * .06) !important}
+  .cap-r{top:calc(var(--plate-top, 42vh) + var(--plate-h, 58vh) * .52) !important; text-align:left}
   .cap-r .cap-kicker{flex-direction:row}
-  .tcap{top:auto; bottom:16vh; max-width:calc(100vw - 2 * var(--pad-x))}
+  .tcap{
+    top:calc(var(--plate-top, 42vh) + var(--plate-h, 58vh) * .30);
+    bottom:auto; max-width:calc(100vw - 2 * var(--pad-x));
+  }
+
+  /* The viewfinder readout is pinned bottom-right, which in portrait is
+     exactly where the stacked hero copy sits — on an iPad the pan readout was
+     printed across the hero buttons. The readout is a flourish; the copy is
+     the point, so in portrait the flourish goes. */
+  .vf-bl{display:none}
+
+  /* The track is measured in viewport heights, so a tall portrait screen was
+     scrolling about fourteen screens of film before reaching the first
+     section. Same pan, far less thumb. */
+  .scrub-track{height:820vh}
 }
 @media (max-aspect-ratio:1/1) and (max-width:900px){
   /* the track is measured in viewport heights, so a phone was scrolling ~14
@@ -1391,12 +1429,7 @@ section.band.trusted{padding-top:84px; padding-bottom:84px}
   .t-main{white-space:normal; letter-spacing:.18em}
 }
 
-/* The viewfinder readouts are pinned bottom-right, which in portrait is exactly
-   where the stacked hero copy now sits — the two were printed over each other.
-   The film's own pan readout is a flourish; the copy is the point. In portrait
-   the flourish goes. */
 @media (max-aspect-ratio:1/1) and (max-width:900px){
-  .vf-bl{display:none}
   .spec-eyebrow{font-size:11.6px; letter-spacing:.08em; line-height:1.5}
 }
 /* Landscape on a phone. There is no ivory plate to move the copy onto — the

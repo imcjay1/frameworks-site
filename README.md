@@ -108,8 +108,14 @@ one `<li>` in its `<ul class="marquee-track">`:
 - Only the first track of each marquee is authored; `site.js` clones it for the
   seamless loop, so each list is maintained in one place.
 - Logos sit at 45% opacity and come up to full on hover, capped at 60px tall.
-- The run speed is `data-marquee-speed` on the `.marquee` (px per second, 30
-  here); `site.js` turns it into the animation duration off the track's width.
+- The run speed is `data-marquee-speed` on the `.marquee` (px per second, 70 on
+  the home page, 55 by default).
+- The band is a real horizontal scroll container, not a transformed track, so a
+  swipe, a drag, shift+wheel or the arrow keys run through the logos at any
+  time. `site.js` drives the drift by writing the same `scrollLeft`, stands off
+  for about a second whenever the visitor takes hold, and picks up from
+  wherever they left it. The seam between the two copies is stepped over
+  invisibly, forwards and backwards.
 
 ## Liquid glass in the home hero
 

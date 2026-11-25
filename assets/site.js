@@ -181,35 +181,113 @@
   }
 
   /* ---------- trusted-by marquee ----------
-     One track is authored; it is cloned here so the logo list is maintained in a
-     single place. Without JS the band stays a static, readable row. */
+     One track is authored; it is cloned here so the logo list is maintained in
+     a single place.
+
+     The band is a native horizontal scroll container (see site.css) and the
+     drift is written straight onto its scrollLeft. That is what buys the
+     manual control: a finger swipe, a trackpad gesture, shift+wheel, a mouse
+     drag and the arrow keys all move the same property, so the visitor can run
+     through the logos whenever they like and the drift simply picks up from
+     wherever they left it. Without JS the band stays a readable, swipeable
+     row. */
   document.querySelectorAll('[data-marquee]').forEach(m => {
     const track = m.querySelector('.marquee-track');
-    if(!track || track.scrollWidth <= m.clientWidth) return;   /* too few logos to loop */
+    if(!track) return;
+    if(track.scrollWidth <= m.clientWidth) return;   /* too few logos to loop */
+
+    /* Reduced motion: no clone and no drift — just the scrollable row. */
+    if(reduced) return;
+
     const clone = track.cloneNode(true);
     clone.setAttribute('aria-hidden', 'true');
     m.appendChild(clone);
 
-    /* The logos are lazy, so the track goes on widening for as long as they
-       arrive. Reading the width once sized the loop against a fraction of the
-       final track and the band ran at roughly three times the authored speed;
-       the observer keeps the duration in step as the row fills out, and across
-       a viewport resize. */
-    const speed = Number(m.dataset.marqueeSpeed) || 55;   /* px per second */
-    const setDuration = () => {
-      if(track.scrollWidth) m.style.setProperty('--marq-duration', (track.scrollWidth / speed) + 's');
-    };
-    setDuration();
-    if('ResizeObserver' in window) new ResizeObserver(setDuration).observe(track);
+    /* One copy of the row, trailing gap included: the distance a lap covers.
+       The logos are lazy, so the track goes on widening as they arrive — the
+       observer keeps the lap honest through that and through a resize. */
+    let lap = track.scrollWidth;
+    const measure = () => { if(track.scrollWidth) lap = track.scrollWidth; };
+    if('ResizeObserver' in window) new ResizeObserver(measure).observe(track);
 
     m.classList.add('is-looping');
+    m.tabIndex = 0;                                  /* arrow keys scroll it */
+    m.setAttribute('role', 'group');
+    m.setAttribute('aria-label', 'Client logos — drag or swipe to browse');
+
+    const speed = Number(m.dataset.marqueeSpeed) || 55;   /* px per second */
+    let pos = 0, last = 0;
+    let inView = true, hovering = false, focused = false, dragging = false, resumeAt = 0;
+
+    /* stand off for a beat after the visitor moves it, then drift on again */
+    const hold = ms => { resumeAt = Math.max(resumeAt, performance.now() + ms); };
+
+    /* Taking hold is read from the input itself rather than inferred from the
+       scroll event: a drift step is under two pixels, and a scroll event
+       coalesced across a couple of frames is already bigger than that, so
+       guessing from the value alone had the band standing off against its own
+       movement. */
+    ['wheel', 'touchstart', 'touchmove', 'touchend', 'keydown'].forEach(type =>
+      m.addEventListener(type, () => hold(1100), {passive:true}));
+
+    /* The momentum of a flick carries on past touchend with no input left to
+       listen to, so a jump far larger than a drift step is taken as the
+       visitor's: their position is adopted and the drift waits for the band to
+       come to rest before picking up from there. */
+    const ADOPT = Math.max(8, speed / 5);
+    m.addEventListener('scroll', () => {
+      if(Math.abs(m.scrollLeft - pos) <= ADOPT) return;
+      pos = m.scrollLeft;
+      hold(900);
+    }, {passive:true});
+
+    m.addEventListener('pointerenter', () => { hovering = true; });
+    m.addEventListener('pointerleave', () => { hovering = false; });
+    m.addEventListener('focusin',  () => { focused = true; });
+    m.addEventListener('focusout', () => { focused = false; });
+
+    /* Drag with a mouse or a pen. Touch is left to the container's own panning,
+       which carries momentum and lets a vertical swipe scroll the page. */
+    let grabX = 0, grabFrom = 0;
+    m.addEventListener('pointerdown', e => {
+      if(e.pointerType === 'touch' || e.button !== 0) return;
+      dragging = true; grabX = e.clientX; grabFrom = m.scrollLeft;
+      m.setPointerCapture(e.pointerId);
+      m.classList.add('is-dragging');
+    });
+    m.addEventListener('pointermove', e => {
+      if(!dragging) return;
+      e.preventDefault();
+      let x = grabFrom - (e.clientX - grabX);
+      /* the two copies are identical, so stepping a whole lap is invisible —
+         it is what lets a drag run on past either seam */
+      if(x < 0){ x += lap; grabFrom += lap; }
+      else if(x > lap * 2 - m.clientWidth){ x -= lap; grabFrom -= lap; }
+      m.scrollLeft = x; pos = m.scrollLeft;
+    });
+    const release = () => {
+      if(!dragging) return;
+      dragging = false; m.classList.remove('is-dragging'); hold(900);
+    };
+    m.addEventListener('pointerup', release);
+    m.addEventListener('pointercancel', release);
+    /* a drag must not turn into a native image drag */
+    m.addEventListener('dragstart', e => e.preventDefault());
+
     if('IntersectionObserver' in window){
       /* paused off-screen, so it isn't competing with the film scrub for frames */
-      new IntersectionObserver(([e]) => m.classList.toggle('in-view', e.isIntersecting))
-        .observe(m);
-    } else {
-      m.classList.add('in-view');
+      new IntersectionObserver(([e]) => { inView = e.isIntersecting; }).observe(m);
     }
+
+    FS.onFrame(() => {
+      const now = performance.now();
+      const dt = last ? Math.min(64, now - last) : 0;   /* a tab left in the background must not jump */
+      last = now;
+      if(!inView || hovering || focused || dragging || now < resumeAt) return;
+      pos += speed * dt / 1000;
+      if(pos >= lap) pos -= lap;
+      m.scrollLeft = pos;
+    });
   });
 
   /* ---------- page transition ----------

@@ -59,13 +59,62 @@
 
   let duration = 0, target = 0, current = 0, ready = false;
 
+  /* ---------- portrait: publish where the film ends ----------
+     The film is object-fit:contain, so on a portrait screen it is a band
+     across the top and the rest of the stage is an ivory plate. How deep that
+     plate is depends on the screen's aspect ratio — it is one depth on a phone
+     and quite another on an iPad — so it is measured rather than guessed, and
+     site.css positions the captions against it. */
+  const stage  = document.querySelector('.stage');
+  const FILM_Y = 0.16;             /* matches object-position:center 16% in site.css */
+
+  function plate(){
+    if(!stage) return;
+    const vw = stage.clientWidth, vh = stage.clientHeight;
+    if(!vw || !vh) return;
+    if(vw > vh){                   /* landscape: the film fills the frame, no plate */
+      stage.style.removeProperty('--plate-top');
+      stage.style.removeProperty('--plate-h');
+      return;
+    }
+    const ar = (video.videoWidth && video.videoHeight)
+      ? video.videoWidth / video.videoHeight : 16 / 9;
+    let h = vw / ar;
+    if(h > vh) h = vh;
+    const top = (vh - h) * FILM_Y + h;
+    stage.style.setProperty('--plate-top', top + 'px');
+    stage.style.setProperty('--plate-h', (vh - top) + 'px');
+  }
+  plate();
+  addEventListener('resize', plate, {passive:true});
+  addEventListener('orientationchange', plate);
+
+  /* iOS will not paint a seeked frame on a video it has never decoded, so on an
+     iPhone and an iPad the hero sat on one still frame for the whole scroll —
+     the film never moved. One muted inline play, paused as soon as it starts,
+     primes the decoder; if the browser refuses that without a gesture, the
+     first touch is a second chance at it. */
+  function prime(){
+    const started = video.play();
+    const settle = () => video.pause();
+    if(started && started.then){
+      started.then(settle).catch(() => {
+        addEventListener('touchstart', prime, {once:true, passive:true});
+      });
+    } else {
+      settle();
+    }
+  }
+
   function armVideo(){
     if(ready || video.readyState < 1) return;   /* HAVE_METADATA or better */
     duration = video.duration; ready = true;
     poster.style.display = 'none';
     video.pause();
     try{ video.currentTime = 0; }catch(e){}
-    if(reduced){ video.play(); }                /* reduced motion: just play once */
+    plate();                                    /* the film's real size is known now */
+    if(reduced){ video.play(); return; }        /* reduced motion: just play once */
+    prime();
   }
   video.addEventListener('loadedmetadata', armVideo);
   video.addEventListener('loadeddata', armVideo);
@@ -88,7 +137,11 @@
 
     /* hero text + viewfinder chrome dissolve as the film takes over */
     if(!reduced){
-      const fade = Math.max(0, 1 - p / 0.12);       /* fully gone by 12% of the pan */
+      /* In portrait the hero copy and the captions share the one plate under the
+         film, and the first caption opens at 6.5% of the pan — so the copy has
+         to be gone by then rather than at the 12% a wide screen can afford. */
+      const fadeEnd = innerHeight >= innerWidth ? 0.052 : 0.12;
+      const fade = Math.max(0, 1 - p / fadeEnd);
       heroCopy.style.opacity = fade;
       heroCopy.style.transform = 'translateY(' + ((1 - fade) * -22) + 'px)';
       heroCopy.style.pointerEvents = fade < 0.5 ? 'none' : '';
